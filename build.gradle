@@ -1,6 +1,12 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+
+group = "org.pzdcdoc"
+name = "pzdcdoc"
+version = "0.8"
 
 repositories {
 	mavenCentral()
