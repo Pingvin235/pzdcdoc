@@ -1,5 +1,4 @@
 apply plugin: 'java'
-//apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -51,10 +50,9 @@ sourceSets {
     }
 }
 
-/*jar {
-    baseName = 'pzdcdoc'
-    version = '0.8'
-}*/
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
 publishing {
     publications {
@@ -67,9 +65,12 @@ publishing {
     }
 }
 
-task buildDemo(type:JavaExec, dependsOn: ['compile']) {
-	// classpath =  sourceSets.runtimeClasspath
-	main = 'ru.bgerp.tool.asciidoc.DocGenerator'
-	args 'demo/cfg', 'demo/src', 'target/doc', '3.0'
+repositories {
+    maven {
+        url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+        credentials {
+            username sonatypeUsername
+            password sonatypePassword
+        }
+    }
 }
-
