@@ -1,0 +1,7 @@
+= Table of content
+:nofooter:
+
+* <<changes.adoc#, Last changes>>
+* <<samples.adoc#, Samples>>
+* Modules
+** <<module/index.adoc#, About module>>
