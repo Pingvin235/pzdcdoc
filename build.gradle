@@ -4,9 +4,6 @@ apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
-group = "org.pzdcdoc"
-version = "0.8"
-
 repositories {
 	mavenCentral()
 }
@@ -51,6 +48,22 @@ sourceSets {
 			srcDir 'src/main'
 			include 'log4j.properties'
 		} 
+    }
+}
+
+/*jar {
+    baseName = 'pzdcdoc'
+    version = '0.8'
+}*/
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+        	groupId 'org.pzdcdoc'
+            artifactId 'pzdcdoc'
+            version '0.8'        
+            from components.java
+        }
     }
 }
 
