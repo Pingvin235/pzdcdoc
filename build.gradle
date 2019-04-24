@@ -45,7 +45,7 @@ sourceSets {
         }
         resources {
 			srcDir 'src/main'
-			include 'log4j.properties'
+			include 'log4j2.properties'
 		} 
     }
 }
