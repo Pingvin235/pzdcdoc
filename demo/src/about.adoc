@@ -142,4 +142,4 @@ Features:
 * structure preview in *Outline* section;
 * hot keys like *Ctrl + b* for typical formatting options.
 
-Preview I normally do not use, just do generation and do F5 in the running browser.
+Preview I normally do not use, just do generation and refresh in the running browser.
