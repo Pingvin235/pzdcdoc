@@ -33,7 +33,7 @@ public class DocGenerator {
     private final File sourceDir;
     private final File outputDir;
     
-    private DocGenerator(String configDir, String sourceDir, String outputDir, String version) throws Exception {
+    private DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
         this.configDir = new File(configDir);
         this.sourceDir = new File(sourceDir);
         this.outputDir = new File(outputDir);
@@ -173,9 +173,10 @@ public class DocGenerator {
     }
     
     public static void main(String[] args) throws Exception {
-        String configDir = args[0], sourceDir = args[1], outputDir = args[2], version = args[3];
+        // TODO: Use args4j.
+        String configDir = args[0], sourceDir = args[1], outputDir = args[2];
         
-        DocGenerator gen = new DocGenerator(configDir, sourceDir, outputDir, version);
+        DocGenerator gen = new DocGenerator(configDir, sourceDir, outputDir);
         gen.process();
         
         int errors = new LinksChecker(gen.outputDir).check();

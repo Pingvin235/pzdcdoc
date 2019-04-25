@@ -4,6 +4,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 }
 
@@ -25,6 +26,10 @@ configurations {
 	all {
     	transitive = false
     }
+    // for demo build
+    pzdcdoc {
+    	transitive = true
+    }
 }
 
 dependencies {
@@ -36,6 +41,9 @@ dependencies {
     compile group: 'org.asciidoctor', name: 'asciidoctorj', version: '1.5.6'
 	compile group: 'com.beust', name: 'jcommander', version: '1.35'
 	compile group: 'org.jruby', name: 'jruby-complete', version: '1.7.26'
+	
+	// for demo build
+	pzdcdoc group: 'org.pzdcdoc', name: 'pzdcdoc', version: '0.8'
 }
 
 sourceSets {
@@ -54,6 +62,12 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+task buildDemoDoc(type:JavaExec) {
+	classpath =  configurations.pzdcdoc
+	main = 'org.pzdcdoc.DocGenerator'
+	args 'demo/cfg', 'demo/src', 'target/doc', '3.0'
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -65,6 +79,7 @@ publishing {
     }
 }
 
+/* Uncomment for publish.
 repositories {
     maven {
         url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
@@ -74,3 +89,4 @@ repositories {
         }
     }
 }
+*/
