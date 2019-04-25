@@ -34,7 +34,6 @@ List:
 === Third level header
 
 == Tables
-
 === Simple example
 [%header,cols=1*]
 |===
@@ -79,6 +78,7 @@ Sample Cloud: myuser@mycompany.com
  
 |===
 
+[[snippets]]
 == Code snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
 [source]
@@ -116,6 +116,8 @@ Link to JavaDoc of the class: javadoc:ru.bgerp.tool.asciidoc.DocGenerator[]
 
 Another document: <<module/index.adoc#, Module>>
 
+Chapter in the current document: <<#snippets, Snippets>>
+
 Chapter in another document: <<module/index.adoc#module-about, About>>
 
 Use such links for referencing on not ready parts <<todo.adoc#, TODO>>, they may be easily found later.
@@ -128,7 +130,16 @@ Such link causes a validation error, may be used for marking not finished places
 
 == Selections
 For any selection except of links use bold font: 
-*variable* *path* *parameter* *interface => menu => item*
+*variable*, *path*, *parameter*, *interface => menu => item*
 
 == Tools
+AsciiDoctor may be edited in any text editor, but as more comfortable way I use an Eclipse plugin.
 
+image::_res/eclipse_plugin.png[]
+
+Features:
+[square]
+* structure preview in *Outline* section;
+* hot keys like *Ctrl + b* for typical formatting options.
+
+Preview I normally do not use, just do generation and do F5 in the running browser.

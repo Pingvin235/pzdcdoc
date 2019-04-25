@@ -1,7 +1,9 @@
 = PzdcDoc documentation generator
+:toc:
 
 Based on link:https://asciidoctor.org/docs/asciidoctorj[AsciidoctorJ], 
 Java binding of the excellent software documentation framework link:https://asciidoctor.org/docs[Asciidoctor].
+Additionally to the information below you may have a look on the link:https://docs.google.com/presentation/d/1MEIMT9SEnepZdLMVFv2Koev3TILRGn_cNgdT25eS-Zg/edit?usp=sharing[Presentation]
 
 == About
 Initially this tool was developed for the link:https://bgerp.org[BGERP], project of Open Source ERP/CRM system.
@@ -25,6 +27,7 @@ The key features:
 * Extension for referencing of JavaDoc by class name.
 * Some CSS adjustments.
 * Preview of documentation is link:demo/src/index.adoc[available] in GitLab and GitHub.
+
 
 == HOWTO
 The link:demo/src[demo] set shows the key ideas using examples and may be used as a reference or a start set.
