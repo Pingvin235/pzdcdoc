@@ -28,7 +28,6 @@ The key features:
 * Some CSS adjustments.
 * Preview of documentation is link:demo/src/index.adoc[available] in GitLab and GitHub.
 
-
 == HOWTO
 The link:demo/src[demo] set shows the key ideas using examples and may be used as a reference or a start set.
 
