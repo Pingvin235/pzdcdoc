@@ -62,6 +62,10 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
 // demo build
 task buildDemoDoc(type:JavaExec) {
 	classpath =  configurations.pzdcdoc
@@ -69,17 +73,45 @@ task buildDemoDoc(type:JavaExec) {
 	args 'demo/cfg', 'demo/src', 'target/doc'
 }
 
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    from javadoc.destinationDir
+}
+
+/*artifacts {
+    archives jar
+    archives sourceJar
+    archives javadocJar
+}*/
+
+// https://medium.com/@nmauti/sign-and-publish-on-maven-central-a-project-with-the-new-maven-publish-gradle-plugin-22a72a4bfd4b
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
+        	customizePom(pom)
+        
         	groupId 'org.pzdcdoc'
             artifactId 'pzdcdoc'
-            version '0.8'        
+            version '0.8'
+                    
             from components.java
+            
+            artifact(sourceJar) {
+                classifier = 'sources'
+            }
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
         }
     }
 
-	/* Uncomment for publish.
+	/* Uncomment for publish. */
 	repositories {
 	    maven {
 	        url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
@@ -88,5 +120,50 @@ publishing {
 	            password sonatypePassword
 	        }
 	    }
-	}*/
+	}
+}
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        // eliminate test-scoped dependencies (no need in maven central POMs)
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        // add all items necessary for maven central publication
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            description 'AsciiDoctor based documentation generation tool'
+            name 'PzdcDoc'
+            url 'https://github.com/pzdcdoc/pzdcdoc'
+            organization {
+                name 'org.pzdcdoc'
+                url 'https://github.com/pzdcdoc'
+            }
+            issueManagement {
+                system 'GitHub'
+                url 'https://github.com/pzdcdoc/pzdcdoc/issues'
+            }
+            licenses {
+                license {
+                    name 'MIT License'
+                    url 'https://github.com/pzdcdoc/pzdcdoc/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/pzdcdoc/spzdcdoc'
+                connection 'scm:git:git://github.com/pzdcdoc/pzdcdoc.git'
+                developerConnection 'scm:git:ssh://git@github.com:pzdcdoc/pzdcdoc.git'
+            }
+            developers {
+                developer {
+                    name 'Shamil Vakhitov'
+                }
+            }
+        }
+    }
 }
