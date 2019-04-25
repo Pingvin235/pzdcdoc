@@ -39,5 +39,5 @@ gradlew buildDemoDoc
 ----
 That will build result to target/doc.
 
-Use "demo build" configuration from link:build.gradle[] for your own project.
+Use "demo build" configuration from link:build.gradle[] as a sample for your own project.
 
