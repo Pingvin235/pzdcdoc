@@ -1,4 +1,4 @@
-= Chapter about module
+= Module
 :toc:
 :toclevels: 4
 

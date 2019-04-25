@@ -1,54 +1,52 @@
-= Примеры
+= About
 :toc:
 
-Полное описание синтаксиса доступно здесь: https://asciidoctor.org/docs/user-manual
+Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
 
-== Заголовок второго уровня
-Полный список здесь: https://asciidoctor.org/docs/user-manual/#style
+== Second level header
+Reference of selected blocks: https://asciidoctor.org/docs/user-manual/#style
 
-NOTE: Заметка.
+NOTE: Note.
 
-WARNING: Предупреждение.
+WARNING: Warning.
 
-CAUTION: Обратить внимание.
+CAUTION: Take attention.
 
-IMPORTANT: Это важно.
+IMPORTANT: It is important.
 
-Многострочные блоки: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/#admon-bl
+Complex admonition blocks: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/#admon-bl
 
 [IMPORTANT]
 ====
-Очень важный блок с предупреждением.
+This is very important block.
 
-Содержит пункты:
+Contains list items:
 [square]
-* Раз.
-* Два.
+* One.
+* Two.
 ====
 
-Список:
+List:
 [square]
-* Пункт 1
-* Пункт 2
+* Position 1
+* Position 2
 
-=== Заголовок третьего уровня
+=== Third level header
 
-== Таблица
+== Tables
 
-=== Пример простой
-
+=== Simple example
 [%header,cols=1*]
 |===
 |Service / Component
 
-|IntraFind Converter Service
+|Converter Service
 
 |Index and Search Service
 
 |===
 
-=== Пример с объединением ячеек
-
+=== Sample with joined cells
 [cols="a,a", options="header"]
 |===
 |Key
@@ -81,9 +79,8 @@ Sample Cloud: myuser@mycompany.com
  
 |===
 
-== Листинги
-
-Конфигурация или иной выделенный фрагмент (*source* добавляет горизонтальный скроллинг):
+== Code snippets
+Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
 [source]
 ----
 # при ошибке правки параметров - обновление таблицы с параметрами, необходимо в случае, если при этом другие параметры изменяются динамическим кодом
@@ -94,7 +91,7 @@ categoryParamId=<param_code>
 requireFillParamIdsBeforeStatusSet.<status_to_code>=<param_codes>
 ----
 
-Java код:
+Java code:
 [source, java]
 ----
 class My {
@@ -106,17 +103,16 @@ class My {
 }
 ----
 
-== Ссылки
-
-Картинка, всегда в каталоге _res рядом с файлом.
+== References
+Image, must be always places in directory *_res* near of the file.
 
 image::_res/image.png[]
 
-Большие картинки можно ограничить по ширине, рекомендовано 600px для горизонтальных изображений и 300 для вертикальных:
+Big images may be restricted by width, recommended 600px for horizontal oriented и 300 vertical:
 
 image::_res/image.png[width="600px"]
 
-Класс в системе: javadoc:ru.bgerp.tool.asciidoc.DocGenerator[]
+Link to JavaDoc of the class: javadoc:ru.bgerp.tool.asciidoc.DocGenerator[]
 
 Другой документ: <<kernel/extension.adoc#, Расширение>>
 

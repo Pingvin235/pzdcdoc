@@ -4,4 +4,4 @@
 * <<changes.adoc#, Last changes>>
 * <<samples.adoc#, Samples>>
 * Modules
-** <<module/index.adoc#, About module>>
+** <<module/index.adoc#, Module>>
