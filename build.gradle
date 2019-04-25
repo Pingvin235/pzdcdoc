@@ -62,10 +62,11 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+// demo build
 task buildDemoDoc(type:JavaExec) {
 	classpath =  configurations.pzdcdoc
 	main = 'org.pzdcdoc.DocGenerator'
-	args 'demo/cfg', 'demo/src', 'target/doc', '3.0'
+	args 'demo/cfg', 'demo/src', 'target/doc'
 }
 
 publishing {

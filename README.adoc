@@ -23,7 +23,7 @@ The key features:
 * Internal references checking, no more broken links.
 * Extension for referencing of JavaDoc by class name.
 * Some CSS adjustments.
-* Preview of documentation is link:demo/src[available] in GitLab and GitHub.
+* Preview of documentation is link:demo/src/index.adoc[available] in GitLab and GitHub.
 
 == HOWTO
 Clone the repository, after execute in the directory:
@@ -31,4 +31,5 @@ Clone the repository, after execute in the directory:
 ----
 gradlew buildDemoDoc
 ----
-That will build result to target/doc
+That will build result to target/doc.
+Use "demo build" configuration from link:build.gradle[] for your own project.
