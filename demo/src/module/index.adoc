@@ -1,0 +1,11 @@
+= Module
+:toc:
+
+[[module-about]]
+== About the module
+This is the demo chapter about some not existing module of not existing product.
+
+Image:
+
+image::_res/image.png[]
+

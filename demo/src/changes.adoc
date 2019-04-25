@@ -1,0 +1,8 @@
+= Last changes
+:toc:
+
+Last changes in the documentation.
+
+== Log of changes
+[square]
+* <<about.adoc#, 25.04.2019>> Added the chapter "About".

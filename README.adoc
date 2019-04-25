@@ -1,0 +1,43 @@
+= PzdcDoc documentation generator
+:toc:
+
+Based on link:https://asciidoctor.org/docs/asciidoctorj[AsciidoctorJ], 
+Java binding of the excellent software documentation framework link:https://asciidoctor.org/docs[Asciidoctor].
+Additionally to the information below you may have a look on the link:https://docs.google.com/presentation/d/1MEIMT9SEnepZdLMVFv2Koev3TILRGn_cNgdT25eS-Zg/edit?usp=sharing[Presentation]
+
+== About
+Initially this tool was developed for the link:https://bgerp.org[BGERP], project of Open Source ERP/CRM system.
+It was successfully used there as one system with GIT stored sources for support of:
+[square]
+* product documentation;
+* samples and articles;
+* database structure
+
+The single tool has replaced Confluence + MediaWiki + self-written DB structure describing utility in a more convenient way.
+Ideally fits for continuous delivery approach, when documentation is considered as essential part of product and written, 
+stored, handled together with other sources. Documentation is automatically built using GitLab CI and published, 
+you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].  
+
+The key features:
+[square]
+* Delivered as a single artifact in Maven repository for simple integration in existing build processes.
+* Building documentation out of many files structure with common ToC.
+* Handling of dependent resources (images, files).
+* Original approach for organization of files structure.
+* Internal references checking, no more broken links.
+* Extension for referencing of JavaDoc by class name.
+* Some CSS adjustments.
+* Preview of documentation is link:demo/src/index.adoc[available] in GitLab and GitHub.
+
+== HOWTO
+The link:demo/src[demo] set shows the key ideas using examples and may be used as a reference or a start set.
+
+Clone the repository, after execute in the directory:
+[source]
+----
+gradlew buildDemoDoc
+----
+That will build result to target/doc.
+
+Use "demo build" configuration from link:build.gradle[] as a sample for your own project.
+
