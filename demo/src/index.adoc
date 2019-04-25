@@ -2,6 +2,6 @@
 :nofooter:
 
 * <<changes.adoc#, Last changes>>
-* <<samples.adoc#, Samples>>
+* <<about.adoc#, About>>
 * Modules
 ** <<module/index.adoc#, Module>>

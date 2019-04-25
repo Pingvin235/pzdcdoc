@@ -114,22 +114,21 @@ image::_res/image.png[width="600px"]
 
 Link to JavaDoc of the class: javadoc:ru.bgerp.tool.asciidoc.DocGenerator[]
 
-Другой документ: <<kernel/extension.adoc#, Расширение>>
+Another document: <<module/index.adoc#, Module>>
 
-Другой документ, подраздел в нём: <<module/index.adoc#jexl, JEXL>>
+Chapter in another document: <<module/index.adoc#module-about, About>>
 
-Если должна быть внутренняя ссылка, но пока не готов документ, использовать <<todo.adoc#, TODO>>, их можно легко будет найти после.
-Удобно ставить подобный признак в конце документа, находящегося в стадии написания, это позволяет легко копировать конструкцию в нужное место.
+Use such links for referencing on not ready parts <<todo.adoc#, TODO>>, they may be easily found later.
 
-Подобная ссылка вызывает ошибки валидации, удобно ставить в документе, который находится в ходе разработки:
+Such link causes a validation error, may be used for marking not finished places:
 [[source]]
 ----
-<<todo,todo>>
+<<todo, todo>>
 ----
 
-== Выделение
+== Selections
+For any selection except of links use bold font: 
+*variable* *path* *parameter* *interface => menu => item*
 
-Для любых выделений кроме ссылок использовать полужирный шрифт: 
-*переменная* *путь* *параметр* *пункт => меню => интерефейса*
-
+== Tools
 
