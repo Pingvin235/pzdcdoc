@@ -22,6 +22,7 @@ The key features:
 [square]
 * Delivered as a single artifact in Maven repository for simple integration in existing build processes.
 * Building documentation out of many files structure with common ToC.
+* Handling of dependent resources (images, files).
 * Original approach for organization of files structure.
 * Internal references checking, no more broken links.
 * Extension for referencing of JavaDoc by class name.
