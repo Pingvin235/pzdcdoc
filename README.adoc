@@ -1,0 +1,19 @@
+= PzdcDoc documentation generator
+
+Based on link:https://asciidoctor.org/docs/asciidoctorj[AsciidoctorJ], 
+Java binding of the excellent software documentation framework link:https://asciidoctor.org/docs[Asciidoctor].
+
+Initially this tool was developed for the link:https://bgerp.org project of Open Source ERP / CRM system.
+And was successfully used there as one system with GIT stored sources for support of:
+[square]
+* product documentation;
+* samples and articles;
+* database structure
+
+The single tool has replaced Confluence + MediaWiki + self-written DB structure describing utility in a more convenient way.
+Ideally fits for continuous delivery approach, when documentation is handled as a part of software and written/stored/handled together with other sources.   
+
+The key features:
+[square]
+* Building documentation out of many files structure with common ToC.
+* 
