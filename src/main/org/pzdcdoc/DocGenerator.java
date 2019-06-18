@@ -99,7 +99,7 @@ public class DocGenerator {
                 attrs.setAttribute("example-caption", "Пример");
                 attrs.setAttribute("figure-caption", "Рисунок");
                 attrs.setAttribute("important-caption", "Важно");
-                attrs.setAttribute("last-update-label", "Последний раз обновлено");
+                attrs.setAttribute("last-update-label", "Сгенерировано <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> Последнее изменение: ");
                 attrs.setAttribute("manname-title", "НАЗВАНИЕ");
                 attrs.setAttribute("note-caption", "Примечание");
                 attrs.setAttribute("table-caption", "Таблица");
