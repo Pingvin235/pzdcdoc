@@ -10,6 +10,7 @@ repositories {
 }
 
 buildDir = 'target'
+version = '1.0'
 
 eclipse {
     classpath {
@@ -44,7 +45,7 @@ dependencies {
 	compile group: 'org.jruby', name: 'jruby-complete', version: '1.7.26'
 	
 	// for demo build
-	pzdcdoc group: 'org.pzdcdoc', name: 'pzdcdoc', version: '0.8'
+	pzdcdoc group: 'org.pzdcdoc', name: 'pzdcdoc', version: "${project.version}"
 }
 
 sourceSets {
@@ -103,7 +104,7 @@ publishing {
         
         	groupId 'org.pzdcdoc'
             artifactId 'pzdcdoc'
-            version '0.8'
+            version "${project.version}"
                     
             from components.java
             
