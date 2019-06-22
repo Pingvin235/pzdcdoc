@@ -33,7 +33,7 @@ public class DocGenerator {
     private final File sourceDir;
     private final File outputDir;
     
-    private DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
+    public DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
         this.configDir = new File(configDir);
         this.sourceDir = new File(sourceDir);
         this.outputDir = new File(outputDir);
@@ -45,11 +45,11 @@ public class DocGenerator {
     }
     
     public void process() throws Exception {
-        process(sourceDir, outputDir, -1);
+        process(sourceDir, outputDir, -1, false);
         copyResources();
     }
     
-    public void process(File source, File target, int deep) throws Exception {
+    public void process(File source, File target, int deep, boolean resource) throws Exception {
         log.info("Processing: " + source);
         
         // include - skipping
@@ -59,7 +59,10 @@ public class DocGenerator {
         if (source.isDirectory()) {
             if (!target.exists()) target.mkdirs();
             
+            final boolean resourceDir = RES.equals(source.getName());
+            
             File[] listFiles = source.listFiles(File::isFile);
+            // index.adoc in the root folder must be processed first to be included in all files after
             Arrays.sort(listFiles, (f1, f2) -> { 
                 if (f1.getName().contains("index"))
                     return -1;
@@ -68,17 +71,13 @@ public class DocGenerator {
                 return 0;
             });
             for (File file : listFiles)
-                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1);
+                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
             
             for (File file : source.listFiles(File::isDirectory))
-                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1);
+                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, false);
         } else {
             String name = source.getName();
             
-            if (name.startsWith("README")) {
-                log.info("Skip.");
-                return;
-            }
             if (name.endsWith(".adoc")) {
                 // TODO: Move all the attributes to configuration.
                 Attributes attrs = AttributesBuilder.attributes()
@@ -127,9 +126,10 @@ public class DocGenerator {
                 fos.close();
                 
                 return;
-            }
+            } 
             // copy resource
-            FileUtils.copyFile(source, target);
+            else if (resource)
+                FileUtils.copyFile(source, target);
         }
     }
         
