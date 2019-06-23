@@ -11,7 +11,7 @@ repositories {
 
 buildDir = 'target'
 version = '1.0'
-sourceCompatibility = 11
+sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 eclipse {
