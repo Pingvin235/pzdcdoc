@@ -16,7 +16,6 @@ import org.asciidoctor.Attributes;
 import org.asciidoctor.AttributesBuilder;
 import org.asciidoctor.Options;
 import org.asciidoctor.OptionsBuilder;
-import org.asciidoctor.Placement;
 import org.asciidoctor.SafeMode;
 import org.asciidoctor.extension.JavaExtensionRegistry;
 import org.jsoup.Jsoup;
@@ -92,7 +91,6 @@ public class DocGenerator {
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)
                         .tableOfContents(true)
-                        .tableOfContents(Placement.RIGHT)
                         .setAnchors(true)
                         .get();
                 
