@@ -33,7 +33,10 @@ public class DocGenerator {
     private final File sourceDir;
     private final File outputDir;
     
-    private DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
+    private String[] scripts;
+    private Element toc;
+    
+    public DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
         this.configDir = new File(configDir);
         this.sourceDir = new File(sourceDir);
         this.outputDir = new File(outputDir);
@@ -45,11 +48,11 @@ public class DocGenerator {
     }
     
     public void process() throws Exception {
-        process(sourceDir, outputDir, -1);
-        copyResources();
+        copyScriptsAndStyles();
+        process(sourceDir, outputDir, -1, false);
     }
     
-    public void process(File source, File target, int deep) throws Exception {
+    public void process(File source, File target, int deep, boolean resource) throws Exception {
         log.info("Processing: " + source);
         
         // include - skipping
@@ -59,7 +62,10 @@ public class DocGenerator {
         if (source.isDirectory()) {
             if (!target.exists()) target.mkdirs();
             
+            final boolean resourceDir = resource || RES.equals(source.getName());
+            
             File[] listFiles = source.listFiles(File::isFile);
+            // index.adoc in the root folder must be processed first to be included in all files after
             Arrays.sort(listFiles, (f1, f2) -> { 
                 if (f1.getName().contains("index"))
                     return -1;
@@ -67,18 +73,15 @@ public class DocGenerator {
                     return 1;
                 return 0;
             });
+            
             for (File file : listFiles)
-                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1);
+                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
             
             for (File file : source.listFiles(File::isDirectory))
-                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1);
+                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
         } else {
             String name = source.getName();
             
-            if (name.startsWith("README")) {
-                log.info("Skip.");
-                return;
-            }
             if (name.endsWith(".adoc")) {
                 // TODO: Move all the attributes to configuration.
                 Attributes attrs = AttributesBuilder.attributes()
@@ -120,31 +123,45 @@ public class DocGenerator {
                 
                 String targetPath = target.getPath().replace(".adoc", ".html").replace('\\','/');
                 
-                html = injectToc(html, targetPath, deep);
+                html = injectScriptsAndToC(html, targetPath, deep);
                
                 FileWriterWithEncoding fos = new FileWriterWithEncoding(targetPath, StandardCharsets.UTF_8);
                 fos.write(html);
                 fos.close();
                 
                 return;
-            }
+            } 
             // copy resource
-            FileUtils.copyFile(source, target);
+            else if (resource)
+                FileUtils.copyFile(source, target);
         }
     }
         
-    public void copyResources() throws IOException {
-        log.info("Copy resources.");
+    public void copyScriptsAndStyles() throws IOException {
+        log.info("Copy scripts and styles.");
         
         File rootRes = new File(outputDir + "/" + RES);
         if (!rootRes.exists()) rootRes.mkdirs();
         
         FileUtils.copyDirectory(configDir.toPath().resolve("stylesheets").toFile(), rootRes);
+        
+        final File dirScripts = configDir.toPath().resolve("scripts").toFile();
+        FileUtils.copyDirectory(dirScripts, rootRes);
+        
+        this.scripts = dirScripts.list();
+        // put pzdoc.js on the last position
+        Arrays.sort(scripts, (f1, f2) -> {
+            if (f1.contains("pzdoc"))
+                return 1;
+            if (f2.contains("pzdoc"))
+                return -1;
+            return 0;
+        });
     }
     
-    private Element toc;
-    
-    private String injectToc(String html, String targetPath, int deep) throws Exception {
+    private String injectScriptsAndToC(String html, String targetPath, int deep) throws Exception {
+        log.debug("injectScriptsAndToC targetPath: {}, deep: {}", targetPath, deep);
+        
         if (toc == null) {
             // The index file must be placed on the top directory.
             if (targetPath.contains("index")) {
@@ -154,14 +171,20 @@ public class DocGenerator {
             return html;
         }
         
-        final String jsSource = "_res/scrollIntoView.js";
-        
         Document jsoup = Jsoup.parse(html);
-        jsoup.select("body").addClass("toc2");
-        jsoup.select("#toc").before("<div id=\"toc\" class=\"toc2\">" + toc.toString() + 
-                "<script src='" + StringUtils.repeat("../", deep) + jsSource + "'/></div>");
-        jsoup.select("#toc.toc2 a").forEach(a -> { 
+        
+        // inject JS files
+        Element head = jsoup.selectFirst("head");
+        for (String script : scripts)
+            head.append("<script src='" + StringUtils.repeat("../", deep) + RES  + "/" + script + "'/>");
+        
+        // inject left ToC
+        jsoup.selectFirst("body").addClass("toc2");
+        jsoup.select("#toc").before("<div id=\"toc\" class=\"toc2\">" + toc.toString() + "</div>");
+        
+        jsoup.select("#toc.toc2 a").forEach(a -> {
             String href = a.attr("href");
+
             if (targetPath.endsWith(href)) a.addClass("current");
             a.attr("href", StringUtils.repeat("../", deep) + href);
             a.attr("title", a.text());
