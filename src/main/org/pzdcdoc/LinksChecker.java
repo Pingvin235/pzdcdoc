@@ -51,6 +51,8 @@ public class LinksChecker {
             if (href.contains("://"))
                 continue;
             
+            log.debug("Checking: {}", href);
+            
             int pos = href.indexOf('#');
             if (pos >= 0) {
                 anchor = href.substring(pos + 1);

@@ -123,7 +123,7 @@ public class DocGenerator {
                 
                 String targetPath = target.getPath().replace(".adoc", ".html").replace('\\','/');
                 
-                html = injectScriptsAndToC(html, targetPath, deep);
+                html = correctHtml(html, targetPath, deep);
                
                 FileWriterWithEncoding fos = new FileWriterWithEncoding(targetPath, StandardCharsets.UTF_8);
                 fos.write(html);
@@ -159,8 +159,8 @@ public class DocGenerator {
         });
     }
     
-    private String injectScriptsAndToC(String html, String targetPath, int deep) throws Exception {
-        log.debug("injectScriptsAndToC targetPath: {}, deep: {}", targetPath, deep);
+    private String correctHtml(String html, String targetPath, int deep) throws Exception {
+        log.debug("correctHtml targetPath: {}, deep: {}", targetPath, deep);
         
         if (toc == null) {
             // The index file must be placed on the top directory.
@@ -178,17 +178,30 @@ public class DocGenerator {
         for (String script : scripts)
             head.append("<script src='" + StringUtils.repeat("../", deep) + RES  + "/" + script + "'/>");
         
+        // find of the top ToC
+        Element pageToC = jsoup.selectFirst("#toc.toc");
+        if (pageToC != null) {
+            Element ul = pageToC.selectFirst(".sectlevel1").clone();
+            // remove doesn't work properly
+            pageToC.html("");
+            pageToC = ul;
+        }
+                
         // inject left ToC
         jsoup.selectFirst("body").addClass("toc2");
         jsoup.select("#toc").before("<div id=\"toc\" class=\"toc2\">" + toc.toString() + "</div>");
         
-        jsoup.select("#toc.toc2 a").forEach(a -> {
+        for (Element a : jsoup.select("#toc.toc2 a")) {
             String href = a.attr("href");
 
-            if (targetPath.endsWith(href)) a.addClass("current");
+            if (targetPath.endsWith(href)) {
+                a.addClass("current");
+                if (pageToC != null)
+                    a.after(pageToC);
+            }
             a.attr("href", StringUtils.repeat("../", deep) + href);
             a.attr("title", a.text());
-        });
+        }
         
         html = jsoup.toString();
         

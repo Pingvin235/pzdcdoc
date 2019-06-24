@@ -425,11 +425,14 @@ p {margin-bottom: 1rem}
 }
 
 #toc.toc2 li > p {
-	white-space: nowrap;
 	margin-bottom: 0;
 }
 
-#toc.toc2 li > p a.current {
+#toc.toc2 li a {
+	white-space: nowrap;
+}
+
+#toc.toc2 li a.current {
 	font-weight: bold;
 }
 
