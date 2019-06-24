@@ -123,7 +123,7 @@ public class DocGenerator {
                 
                 String targetPath = target.getPath().replace(".adoc", ".html").replace('\\','/');
                 
-                html = injectScriptsAndToC(html, targetPath, deep);
+                html = correctHtml(html, targetPath, deep);
                
                 FileWriterWithEncoding fos = new FileWriterWithEncoding(targetPath, StandardCharsets.UTF_8);
                 fos.write(html);
@@ -159,8 +159,8 @@ public class DocGenerator {
         });
     }
     
-    private String injectScriptsAndToC(String html, String targetPath, int deep) throws Exception {
-        log.debug("injectScriptsAndToC targetPath: {}, deep: {}", targetPath, deep);
+    private String correctHtml(String html, String targetPath, int deep) throws Exception {
+        log.debug("correctHtml targetPath: {}, deep: {}", targetPath, deep);
         
         if (toc == null) {
             // The index file must be placed on the top directory.
