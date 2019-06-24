@@ -178,17 +178,30 @@ public class DocGenerator {
         for (String script : scripts)
             head.append("<script src='" + StringUtils.repeat("../", deep) + RES  + "/" + script + "'/>");
         
+        // find of the top ToC
+        Element pageToC = jsoup.selectFirst("#toc.toc");
+        if (pageToC != null) {
+            Element ul = pageToC.selectFirst(".sectlevel1").clone();
+            // remove doesn't work properly
+            pageToC.html("");
+            pageToC = ul;
+        }
+                
         // inject left ToC
         jsoup.selectFirst("body").addClass("toc2");
         jsoup.select("#toc").before("<div id=\"toc\" class=\"toc2\">" + toc.toString() + "</div>");
         
-        jsoup.select("#toc.toc2 a").forEach(a -> {
+        for (Element a : jsoup.select("#toc.toc2 a")) {
             String href = a.attr("href");
 
-            if (targetPath.endsWith(href)) a.addClass("current");
+            if (targetPath.endsWith(href)) {
+                a.addClass("current");
+                if (pageToC != null)
+                    a.after(pageToC);
+            }
             a.attr("href", StringUtils.repeat("../", deep) + href);
             a.attr("title", a.text());
-        });
+        }
         
         html = jsoup.toString();
         
