@@ -10,8 +10,9 @@ const $$ = new function() {
 	
 	const markPart = () => {
 		const mark = function () {
-			const hash = location.hash;
+			let hash = location.hash;
 			if (hash) {
+				hash = decodeURI(hash);
 				const $selected = $('#toc.toc2 li > p > a.current');
 				const $partLinks = $selected.closest('li').find('ul a');
 				
