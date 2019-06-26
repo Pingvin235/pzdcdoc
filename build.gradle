@@ -157,6 +157,9 @@ publishing {
 def customizePom(pom) {
     pom.withXml {
         def root = asNode()
+        
+        // change packaging from pom
+        root.packaging[0].value = 'jar'
 
         // eliminate test-scoped dependencies (no need in maven central POMs)
         root.dependencies.removeAll { dep ->
