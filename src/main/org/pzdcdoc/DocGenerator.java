@@ -53,20 +53,29 @@ public class DocGenerator {
     }
     
     public void process(File source, File target, int deep, boolean resource) throws Exception {
-        log.info("Processing: " + source);
+        final String sourceName = source.getName();
+        
+        // hidden resources, names started by .
+        if (sourceName.startsWith(".")) {
+            log.debug("Skip hidden: {}", source);
+            return;
+        }
         
         // include - skipping
-        if (source.getName().endsWith(".adocf"))
+        if (sourceName.endsWith(".adocf")) {
+            log.debug("Skip include: {}", source);
             return;
+        }
+        
+        log.info("Processing: " + source);
         
         if (source.isDirectory()) {
-            if (!target.exists()) target.mkdirs();
+            final boolean resourceDir = resource || RES.equals(sourceName);
             
-            final boolean resourceDir = resource || RES.equals(source.getName());
+            File[] files = source.listFiles();
             
-            File[] listFiles = source.listFiles(File::isFile);
             // index.adoc in the root folder must be processed first to be included in all files after
-            Arrays.sort(listFiles, (f1, f2) -> { 
+            Arrays.sort(files, (f1, f2) -> { 
                 if (f1.getName().contains("index"))
                     return -1;
                 if (f2.getName().contains("index"))
@@ -74,13 +83,10 @@ public class DocGenerator {
                 return 0;
             });
             
-            for (File file : listFiles)
-                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
-            
-            for (File file : source.listFiles(File::isDirectory))
+            for (File file : files)
                 process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
         } else {
-            String name = source.getName();
+            String name = sourceName;
             
             if (name.endsWith(".adoc")) {
                 // TODO: Move all the attributes to configuration.
@@ -124,6 +130,8 @@ public class DocGenerator {
                 String targetPath = target.getPath().replace(".adoc", ".html").replace('\\','/');
                 
                 html = correctHtml(html, targetPath, deep);
+                
+                FileUtils.forceMkdirParent(target);
                
                 FileWriterWithEncoding fos = new FileWriterWithEncoding(targetPath, StandardCharsets.UTF_8);
                 fos.write(html);
