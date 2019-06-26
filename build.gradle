@@ -50,18 +50,6 @@ dependencies {
 	pzdcdoc group: 'org.pzdcdoc', name: 'pzdcdoc', version: "${project.version}"
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main'
-        }
-        resources {
-			srcDir 'src/main'
-			include 'log4j2.properties'
-		} 
-    }
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
