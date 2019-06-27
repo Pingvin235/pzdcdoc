@@ -1,11 +1,13 @@
 package org.pzdcdoc;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -29,11 +31,14 @@ public class DocGenerator {
     
     private final Asciidoctor asciidoctor = Factory.create();
     
+    @SuppressWarnings("unused")
     private final File configDir;
     private final File sourceDir;
     private final File outputDir;
     
-    private String[] scripts;
+    private final String[] scripts = new String[] {"jquery-3.3.1.js", "pzdcdoc.js"};
+    private final String[] stylesheets = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
+    
     private Element toc;
     
     public DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
@@ -151,20 +156,13 @@ public class DocGenerator {
         File rootRes = new File(outputDir + "/" + RES);
         if (!rootRes.exists()) rootRes.mkdirs();
         
-        FileUtils.copyDirectory(configDir.toPath().resolve("stylesheets").toFile(), rootRes);
+        for (String script : scripts)
+            IOUtils.copy(getClass().getClassLoader().getResourceAsStream("scripts/" + script),
+                    new FileOutputStream(rootRes.getAbsolutePath() + "/" + script));
         
-        final File dirScripts = configDir.toPath().resolve("scripts").toFile();
-        FileUtils.copyDirectory(dirScripts, rootRes);
-        
-        this.scripts = dirScripts.list();
-        // put pzdoc.js on the last position
-        Arrays.sort(scripts, (f1, f2) -> {
-            if (f1.contains("pzdoc"))
-                return 1;
-            if (f2.contains("pzdoc"))
-                return -1;
-            return 0;
-        });
+        for (String style : stylesheets)
+            IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style),
+                    new FileOutputStream(rootRes.getAbsolutePath() + "/" + style));
     }
     
     private String correctHtml(String html, String targetPath, int deep) throws Exception {
