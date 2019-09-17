@@ -72,8 +72,6 @@ public class DocGenerator {
             return;
         }
         
-        log.info("Processing: " + source);
-        
         if (source.isDirectory()) {
             final boolean resourceDir = resource || RES.equals(sourceName);
             
@@ -92,8 +90,9 @@ public class DocGenerator {
                 process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
         } else {
             String name = sourceName;
-            
             if (name.endsWith(".adoc")) {
+                log.info("Processing: " + source);
+
                 // TODO: Move all the attributes to configuration.
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", deep) + RES)
