@@ -91,16 +91,16 @@ signing {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-        	customizePom(pom)
-        
         	groupId 'org.pzdcdoc'
             artifactId 'pzdcdoc'
             version "${project.version}"
                     
             from components.java
+
+            //customizePom(pom)
             
             // create the sign pom artifact
-            pom.withXml {
+            /*pom.withXml {
                 def pomFile = file("${project.buildDir}/generated-pom.xml")
                 writeTo(pomFile)
                 def pomAscFile = signing.sign(pomFile).signatureFiles[0]
@@ -108,17 +108,18 @@ publishing {
                     classifier = null
                     extension = 'pom.asc'
                 }
-			}
+			}*/
 			
-            artifact(sourceJar) {
+            /* artifact(sourceJar) {
                 classifier = 'sources'
             }
             artifact(javadocJar) {
                 classifier = 'javadoc'
-            }
+            } */
             
             // create the signed artifacts
-			project.tasks.signArchives.signatureFiles.each {
+			/*
+            project.tasks.signArchives.signatureFiles.each {
 			    artifact(it) {
 			        def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
 			        if (matcher.find()) {
@@ -128,7 +129,7 @@ publishing {
 			        }
 			        extension = 'jar.asc'
 			    }
-			}
+			}*/
         }
     }
 
