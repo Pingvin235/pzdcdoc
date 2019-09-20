@@ -56,7 +56,14 @@ public class DocGenerator {
         copyScriptsAndStyles();
         process(sourceDir, outputDir, -1, false);
     }
-    
+
+    public int check() throws Exception {
+        int errors = new LinksChecker(outputDir).check();
+        if (errors > 0)
+            log.error("ERROR COUNT => " + errors);
+        return errors;
+    }
+
     public void process(File source, File target, int deep, boolean resource) throws Exception {
         final String sourceName = source.getName();
         
@@ -71,8 +78,6 @@ public class DocGenerator {
             log.debug("Skip include: {}", source);
             return;
         }
-        
-        log.info("Processing: " + source);
         
         if (source.isDirectory()) {
             final boolean resourceDir = resource || RES.equals(sourceName);
@@ -92,8 +97,9 @@ public class DocGenerator {
                 process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
         } else {
             String name = sourceName;
-            
             if (name.endsWith(".adoc")) {
+                log.info("Processing: " + source);
+
                 // TODO: Move all the attributes to configuration.
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", deep) + RES)
@@ -220,10 +226,7 @@ public class DocGenerator {
         
         DocGenerator gen = new DocGenerator(configDir, sourceDir, outputDir);
         gen.process();
-        
-        int errors = new LinksChecker(gen.outputDir).check();
-        if (errors > 0)
-            log.error("ERROR COUNT => " + errors);
+        int errors = gen.check();
         
         log.info("DONE!");
         
