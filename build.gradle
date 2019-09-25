@@ -70,7 +70,7 @@ tasks.withType(Javadoc) {
 task buildDemoDoc(type:JavaExec) {
 	classpath =  configurations.pzdcdoc
 	main = 'org.pzdcdoc.DocGenerator'
-	args 'demo/cfg', 'demo/src', 'target/doc'
+	args 'NOTUSED', 'demo/src', 'target/doc'
 }
 
 task sourceJar(type: Jar) {
