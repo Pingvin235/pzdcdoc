@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +23,8 @@ import org.asciidoctor.Options;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
 import org.asciidoctor.extension.JavaExtensionRegistry;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -39,7 +44,10 @@ public class DocGenerator {
     private final String[] scripts = new String[] {"jquery-3.3.1.js", "pzdcdoc.js"};
     private final String[] stylesheets = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
     
+    // cached ToC from index.adoc for injecting everywhere
     private Element toc;
+    // global attributes from configuration file
+    private Map<String, Object> attributes;
     
     public DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
         this.configDir = new File(configDir);
@@ -78,7 +86,7 @@ public class DocGenerator {
             log.debug("Skip include: {}", source);
             return;
         }
-        
+
         if (source.isDirectory()) {
             final boolean resourceDir = resource || RES.equals(sourceName);
             
@@ -86,9 +94,9 @@ public class DocGenerator {
             
             // index.adoc in the root folder must be processed first to be included in all files after
             Arrays.sort(files, (f1, f2) -> { 
-                if (f1.getName().contains("index"))
+                if (containsIndex(f1.getName()))
                     return -1;
-                if (f2.getName().contains("index"))
+                if (containsIndex(f2.getName()))
                     return 1;
                 return 0;
             });
@@ -96,14 +104,26 @@ public class DocGenerator {
             for (File file : files)
                 process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
         } else {
-            String name = sourceName;
-            if (name.endsWith(".adoc")) {
+            if (sourceName.endsWith(".adoc")) {
                 log.info("Processing: " + source);
 
-                // TODO: Move all the attributes to configuration.
+                if (containsIndex(sourceName) && attributes == null) {
+                    Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
+                    if (configuration.toFile().exists()) {
+                        log.info("Processing configuration: {}", configuration);
+                        org.dom4j.Document document = new SAXReader().read(configuration.toFile());
+                        
+                        attributes = new HashMap<>();
+
+                        for (Node attr : document.selectNodes("//attributes/*"))
+                            attributes.put(attr.getName(), attr.getText());
+
+                        log.info("Read {} attributes", attributes.size());
+                    }
+                }
+
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", deep) + RES)
-                        .attribute("favicon", "https://bgerp.org/img/favicon.png")
                         .linkCss(true)
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)
@@ -111,23 +131,10 @@ public class DocGenerator {
                         .setAnchors(true)
                         .get();
                 
-                // TODO: Make configurable.
-                // https://asciidoctor.org/docs/user-manual/#customizing-labels
-                // https://github.com/asciidoctor/asciidoctor/blob/master/lib/asciidoctor/document.rb#L255
-                attrs.setAttribute("appendix-caption", "Приложение");
-                attrs.setAttribute("caution-caption", "Внимание");
-                attrs.setAttribute("example-caption", "Пример");
-                attrs.setAttribute("figure-caption", "Рисунок");
-                attrs.setAttribute("important-caption", "Важно");
-                attrs.setAttribute("last-update-label", "Сгенерировано <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> Последнее изменение: ");
-                attrs.setAttribute("manname-title", "НАЗВАНИЕ");
-                attrs.setAttribute("note-caption", "Примечание");
-                attrs.setAttribute("table-caption", "Таблица");
-                attrs.setAttribute("tip-caption", "Подсказка");
-                attrs.setAttribute("toc-title", "Содержание");
-                attrs.setAttribute("untitled-label", "Без названия");
-                attrs.setAttribute("version-label", "Версия");
-                attrs.setAttribute("warning-caption", "Предупреждение");
+                attrs.setAttribute("last-update-label", "Generated by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a>, last change: ");
+
+                if (attributes != null)
+                    attrs.setAttributes(attributes);
 
                 Options options = OptionsBuilder.options()
                         .toFile(false)
@@ -135,7 +142,7 @@ public class DocGenerator {
                         .safe(SafeMode.UNSAFE)
                         .attributes(attrs)
                         .get();
-                
+
                 String html = asciidoctor.convertFile(source, options);
                 
                 String targetPath = target.getPath().replace(".adoc", ".html").replace('\\','/');
@@ -170,13 +177,17 @@ public class DocGenerator {
             IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style),
                     new FileOutputStream(rootRes.getAbsolutePath() + "/" + style));
     }
+
+    private boolean containsIndex(String name) {
+        return name.contains("index");
+    }
     
     private String correctHtml(String html, String targetPath, int deep) throws Exception {
         log.debug("correctHtml targetPath: {}, deep: {}", targetPath, deep);
         
         if (toc == null) {
             // The index file must be placed on the top directory.
-            if (targetPath.contains("index")) {
+            if (containsIndex(targetPath)) {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
             }
