@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- configuration file, may be placed in the same directory with root index.adoc file -->
 <pzdcdoc>
+	<!-- these attributes applied to each of processed files, may be overvritten inside -->
 	<attributes>
 		<favicon>https://bgerp.org/img/favicon.png</favicon>
 		<pzdc-javadoc>http://www.bgcrm.ru/doc/3.0/javadoc/</pzdc-javadoc>
