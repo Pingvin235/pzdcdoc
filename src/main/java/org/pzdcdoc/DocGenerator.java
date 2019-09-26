@@ -1,7 +1,6 @@
 package org.pzdcdoc;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,7 +8,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -46,6 +44,7 @@ public class DocGenerator {
     private final String[] scripts = new String[] {"jquery-3.3.1.js", "pzdcdoc.js"};
     private final String[] stylesheets = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
     
+    // cached ToC from index.adoc for injecting everywhere
     private Element toc;
     // global attributes from configuration file
     private Map<String, Object> attributes;
