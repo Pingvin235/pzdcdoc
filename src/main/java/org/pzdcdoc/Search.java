@@ -26,6 +26,8 @@ public class Search {
     }
 
     public void writeScript(File rootRes) {
+        addArticle(new Article("Тест", "Тест", "Тест foo"));
+
         log.info("Write search script.");
         try (Writer out = new OutputStreamWriter(new FileOutputStream(rootRes.getAbsolutePath() + "/" + SCRIPT), StandardCharsets.UTF_8)) {
             out.write("$$.documents = ");

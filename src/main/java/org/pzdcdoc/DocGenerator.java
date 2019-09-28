@@ -43,7 +43,10 @@ public class DocGenerator {
     private final File sourceDir;
     private final File outputDir;
     
-    private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js", "lunr-2.3.6.js", "pzdcdoc.js"};
+    private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js", 
+        // https://lunrjs.com/guides/language_support.html
+        "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js",
+        "pzdcdoc.js"};
     
     private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
     private static final String[] STYLESHEETS = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};

@@ -30,11 +30,24 @@ const $$ = new function() {
 	};
 
 	const initSearch = () => {
+		const idx = lunr(function () {
+			// https://lunrjs.com/guides/language_support.html
+			this.use(lunr.multiLanguage('en', 'ru', 'de'));
+
+			this.ref('url')
+			this.field('title')
+			this.field('content')
+		
+			$$.documents.forEach(function (doc) {
+				this.add(doc)
+			}, this)
+		});
+
 		const $input = $('#search input');
 		$input.on("keypress", (e) => {
 			if (!enterPressed(e)) return;
-			const search = $input.val();
-			
+
+			const search = idx.search($input.val());
 			console.log(search);
 		});
 	};
