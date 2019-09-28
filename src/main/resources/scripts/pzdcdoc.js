@@ -24,14 +24,29 @@ const $$ = new function() {
 		mark();
 		$(window).bind('hashchange', mark);
 	};
+
+	const enterPressed = ($e) => {
+		return ($e.keyCode || $e.which) == 13;
+	};
+
+	const initSearch = () => {
+		const $input = $('#search input');
+		$input.on("keypress", (e) => {
+			if (!enterPressed(e)) return;
+			const search = $input.val();
+			
+			console.log(search);
+		});
+	};
 	
 	// public functions
 	this.scrollTocToVisible = scrollTocToVisible;
 	this.markPart = markPart;
+	this.initSearch = initSearch;
 }
-
 
 $(function () {
 	$$.markPart();
 	$$.scrollTocToVisible();
+	$$.initSearch();
 });

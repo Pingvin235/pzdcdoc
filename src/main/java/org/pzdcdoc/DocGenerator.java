@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,13 +43,17 @@ public class DocGenerator {
     private final File sourceDir;
     private final File outputDir;
     
-    private final String[] scripts = new String[] {"jquery-3.3.1.js", "lunr-2.3.6.js", "pzdcdoc.js"};
-    private final String[] stylesheets = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
+    private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js", "lunr-2.3.6.js", "pzdcdoc.js"};
     
+    private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
+    private static final String[] STYLESHEETS = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
+
     // cached ToC from index.adoc for injecting everywhere
     private Element toc;
     // global attributes from configuration file
     private Map<String, Object> attributes;
+    // 
+    private Search search = new Search();
     
     public DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
         this.configDir = new File(configDir);
@@ -62,8 +67,8 @@ public class DocGenerator {
     }
     
     public void process() throws Exception {
-        copyScriptsAndStyles();
         process(sourceDir, outputDir, -1, false);
+        copyScriptsAndStyles();
     }
 
     public int check() throws Exception {
@@ -173,11 +178,13 @@ public class DocGenerator {
         File rootRes = new File(outputDir + "/" + RES);
         if (!rootRes.exists()) rootRes.mkdirs();
         
-        for (String script : scripts)
+        for (String script : SCRIPTS)
             IOUtils.copy(getClass().getClassLoader().getResourceAsStream("scripts/" + script),
                     new FileOutputStream(rootRes.getAbsolutePath() + "/" + script));
+
+        search.writeScript(rootRes);
         
-        for (String style : stylesheets)
+        for (String style : STYLESHEETS)
             IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style),
                     new FileOutputStream(rootRes.getAbsolutePath() + "/" + style));
     }
@@ -204,7 +211,7 @@ public class DocGenerator {
         
         // inject JS files
         Element head = jsoup.selectFirst("head");
-        for (String script : scripts)
+        for (String script : SCRIPTS_INJECT)
             head.append("<script src='" + StringUtils.repeat("../", deep) + RES  + "/" + script + "'/>");
         
         // find of the top ToC
