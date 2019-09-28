@@ -23,6 +23,7 @@ import org.asciidoctor.Options;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
 import org.asciidoctor.extension.JavaExtensionRegistry;
+import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
@@ -41,7 +42,7 @@ public class DocGenerator {
     private final File sourceDir;
     private final File outputDir;
     
-    private final String[] scripts = new String[] {"jquery-3.3.1.js", "pzdcdoc.js"};
+    private final String[] scripts = new String[] {"jquery-3.3.1.js", "lunr-2.3.6.js", "pzdcdoc.js"};
     private final String[] stylesheets = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
     
     // cached ToC from index.adoc for injecting everywhere
@@ -107,20 +108,8 @@ public class DocGenerator {
             if (sourceName.endsWith(".adoc")) {
                 log.info("Processing: " + source);
 
-                if (containsIndex(sourceName) && attributes == null) {
-                    Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
-                    if (configuration.toFile().exists()) {
-                        log.info("Processing configuration: {}", configuration);
-                        org.dom4j.Document document = new SAXReader().read(configuration.toFile());
-                        
-                        attributes = new HashMap<>();
-
-                        for (Node attr : document.selectNodes("//attributes/*"))
-                            attributes.put(attr.getName(), attr.getText());
-
-                        log.info("Read {} attributes", attributes.size());
-                    }
-                }
+                if (containsIndex(sourceName) && attributes == null)
+                    loadAttributes(source);
 
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", deep) + RES)
@@ -162,6 +151,21 @@ public class DocGenerator {
                 FileUtils.copyFile(source, target);
         }
     }
+
+    private void loadAttributes(File source) throws DocumentException {
+        Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
+        if (configuration.toFile().exists()) {
+            log.info("Processing configuration: {}", configuration);
+            org.dom4j.Document document = new SAXReader().read(configuration.toFile());
+            
+            attributes = new HashMap<>();
+
+            for (Node attr : document.selectNodes("//attributes/*"))
+                attributes.put(attr.getName(), attr.getText());
+
+            log.info("Read {} attributes", attributes.size());
+        }
+    }
         
     public void copyScriptsAndStyles() throws IOException {
         log.info("Copy scripts and styles.");
@@ -186,7 +190,7 @@ public class DocGenerator {
         log.debug("correctHtml targetPath: {}, deep: {}", targetPath, deep);
         
         if (toc == null) {
-            // The index file must be placed on the top directory.
+            // the index file must be placed on the top the root directory
             if (containsIndex(targetPath)) {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
@@ -228,7 +232,7 @@ public class DocGenerator {
         
         html = jsoup.toString();
         
-        return html;    
+        return html;
     }
     
     public static void main(String[] args) throws Exception {
