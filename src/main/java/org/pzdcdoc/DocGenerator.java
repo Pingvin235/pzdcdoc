@@ -194,6 +194,8 @@ public class DocGenerator {
             if (containsIndex(targetPath)) {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
+                // add search field
+                toc.select("#header").after("<div id='search'><input type='text' placeholder='Search'/></div>");
             }
             return html;
         }

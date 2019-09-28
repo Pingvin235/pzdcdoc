@@ -446,3 +446,7 @@ p {margin-bottom: 1rem}
 	overflow: auto;
 	white-space: pre;
 }
+
+#search input {
+	width: 100%;
+}
