@@ -34,7 +34,7 @@ const $$ = new function() {
 			// https://lunrjs.com/guides/language_support.html
 			this.use(lunr.multiLanguage('en', 'ru', 'de'));
 
-			this.ref('url')
+			this.ref('ref')
 			this.field('title')
 			this.field('content')
 		

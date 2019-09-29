@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,18 +38,19 @@ public class Search {
     }
 
     public static class Article {
-        private final String url;
+        private final String ref;
         private final String title;
         private final String content;
 
-        public Article(String url, String title, String content) {
-            this.url = url;
+        public Article(String ref, String title, String content) {
+            this.ref = ref;
             this.title = title;
             this.content = content;
+            log.debug("Add article, ref: {}, title: {}", ref, title);
         }
 
-        public String getUrl() {
-            return url;
+        public String getRef() {
+            return ref;
         }
 
         public String getTitle() {
