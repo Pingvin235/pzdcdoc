@@ -451,6 +451,20 @@ p {margin-bottom: 1rem}
 	white-space: pre;
 }
 
-#search input {
+#search > * {
+	display: table-cell;
+}
+
+#search-input {
 	width: 100%;
 }
+
+#search-input input {
+	width: 100%;
+}
+
+#search-count {
+	color: #bf3400;
+	padding-left: 0.5em;
+}
+

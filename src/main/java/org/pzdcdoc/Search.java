@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.select.Elements;
 
 public class Search {
     private static final Logger log = LogManager.getLogger();
@@ -22,6 +23,10 @@ public class Search {
     
     public void addArticle(Article article) {
         articles.add(article);
+    }
+
+    public void injectField(Elements header) {
+        header.after("<div id='search'><div id='search-input'><input type='text' placeholder='Search'/></div><div id='search-count'></div></div>");
     }
 
     public void writeScript(File rootRes) {

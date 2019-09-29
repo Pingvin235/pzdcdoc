@@ -206,7 +206,7 @@ public class DocGenerator {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
                 // add search field
-                toc.select("#header").after("<div id='search'><input type='text' placeholder='Search'/></div>");
+                search.injectField(toc.select("#header"));
             }
             return html;
         }
@@ -215,7 +215,7 @@ public class DocGenerator {
         Element head = jsoup.selectFirst("head");
 
         if (search != null) {
-            final String relativePath = targetDir.toPath().relativize(Paths.get(targetPath)).toString();
+            final String relativePath = targetDir.toPath().relativize(Paths.get(targetPath)).toString().replace('\\', '/');
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
         }
         
