@@ -436,6 +436,10 @@ p {margin-bottom: 1rem}
 	font-weight: bold;
 }
 
+#toc.toc2 li a.search {
+	color: #bf3400;
+}
+
 .exampleblock > .content {
 	overflow: auto;
 	white-space: nowrap;
@@ -446,3 +450,22 @@ p {margin-bottom: 1rem}
 	overflow: auto;
 	white-space: pre;
 }
+
+#search > * {
+	display: table-cell;
+}
+
+#search-input {
+	width: 100%;
+	padding-left: 0.5em;
+}
+
+#search-input input {
+	width: 100%;
+}
+
+#search-count {
+	color: #bf3400;
+	padding-left: 0.5em;
+}
+

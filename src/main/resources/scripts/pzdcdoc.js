@@ -24,12 +24,58 @@ const $$ = new function() {
 		mark();
 		$(window).bind('hashchange', mark);
 	};
+
+	const enterPressed = ($e) => {
+		return ($e.keyCode || $e.which) == 13;
+	};
+
+	const buildIndex = () => {
+		return lunr(function () {
+			// https://lunrjs.com/guides/language_support.html
+			this.use(lunr.multiLanguage('en', 'ru', 'de'));
+
+			this.ref('ref')
+			this.field('title')
+			this.field('content')
+		
+			$$.documents.forEach(function (doc) {
+				this.add(doc)
+			}, this)
+		});
+	}
+
+	const initSearch = () => {
+		let idx = undefined;
+
+		const $input = $('#search input');
+		$input.on("keypress", (e) => {
+			if (!idx)
+				idx = buildIndex();
+
+			if (!enterPressed(e)) return;
+
+			const $tocLinks = $('#toc.toc2 li a');
+			$tocLinks.removeClass('search');
+
+			const $searchCount = $('#search-count');
+			$searchCount.text('');
+
+			const searchValue = $input.val();
+			if (searchValue) {
+				const searchResult = idx.search(searchValue);
+				$searchCount.text(searchResult.length);
+				searchResult.forEach((hit) => {
+					$tocLinks.filter('[href$="' + hit.ref + '"]').addClass('search');
+				});
+			}
+		});
+	};
 	
 	// public functions
 	this.scrollTocToVisible = scrollTocToVisible;
 	this.markPart = markPart;
+	this.initSearch = initSearch;
 }
-
 
 $(function () {
 	$$.markPart();

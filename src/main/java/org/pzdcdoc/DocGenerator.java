@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +25,7 @@ import org.asciidoctor.Options;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
 import org.asciidoctor.extension.JavaExtensionRegistry;
+import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
@@ -39,40 +42,47 @@ public class DocGenerator {
     @SuppressWarnings("unused")
     private final File configDir;
     private final File sourceDir;
-    private final File outputDir;
+    private final File targetDir;
     
-    private final String[] scripts = new String[] {"jquery-3.3.1.js", "pzdcdoc.js"};
-    private final String[] stylesheets = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
+    private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js", 
+        // https://lunrjs.com/guides/language_support.html
+        "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js",
+        "pzdcdoc.js"};
     
+    private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
+    private static final String[] STYLESHEETS = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
+
     // cached ToC from index.adoc for injecting everywhere
     private Element toc;
     // global attributes from configuration file
     private Map<String, Object> attributes;
+    // 
+    private Search search = new Search();
     
-    public DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
+    public DocGenerator(String configDir, String sourceDir, String targetDir) throws Exception {
         this.configDir = new File(configDir);
         this.sourceDir = new File(sourceDir);
-        this.outputDir = new File(outputDir);
+        this.targetDir = new File(targetDir);
         
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
         
-        FileUtils.deleteDirectory(new File(outputDir));
+        FileUtils.deleteDirectory(new File(targetDir));
     }
     
     public void process() throws Exception {
+        process(sourceDir, targetDir, -1, false);
         copyScriptsAndStyles();
-        process(sourceDir, outputDir, -1, false);
     }
 
     public int check() throws Exception {
-        int errors = new LinksChecker(outputDir).check();
+        int errors = new LinksChecker(targetDir).check();
         if (errors > 0)
             log.error("ERROR COUNT => " + errors);
         return errors;
     }
 
-    public void process(File source, File target, int deep, boolean resource) throws Exception {
+    public void process(File source, File target, int depth, boolean resource) throws Exception {
         final String sourceName = source.getName();
         
         // hidden resources, names started by .
@@ -102,28 +112,16 @@ public class DocGenerator {
             });
             
             for (File file : files)
-                process(file, new File(target.getPath() + "/" + file.getName()), deep + 1, resourceDir);
+                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, resourceDir);
         } else {
             if (sourceName.endsWith(".adoc")) {
                 log.info("Processing: " + source);
 
-                if (containsIndex(sourceName) && attributes == null) {
-                    Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
-                    if (configuration.toFile().exists()) {
-                        log.info("Processing configuration: {}", configuration);
-                        org.dom4j.Document document = new SAXReader().read(configuration.toFile());
-                        
-                        attributes = new HashMap<>();
-
-                        for (Node attr : document.selectNodes("//attributes/*"))
-                            attributes.put(attr.getName(), attr.getText());
-
-                        log.info("Read {} attributes", attributes.size());
-                    }
-                }
+                if (containsIndex(sourceName) && attributes == null)
+                    loadAttributes(source);
 
                 Attributes attrs = AttributesBuilder.attributes()
-                        .stylesDir(StringUtils.repeat("../", deep) + RES)
+                        .stylesDir(StringUtils.repeat("../", depth) + RES)
                         .linkCss(true)
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)
@@ -131,7 +129,7 @@ public class DocGenerator {
                         .setAnchors(true)
                         .get();
                 
-                attrs.setAttribute("last-update-label", "Generated by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
+                attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
 
                 if (attributes != null)
                     attrs.setAttributes(attributes);
@@ -144,10 +142,10 @@ public class DocGenerator {
                         .get();
 
                 String html = asciidoctor.convertFile(source, options);
-                
+
                 String targetPath = target.getPath().replace(".adoc", ".html").replace('\\','/');
-                
-                html = correctHtml(html, targetPath, deep);
+
+                html = correctHtml(html, targetPath, depth);
                 
                 FileUtils.forceMkdirParent(target);
                
@@ -162,18 +160,35 @@ public class DocGenerator {
                 FileUtils.copyFile(source, target);
         }
     }
+
+    private void loadAttributes(File source) throws DocumentException {
+        Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
+        if (configuration.toFile().exists()) {
+            log.info("Processing configuration: {}", configuration);
+            org.dom4j.Document document = new SAXReader().read(configuration.toFile());
+            
+            attributes = new HashMap<>();
+
+            for (Node attr : document.selectNodes("//attributes/*"))
+                attributes.put(attr.getName(), attr.getText());
+
+            log.info("Read {} attributes", attributes.size());
+        }
+    }
         
     public void copyScriptsAndStyles() throws IOException {
         log.info("Copy scripts and styles.");
         
-        File rootRes = new File(outputDir + "/" + RES);
+        File rootRes = new File(targetDir + "/" + RES);
         if (!rootRes.exists()) rootRes.mkdirs();
         
-        for (String script : scripts)
+        for (String script : SCRIPTS)
             IOUtils.copy(getClass().getClassLoader().getResourceAsStream("scripts/" + script),
                     new FileOutputStream(rootRes.getAbsolutePath() + "/" + script));
+
+        search.writeScript(rootRes);
         
-        for (String style : stylesheets)
+        for (String style : STYLESHEETS)
             IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style),
                     new FileOutputStream(rootRes.getAbsolutePath() + "/" + style));
     }
@@ -182,24 +197,31 @@ public class DocGenerator {
         return name.contains("index");
     }
     
-    private String correctHtml(String html, String targetPath, int deep) throws Exception {
-        log.debug("correctHtml targetPath: {}, deep: {}", targetPath, deep);
+    private String correctHtml(String html, String targetPath, int depth) throws Exception {
+        log.debug("correctHtml targetPath: {}, deep: {}", targetPath, depth);
         
         if (toc == null) {
-            // The index file must be placed on the top directory.
+            // the index file must be placed on the top the root directory
             if (containsIndex(targetPath)) {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
+                // add search field
+                search.injectField(toc.select("#header"));
             }
             return html;
         }
         
         Document jsoup = Jsoup.parse(html);
+        Element head = jsoup.selectFirst("head");
+
+        if (search != null) {
+            final String relativePath = targetDir.toPath().relativize(Paths.get(targetPath)).toString().replace('\\', '/');
+            search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
+        }
         
         // inject JS files
-        Element head = jsoup.selectFirst("head");
-        for (String script : scripts)
-            head.append("<script src='" + StringUtils.repeat("../", deep) + RES  + "/" + script + "'/>");
+        for (String script : SCRIPTS_INJECT)
+            head.append("<script src='" + StringUtils.repeat("../", depth) + RES  + "/" + script + "'/>");
         
         // find of the top ToC
         Element pageToC = jsoup.selectFirst("#toc.toc");
@@ -222,20 +244,20 @@ public class DocGenerator {
                 if (pageToC != null)
                     a.after(pageToC);
             }
-            a.attr("href", StringUtils.repeat("../", deep) + href);
+            a.attr("href", StringUtils.repeat("../", depth) + href);
             a.attr("title", a.text());
         }
         
         html = jsoup.toString();
         
-        return html;    
+        return html;
     }
     
     public static void main(String[] args) throws Exception {
         // TODO: Use args4j.
-        String configDir = args[0], sourceDir = args[1], outputDir = args[2];
+        String configDir = args[0], sourceDir = args[1], targetDir = args[2];
         
-        DocGenerator gen = new DocGenerator(configDir, sourceDir, outputDir);
+        DocGenerator gen = new DocGenerator(configDir, sourceDir, targetDir);
         gen.process();
         int errors = gen.check();
         
