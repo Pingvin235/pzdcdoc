@@ -57,9 +57,14 @@ const $$ = new function() {
 			const $tocLinks = $('#toc.toc2 li a');
 			$tocLinks.removeClass('search');
 
+			const $searchCount = $('#search-count');
+			$searchCount.text('');
+
 			const searchValue = $input.val();
 			if (searchValue) {
-				idx.search(searchValue).forEach((hit) => {
+				const searchResult = idx.search(searchValue);
+				$searchCount.text(searchResult.length);
+				searchResult.forEach((hit) => {
 					$tocLinks.filter('[href$="' + hit.ref + '"]').addClass('search');
 				});
 			}
