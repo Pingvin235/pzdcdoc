@@ -48,8 +48,8 @@ public class DocGenerator {
         // https://lunrjs.com/guides/language_support.html
         "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js",
         "pzdcdoc.js"};
-    
-    private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
+    private static final String[] SCRIPTS_INJECT = SCRIPTS;
+    private static final String[] MODULES_INJECT = { Search.SCRIPT }; 
     private static final String[] STYLESHEETS = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
 
     // cached ToC from index.adoc for injecting everywhere
@@ -222,6 +222,10 @@ public class DocGenerator {
         // inject JS files
         for (String script : SCRIPTS_INJECT)
             head.append("<script src='" + StringUtils.repeat("../", depth) + RES  + "/" + script + "'/>");
+
+        // inject JS modules
+        for (String module : MODULES_INJECT)
+            head.append("<script type='module' src='./" + StringUtils.repeat("../", depth) + RES  + "/" + module + "'/>");
         
         // find of the top ToC
         Element pageToC = jsoup.selectFirst("#toc.toc");
