@@ -42,7 +42,7 @@ public class DocGenerator {
     @SuppressWarnings("unused")
     private final File configDir;
     private final File sourceDir;
-    private final File outputDir;
+    private final File targetDir;
     
     private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js", 
         // https://lunrjs.com/guides/language_support.html
@@ -59,24 +59,24 @@ public class DocGenerator {
     // 
     private Search search = new Search();
     
-    public DocGenerator(String configDir, String sourceDir, String outputDir) throws Exception {
+    public DocGenerator(String configDir, String sourceDir, String targetDir) throws Exception {
         this.configDir = new File(configDir);
         this.sourceDir = new File(sourceDir);
-        this.outputDir = new File(outputDir);
+        this.targetDir = new File(targetDir);
         
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
         
-        FileUtils.deleteDirectory(new File(outputDir));
+        FileUtils.deleteDirectory(new File(targetDir));
     }
     
     public void process() throws Exception {
-        process(sourceDir, outputDir, -1, false);
+        process(sourceDir, targetDir, -1, false);
         copyScriptsAndStyles();
     }
 
     public int check() throws Exception {
-        int errors = new LinksChecker(outputDir).check();
+        int errors = new LinksChecker(targetDir).check();
         if (errors > 0)
             log.error("ERROR COUNT => " + errors);
         return errors;
@@ -179,7 +179,7 @@ public class DocGenerator {
     public void copyScriptsAndStyles() throws IOException {
         log.info("Copy scripts and styles.");
         
-        File rootRes = new File(outputDir + "/" + RES);
+        File rootRes = new File(targetDir + "/" + RES);
         if (!rootRes.exists()) rootRes.mkdirs();
         
         for (String script : SCRIPTS)
@@ -215,7 +215,7 @@ public class DocGenerator {
         Element head = jsoup.selectFirst("head");
 
         if (search != null) {
-            final String relativePath = outputDir.toPath().relativize(Paths.get(targetPath)).toString();
+            final String relativePath = targetDir.toPath().relativize(Paths.get(targetPath)).toString();
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
         }
         
