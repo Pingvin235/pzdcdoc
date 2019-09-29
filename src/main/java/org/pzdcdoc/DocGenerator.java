@@ -255,9 +255,9 @@ public class DocGenerator {
     
     public static void main(String[] args) throws Exception {
         // TODO: Use args4j.
-        String configDir = args[0], sourceDir = args[1], outputDir = args[2];
+        String configDir = args[0], sourceDir = args[1], targetDir = args[2];
         
-        DocGenerator gen = new DocGenerator(configDir, sourceDir, outputDir);
+        DocGenerator gen = new DocGenerator(configDir, sourceDir, targetDir);
         gen.process();
         int errors = gen.check();
         
