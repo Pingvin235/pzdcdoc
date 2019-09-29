@@ -29,8 +29,8 @@ const $$ = new function() {
 		return ($e.keyCode || $e.which) == 13;
 	};
 
-	const initSearch = () => {
-		const idx = lunr(function () {
+	const buildIndex = () => {
+		return lunr(function () {
 			// https://lunrjs.com/guides/language_support.html
 			this.use(lunr.multiLanguage('en', 'ru', 'de'));
 
@@ -42,9 +42,16 @@ const $$ = new function() {
 				this.add(doc)
 			}, this)
 		});
+	}
+
+	const initSearch = () => {
+		let idx = undefined;
 
 		const $input = $('#search input');
 		$input.on("keypress", (e) => {
+			if (!idx)
+				idx = buildIndex();
+
 			if (!enterPressed(e)) return;
 
 			const $tocLinks = $('#toc.toc2 li a');
