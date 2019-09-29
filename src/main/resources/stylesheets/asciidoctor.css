@@ -457,6 +457,7 @@ p {margin-bottom: 1rem}
 
 #search-input {
 	width: 100%;
+	padding-left: 0.5em;
 }
 
 #search-input input {
