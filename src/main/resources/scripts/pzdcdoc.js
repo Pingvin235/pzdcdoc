@@ -47,8 +47,15 @@ const $$ = new function() {
 		$input.on("keypress", (e) => {
 			if (!enterPressed(e)) return;
 
-			const search = idx.search($input.val());
-			console.log(search);
+			const $tocLinks = $('#toc.toc2 li a');
+			$tocLinks.removeClass('search');
+
+			const searchValue = $input.val();
+			if (searchValue) {
+				idx.search(searchValue).forEach((hit) => {
+					$tocLinks.filter('[href$="' + hit.ref + '"]').addClass('search');
+				});
+			}
 		});
 	};
 	

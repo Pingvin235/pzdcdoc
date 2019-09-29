@@ -212,9 +212,7 @@ public class DocGenerator {
         }
         
         Document jsoup = Jsoup.parse(html);
-
         Element head = jsoup.selectFirst("head");
-        //head.attr("pzdoc-depth", String.valueOf(depth));
 
         if (search != null) {
             final String relativePath = outputDir.toPath().relativize(Paths.get(targetPath)).toString();
