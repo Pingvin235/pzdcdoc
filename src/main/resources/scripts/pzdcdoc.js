@@ -68,5 +68,4 @@ const $$ = new function() {
 $(function () {
 	$$.markPart();
 	$$.scrollTocToVisible();
-	$$.initSearch();
 });
