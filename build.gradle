@@ -74,17 +74,24 @@ tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
 
-// demo build
-task checkoutDemoDoc(type:Exec) {
-    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'i12-better-samples'
-
-    standardOutput = new ByteArrayOutputStream()
+// checkout projects for demo build to target/src-doc
+task checkoutDemoDoc() {
+    doFirst {
+        delete docSrcDir
+    }
+    exec {
+        commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'i12-better-samples'
+    }
+    delete "${docSrcDir}/.git"
+    exec {
+        commandLine 'git', 'clone', 'https://github.com/asciidoctor/asciidoctor.org.git', "${docSrcDir}/asciidoctor", '--depth', '1', '--branch', 'master'
+    }
+    /*standardOutput = new ByteArrayOutputStream()
     errorOutput = new ByteArrayOutputStream()
-
     doLast {
         logger.info(standardOutput.toString())
         logger.error(errorOutput.toString())
-    }
+    }*/
 }
 
 task buildDemoDoc(type:JavaExec, dependsOn: checkoutDemoDoc) {
