@@ -75,7 +75,7 @@ tasks.withType(Javadoc) {
 }
 
 task checkoutDemoDoc(type: Exec, dependsOn: clean) {
-    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'i12-better-samples'
+    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'master'
 }
 
 task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc']) {
