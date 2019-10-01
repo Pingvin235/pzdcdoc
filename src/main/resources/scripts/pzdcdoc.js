@@ -60,8 +60,17 @@ const $$ = new function() {
 			const $searchCount = $('#search-count');
 			$searchCount.text('');
 
-			const searchValue = $input.val();
+			let searchValue = $input.val();
 			if (searchValue) {
+				const tokens = searchValue.split(/\s+/);
+				
+				searchValue = '';
+				tokens.forEach(token => {
+					if (!token.match(/^[\+\-\~]/))
+						searchValue += ' +';
+					searchValue += token + ' ';
+				});
+
 				const searchResult = idx.search(searchValue);
 				$searchCount.text(searchResult.length);
 				searchResult.forEach(hit => {
