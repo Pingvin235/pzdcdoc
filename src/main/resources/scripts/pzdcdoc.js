@@ -55,7 +55,7 @@ const $$ = new function() {
 			if (!enterPressed(e)) return;
 
 			const $tocLinks = $('#toc.toc2 li a');
-			$tocLinks.removeClass('search');
+			$tocLinks.removeClass('search').removeAttr('target');
 
 			const $searchCount = $('#search-count');
 			$searchCount.text('');
@@ -69,7 +69,7 @@ const $$ = new function() {
 						const $a = $(this);
 						const url = $a.attr('href').replace('../', '');
 						if (url === hit.ref)
-							$a.addClass('search');
+							$a.addClass('search').attr('target', '_blank');
 					});
 				});
 			}
