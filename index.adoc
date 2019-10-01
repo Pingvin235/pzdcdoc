@@ -1,8 +1,6 @@
 = Demo ToC
 :nofooter:
 
-:doc-path: src/doc
-
 * <<README.adoc#, README>>
 * <<{doc-path}/changes.adoc#, Last changes>>
 * <<{doc-path}/about.adoc#, About>>

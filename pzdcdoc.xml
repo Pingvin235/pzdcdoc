@@ -3,6 +3,8 @@
 <pzdcdoc>
 	<!-- these attributes applied to each of processed files, may be overvritten inside -->
 	<attributes>
+		<doc-path>src/doc</doc-path>
+
 		<favicon>https://bgerp.ru/img/favicon.png</favicon>
 		<pzdc-javadoc>http://www.bgcrm.ru/doc/3.0/javadoc/</pzdc-javadoc>
 		<!-- sample of labels customization
