@@ -43,14 +43,9 @@ AsciiDoctor attributes from the file are included in all of converted `.adoc` fi
 * All the used references between `.adoc` are relative and automatically converted to HTML.
 
 == HOWTO test
-The link:demo/src[demo] set shows the key ideas using examples and may be used as a reference or a start set.
-
-Clone the repository, after execute in the directory:
+Clone the GIT repository, after execute in the directory:
 [source]
 ----
 gradlew buildDemoDoc
 ----
-That will build result to `target/doc`.
-
-Use "demo build" configuration from link:build.gradle[] as a sample for your own project.
-
+That will build result to `target/doc-out`, these files may be published on HTTP server.
