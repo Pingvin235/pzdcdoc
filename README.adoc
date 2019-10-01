@@ -22,7 +22,7 @@ you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].
 [square]
 * Delivered as a single artifact in Maven repository for simple integration in existing build processes.
 * Building documentation out of many files structured in original way with ToC.
-* Preserving structure, preview of documentation is link:src/doc/demo.adoc[available] in GitLab and GitHub.
+* Preserving structure, preview of documentation is <<src/doc/demo.adoc#, available>> in GitLab and GitHub.
 * Produce embedded JS search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
 * Internal references checking, no more broken links.
 * Extension for referencing of JavaDoc by class name.
