@@ -18,25 +18,31 @@ Ideally fits for continuous delivery approach, when documentation is considered 
 stored, handled together with other sources. Documentation is automatically built using GitLab CI and published, 
 you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].  
 
-The key features:
+=== The key features
 [square]
 * Delivered as a single artifact in Maven repository for simple integration in existing build processes.
-* Building documentation out of many files structure with common ToC.
-* Built-in search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
-* Handling of dependent resources (images, files).
-* Original approach for organization of files structure.
+* Building documentation out of many files structured in original way with ToC.
+* Preserving structure, preview of documentation is link:src/doc/demo.adoc[available] in GitLab and GitHub.
+* Produce embedded JS search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
 * Internal references checking, no more broken links.
 * Extension for referencing of JavaDoc by class name.
-* Some CSS adjustments.
-* Preview of documentation is link:demo/src/index.adoc[available] in GitLab and GitHub.
+* CSS enhancements.
 
-Logic:
+== Logic
 [square]
-* As parameter 
-* Everything starts from index.adoc - the
+* As parameter generator takes input and output directories.
+* Input directory may be taken directly from project or checked out from version control to outside like `target`. 
+In this case may be collected many GIT projects.
+* In the input directory mast be placed `index.adoc` with table of contents.
+* In the input directory may be placed `pzdcdoc.xml` file with different parameters.
+AsciiDoctor attributes from the file are included in all of converted `.adoc` files.
+* The generator goes through all the files in input dir and converting all with extension `.adoc` them to `.html`.
+** Directory starting from `.` are skipped.
+** Includes have to be named `.adocf` to avoid converting.
+** Resources (files, images) are recommened to place in `_res` subdirectory near of referencing `.adoc` file.
+* All the used references between `.adoc` are relative and automatically converted to HTML.
 
-
-== HOWTO
+== HOWTO test
 The link:demo/src[demo] set shows the key ideas using examples and may be used as a reference or a start set.
 
 Clone the repository, after execute in the directory:
@@ -44,7 +50,7 @@ Clone the repository, after execute in the directory:
 ----
 gradlew buildDemoDoc
 ----
-That will build result to target/doc.
+That will build result to `target/doc`.
 
 Use "demo build" configuration from link:build.gradle[] as a sample for your own project.
 
