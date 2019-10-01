@@ -55,17 +55,31 @@ const $$ = new function() {
 			if (!enterPressed(e)) return;
 
 			const $tocLinks = $('#toc.toc2 li a');
-			$tocLinks.removeClass('search');
+			$tocLinks.removeClass('search').removeAttr('target');
 
 			const $searchCount = $('#search-count');
 			$searchCount.text('');
 
-			const searchValue = $input.val();
+			let searchValue = $input.val();
 			if (searchValue) {
+				const tokens = searchValue.split(/\s+/);
+				
+				searchValue = '';
+				tokens.forEach(token => {
+					if (!token.match(/^[\+\-\~]/))
+						searchValue += ' +';
+					searchValue += token + ' ';
+				});
+
 				const searchResult = idx.search(searchValue);
 				$searchCount.text(searchResult.length);
-				searchResult.forEach((hit) => {
-					$tocLinks.filter('[href$="' + hit.ref + '"]').addClass('search');
+				searchResult.forEach(hit => {
+					$tocLinks.each(function () {
+						const $a = $(this);
+						const url = $a.attr('href').replace(/\.\.\//g, '');
+						if (url === hit.ref)
+							$a.addClass('search').attr('target', '_blank');
+					});
 				});
 			}
 		});
