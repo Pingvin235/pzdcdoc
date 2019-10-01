@@ -1,11 +1,12 @@
-= Table of contents
+= Demo ToC
 :nofooter:
 
+:doc-path: src/doc
 
-
-* <<changes.adoc#, Last changes>>
-* <<about.adoc#, About>>
+* <<README.adoc#, README>>
+* <<{doc-path}/changes.adoc#, Last changes>>
+* <<{doc-path}/about.adoc#, About>>
 * Modules
-** <<module/index.adoc#, Module>>
+** <<{doc-path}/module/index.adoc#, Module>>
 
-:dddd: sdfsfsdfs
+
