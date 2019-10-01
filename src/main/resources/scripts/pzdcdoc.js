@@ -76,7 +76,7 @@ const $$ = new function() {
 				searchResult.forEach(hit => {
 					$tocLinks.each(function () {
 						const $a = $(this);
-						const url = $a.attr('href').replace('../', '');
+						const url = $a.attr('href').replace(/\.\.\//g, '');
 						if (url === hit.ref)
 							$a.addClass('search').attr('target', '_blank');
 					});
