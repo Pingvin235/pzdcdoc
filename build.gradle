@@ -1,4 +1,4 @@
-/* 
+/*
   Local publishing:
     gradlew publishToMavenLocal
   To Sonatype:
@@ -12,14 +12,17 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 repositories {
-	mavenLocal()
-	mavenCentral()
+    mavenLocal()
+    mavenCentral()
 }
 
 buildDir = 'target'
 version = '1.3'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+ext.admin = hasProperty('sonatypeUsername')
+ext.docSrcDir = "${buildDir}/doc-src"
 
 eclipse {
     classpath {
@@ -34,12 +37,12 @@ idea {
 }
 
 configurations {
-	all {
-    	transitive = false
+    all {
+        transitive = false
     }
     // for demo build
     pzdcdoc {
-    	transitive = true
+        transitive = true
     }
 }
 
@@ -58,7 +61,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.0.pr3'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0.pr3'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.0.pr3'
-	
+    
     // for demo build
     pzdcdoc group: 'org.pzdcdoc', name: 'pzdcdoc', version: "${project.version}"
 }
@@ -71,11 +74,14 @@ tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
 
-// demo build
-task buildDemoDoc(type:JavaExec) {
-	classpath =  configurations.pzdcdoc
-	main = 'org.pzdcdoc.DocGenerator'
-	args 'NOTUSED', 'demo/src', 'target/doc'
+task checkoutDemoDoc(type: Exec, dependsOn: clean) {
+    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'master'
+}
+
+task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc']) {
+    classpath = configurations.pzdcdoc
+    main = 'org.pzdcdoc.DocGenerator'
+    args 'NOTUSED', docSrcDir, 'target/doc-out'
 }
 
 task sourceJar(type: Jar) {
@@ -87,8 +93,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier "javadoc"
     from javadoc.destinationDir
 }
-
-ext.admin = hasProperty('sonatypeUsername')
 
 artifacts {
     archives sourceJar
@@ -106,7 +110,7 @@ signing {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-        	groupId 'org.pzdcdoc'
+            groupId 'org.pzdcdoc'
             artifactId 'pzdcdoc'
             version "${project.version}"
                     
@@ -149,15 +153,15 @@ publishing {
         }
     }
 
-	repositories {
-	    maven {
-	        url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-	        credentials {
-	            username findProperty('sonatypeUsername')
-	            password findProperty('sonatypePassword')
-	        }
-	    }
-	}
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username findProperty('sonatypeUsername')
+                password findProperty('sonatypePassword')
+            }
+        }
+    }
 }
 
 def customizePom(pom) {

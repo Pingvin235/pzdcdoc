@@ -5,4 +5,4 @@ Last changes in the documentation.
 
 == Log of changes
 [square]
-* <<about.adoc#, 25.04.2019>> Added the chapter "About".
+* <<demo.adoc#, 01.10.2019>> Added the chapter "Demo".
