@@ -86,7 +86,7 @@ task checkoutDemoAsciiDoctor(type: Exec) {
 task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoPzdcDoc', 'checkoutDemoAsciiDoctor']) {
     classpath = configurations.pzdcdoc
     main = 'org.pzdcdoc.DocGenerator'
-    args 'NOTUSED', 'demo/src', 'target/doc'
+    args 'NOTUSED', docSrcDir, 'target/doc'
 }
 
 task sourceJar(type: Jar) {
