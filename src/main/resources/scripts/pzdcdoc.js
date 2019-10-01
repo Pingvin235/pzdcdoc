@@ -64,8 +64,13 @@ const $$ = new function() {
 			if (searchValue) {
 				const searchResult = idx.search(searchValue);
 				$searchCount.text(searchResult.length);
-				searchResult.forEach((hit) => {
-					$tocLinks.filter('[href$="' + hit.ref + '"]').addClass('search');
+				searchResult.forEach(hit => {
+					$tocLinks.each(function () {
+						const $a = $(this);
+						const url = $a.attr('href').replace('../', '');
+						if (url === hit.ref)
+							$a.addClass('search');
+					});
 				});
 			}
 		});
