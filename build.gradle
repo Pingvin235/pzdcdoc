@@ -74,16 +74,11 @@ tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
 
-task checkoutDemoPzdcDoc(type: Exec) {
+task checkoutDemoDoc(type: Exec, dependsOn: clean) {
     commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'i12-better-samples'
 }
 
-task checkoutDemoAsciiDoctor(type: Exec) {
-    mustRunAfter checkoutDemoPzdcDoc
-    commandLine 'git', 'clone', 'https://github.com/asciidoctor/asciidoctor.org.git', "${docSrcDir}/asciidoctor", '--depth', '1', '--branch', 'master'
-}
-
-task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoPzdcDoc', 'checkoutDemoAsciiDoctor']) {
+task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc']) {
     classpath = configurations.pzdcdoc
     main = 'org.pzdcdoc.DocGenerator'
     args 'NOTUSED', docSrcDir, 'target/doc'
