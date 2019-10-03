@@ -39,7 +39,7 @@ AsciiDoctor attributes from the file are included in all of converted `.adoc` fi
 * The generator goes through all the files in input dir and converting all with extension `.adoc` them to `.html`.
 ** Directory starting from `.` are skipped.
 ** Includes have to be named `.adocf` to avoid converting.
-** Resources (files, images) are recommened to place in `_res` subdirectory near of referencing `.adoc` file.
+** Resources (files, images) must be placed in `_res` subdirectory near of referencing `.adoc` file, they are automatically copied.
 * All the used references between `.adoc` are relative and automatically converted to HTML.
 
 == How to test
