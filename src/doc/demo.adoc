@@ -133,9 +133,17 @@ For any selection except of links use bold font:
 *variable*, *path*, *parameter*, *interface => menu => item*
 
 == Diagrams
+Supported Ditaa and PlantUML diagrams.
 
+https://asciidoctor.org/docs/asciidoctor-diagram/
 https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
 
+=== Ditaa
+http://ditaa.sourceforge.net/
+
+Use http://asciiflow.com/ for editing.
+
+:imagesdir: _res
 [ditaa]
 ----
 +------------------+       +---------------+

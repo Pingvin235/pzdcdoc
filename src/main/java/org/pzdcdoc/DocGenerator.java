@@ -121,6 +121,7 @@ public class DocGenerator {
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", depth) + RES)
                         .linkCss(true)
+                        .attribute("imagesoutdir", RES)
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)
                         .tableOfContents(true)
