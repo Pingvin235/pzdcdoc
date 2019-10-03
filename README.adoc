@@ -34,7 +34,7 @@ On top of AsciiDoctor there are added the following features:
 == Logic
 [square]
 * As parameter generator takes input and output directories.
-* Input directory may be taken directly from project or checked out from version control to outside like `target`. 
+* Input directory may be copied directly from project or checked out from version control to outside like `target`. 
 First way is easier, in the second one may be combined doc sources out of many GIT projects.
 In the input directory may be placed:
 * `index.adoc` with table of contents. Only one index on the highest level will be used.
