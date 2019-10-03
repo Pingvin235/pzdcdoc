@@ -22,7 +22,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext.admin = hasProperty('sonatypeUsername')
+ext.docBranch = project.hasProperty('docBranch') ? project.findProperty('docBranch') : 'master'
 ext.docSrcDir = "${buildDir}/doc-src"
+ext.docOutDir = "${buildDir}/doc-out"
 
 eclipse {
     classpath {
@@ -54,6 +56,7 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
     compile group: 'org.asciidoctor', name: 'asciidoctorj', version: '2.1.0'
     compile group: 'org.asciidoctor', name: 'asciidoctorj-api', version: '2.1.0'
+    compile group: 'org.asciidoctor', name: 'asciidoctorj-diagram', version: '1.5.18'
     compile group: 'com.beust', name: 'jcommander', version: '1.78'
     compile group: 'org.jruby', name: 'jruby-complete', version: '9.2.8.0'
     compile group: 'org.dom4j', name: 'dom4j', version: '2.1.1'
@@ -74,14 +77,30 @@ tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
 
-task checkoutDemoDoc(type: Exec, dependsOn: clean) {
-    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'master'
+defaultTasks 'clean', 'buildDemoDocLocal'
+
+task copyDemoDocLocal(type: Copy) {
+    mustRunAfter 'clean'
+    from 'src/doc'
+    into docSrcDir
 }
 
-task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc']) {
+task buildDemoDocLocal(type:JavaExec, dependsOn: ['compileJava', 'copyDemoDocLocal']) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.pzdcdoc.DocGenerator'
+    args 'NOTUSED', docSrcDir, docOutDir
+}
+
+task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
+    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', "${docBranch}"
+}
+
+// Sample of generation out of branch:
+// gradlew buildDemoDoc -PdocBranch=i5-diagrams
+task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenLocal']) {
     classpath = configurations.pzdcdoc
     main = 'org.pzdcdoc.DocGenerator'
-    args 'NOTUSED', docSrcDir, 'target/doc-out'
+    args 'NOTUSED', docSrcDir, docOutDir
 }
 
 task sourceJar(type: Jar) {

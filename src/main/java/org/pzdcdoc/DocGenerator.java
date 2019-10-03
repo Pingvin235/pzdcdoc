@@ -54,9 +54,6 @@ public class DocGenerator {
 
     // cached ToC from index.adoc for injecting everywhere
     private Element toc;
-    // global attributes from configuration file
-    private Map<String, Object> attributes;
-    // 
     private Search search = new Search();
     
     public DocGenerator(String configDir, String sourceDir, String targetDir) throws Exception {
@@ -66,12 +63,14 @@ public class DocGenerator {
         
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
+
+        asciidoctor.requireLibrary("asciidoctor-diagram");
         
         FileUtils.deleteDirectory(new File(targetDir));
     }
     
     public void process() throws Exception {
-        process(sourceDir, targetDir, -1, false);
+        process(sourceDir, targetDir, -1, false, new HashMap<>());
         copyScriptsAndStyles();
     }
 
@@ -82,7 +81,7 @@ public class DocGenerator {
         return errors;
     }
 
-    public void process(File source, File target, int depth, boolean resource) throws Exception {
+    public void process(File source, File target, int depth, boolean resource, Map<String, Object> attributes) throws Exception {
         final String sourceName = source.getName();
         
         // hidden resources, names started by .
@@ -110,19 +109,19 @@ public class DocGenerator {
                     return 1;
                 return 0;
             });
+
+            attributes = loadAttributes(source, attributes);
             
             for (File file : files)
-                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, resourceDir);
+                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, resourceDir, attributes);
         } else {
             if (sourceName.endsWith(".adoc")) {
                 log.info("Processing: " + source);
 
-                if (containsIndex(sourceName) && attributes == null)
-                    loadAttributes(source);
-
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", depth) + RES)
                         .linkCss(true)
+                        .attribute("imagesoutdir", RES)
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)
                         .tableOfContents(true)
@@ -131,8 +130,7 @@ public class DocGenerator {
                 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
 
-                if (attributes != null)
-                    attrs.setAttributes(attributes);
+                attrs.setAttributes(attributes);
 
                 Options options = OptionsBuilder.options()
                         .toFile(false)
@@ -161,19 +159,20 @@ public class DocGenerator {
         }
     }
 
-    private void loadAttributes(File source) throws DocumentException {
-        Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
+    private Map<String, Object> loadAttributes(File source, Map<String, Object> attributes) throws DocumentException {
+        Path configuration = source.toPath().resolve("pzdcdoc.xml");
         if (configuration.toFile().exists()) {
             log.info("Processing configuration: {}", configuration);
             org.dom4j.Document document = new SAXReader().read(configuration.toFile());
             
-            attributes = new HashMap<>();
+            attributes = new HashMap<>(attributes);
 
             for (Node attr : document.selectNodes("//attributes/*"))
                 attributes.put(attr.getName(), attr.getText());
 
             log.info("Read {} attributes", attributes.size());
         }
+        return attributes;
     }
         
     public void copyScriptsAndStyles() throws IOException {
@@ -214,9 +213,17 @@ public class DocGenerator {
         Document jsoup = Jsoup.parse(html);
         Element head = jsoup.selectFirst("head");
 
+        // add content to search index
         if (search != null) {
             final String relativePath = targetDir.toPath().relativize(Paths.get(targetPath)).toString().replace('\\', '/');
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
+        }
+
+        // patch diagram images links
+        for (Element diag : jsoup.select("img[src^=diag]")) {
+            String src = RES + "/" + diag.attr("src");
+            log.info("Corrected diagram path to: {}", src);
+            diag.attr("src", src);
         }
         
         // inject JS files
@@ -254,7 +261,6 @@ public class DocGenerator {
     }
     
     public static void main(String[] args) throws Exception {
-        // TODO: Use args4j.
         String configDir = args[0], sourceDir = args[1], targetDir = args[2];
         
         DocGenerator gen = new DocGenerator(configDir, sourceDir, targetDir);

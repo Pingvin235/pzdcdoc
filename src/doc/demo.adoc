@@ -112,7 +112,7 @@ Big images may be restricted by width, recommended 600px for horizontal oriented
 
 image::_res/image.png[width="600px"]
 
-Link to JavaDoc of the class: javadoc:ru.bgerp.tool.asciidoc.DocGenerator[]
+Link to JavaDoc of the class: javadoc:ru.bgcrm.dao.user.UserDAO[]
 
 Another document: <<module/index.adoc#, Module>>
 
@@ -131,6 +131,27 @@ Such link causes a validation error, may be used for marking not finished places
 == Selections
 For any selection except of links use bold font: 
 *variable*, *path*, *parameter*, *interface => menu => item*
+
+[[diagrams]]
+== Diagrams
+Supported Ditaa and PlantUML diagrams.
+[square]
+* https://asciidoctor.org/docs/asciidoctor-diagram/
+* https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
+
+=== Ditaa
+http://ditaa.sourceforge.net/
+
+Use http://asciiflow.com/ for editing.
+
+[ditaa]
+----
++------------------+       +---------------+
+|                  |       |               |
+|  Test for Adoc   +------>+   Diagrams    |
+|                  |       |               |
++------------------+       +---------------+
+----
 
 == Tools
 AsciiDoctor may be edited in any text editor, but as more comfortable way I use an Eclipse plugin.

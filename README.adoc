@@ -6,6 +6,19 @@ Java binding of the excellent software documentation framework link:https://asci
 Additionally to the information below you may have a look on the link:https://docs.google.com/presentation/d/1MEIMT9SEnepZdLMVFv2Koev3TILRGn_cNgdT25eS-Zg/edit?usp=sharing[Presentation]
 
 == About
+PzdcDoc is the complex ready-to-use solution, providing clear way and workflow for organizing software documentation.
+On top of AsciiDoctor there are added the following features:
+[square]
+* Delivered as a single Java artifact in Maven repository for simple integration in existing build processes.
+* Building documentation out of many files structured in original way with ToC.
+* Preserving structure, preview of documentation is <<src/doc/demo.adoc#, available>> in GitLab and GitHub.
+* Internal references checking, no more broken links.
+* Produce embedded JS search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
+* <<src/doc/demo#diagrams, Diagrams>> generation.
+* Extension for referencing of JavaDoc by class name.
+* CSS enhancements.
+
+=== History
 Initially this tool was developed for the link:https://bgerp.org[BGERP], project of Open Source ERP/CRM system.
 It was successfully used there as one system with GIT stored sources for support of:
 [square]
@@ -16,36 +29,42 @@ It was successfully used there as one system with GIT stored sources for support
 The single tool has replaced Confluence + MediaWiki + self-written DB structure describing utility in a more convenient way.
 Ideally fits for continuous delivery approach, when documentation is considered as essential part of product and written, 
 stored, handled together with other sources. Documentation is automatically built using GitLab CI and published, 
-you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].  
+you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].
 
-=== The key features
-[square]
-* Delivered as a single Java artifact in Maven repository for simple integration in existing build processes.
-* Building documentation out of many files structured in original way with ToC.
-* Preserving structure, preview of documentation is <<src/doc/demo.adoc#, available>> in GitLab and GitHub.
-* Produce embedded JS search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
-* Internal references checking, no more broken links.
-* Extension for referencing of JavaDoc by class name.
-* CSS enhancements.
+== Demo
+Clone the GIT repository, after execute in the directory one of the following tests.
+You would need Java version 8 or higher.
+Both produce result to `target/doc-out`, these files may be published on HTTP server.
 
-== Logic
+=== Simple test with local files
+[source]
+----
+gradlew
+----
+
+Default task `buildDemoDocLocal` uses `src/doc` directory as an input and compiles classes from sources.
+Good for first start and testing changes.
+
+=== Complex test with checking out GIT
+[source]
+----
+gradlew buildDemoDoc
+----
+
+Extracts the project data from GIT and uses Maven artifact of PzdcDoc for running.
+That sample suits for integrating to other projects. 
+You may see the result here: http://pzdcdoc.org/demo
+
+== How does it work
 [square]
 * As parameter generator takes input and output directories.
-* Input directory may be taken directly from project or checked out from version control to outside like `target`. 
+* Input directory may be copied directly from project or checked out from version control to outside like `target`. 
 First way is easier, in the second one may be combined doc sources out of many GIT projects.
-* In the input directory mast be placed `index.adoc` with table of contents.
-* In the input directory may be placed `pzdcdoc.xml` file with different parameters.
-AsciiDoctor attributes from the file are included in all of converted `.adoc` files.
+In the input directory may be placed:
+* `index.adoc` with table of contents. Only one index on the highest level will be used.
+* `pzdcdoc.xml` file with AsciiDoctor attributes, these will be implicitly included in each of `.adoc` file starting from the directory, where `pzdcdoc.xml` is placed. This means, that this configuration is inherited and may be overwritten.
 * The generator goes through all the files in input dir and converting all with extension `.adoc` them to `.html`.
 ** Directory starting from `.` are skipped.
 ** Includes have to be named `.adocf` to avoid converting.
 ** Resources (files, images) must be placed in `_res` subdirectory near of referencing `.adoc` file, they are automatically copied.
 * All the used references between `.adoc` are relative and automatically converted to HTML.
-
-== How to test
-Clone the GIT repository, after execute in the directory:
-[source]
-----
-gradlew buildDemoDoc
-----
-That will build result to `target/doc-out`, these files may be published on HTTP server.
