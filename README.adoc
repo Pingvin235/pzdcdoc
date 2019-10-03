@@ -18,13 +18,16 @@ Ideally fits for continuous delivery approach, when documentation is considered 
 stored, handled together with other sources. Documentation is automatically built using GitLab CI and published, 
 you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].  
 
-=== The key features
+=== Key features
+PzdcDoc is the complex ready-to-use solution, providing clear way and workflow for organizing software documentation.
+On top of AsciiDoctor there are added the following features:
 [square]
 * Delivered as a single Java artifact in Maven repository for simple integration in existing build processes.
 * Building documentation out of many files structured in original way with ToC.
 * Preserving structure, preview of documentation is <<src/doc/demo.adoc#, available>> in GitLab and GitHub.
-* Produce embedded JS search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
 * Internal references checking, no more broken links.
+* Produce embedded JS search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
+* <<src/doc/demo#diagrams, Diagrams>> generation.
 * Extension for referencing of JavaDoc by class name.
 * CSS enhancements.
 
