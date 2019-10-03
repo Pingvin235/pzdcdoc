@@ -1,0 +1,7 @@
+= Demo Local ToC
+:nofooter:
+
+* <<demo.adoc#, Demo AsciiDoctor>>
+* Modules
+** <<module/index.adoc#, Module>>
+* <<changes.adoc#, Last changes>>
