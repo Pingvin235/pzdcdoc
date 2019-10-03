@@ -95,6 +95,8 @@ task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
     commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', "${docBranch}"
 }
 
+// Sample of generation out of branch:
+// gradlew buildDemoDoc -PdocBranch=i5-diagrams
 task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenLocal']) {
     classpath = configurations.pzdcdoc
     main = 'org.pzdcdoc.DocGenerator'
