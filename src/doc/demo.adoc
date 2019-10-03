@@ -135,9 +135,8 @@ For any selection except of links use bold font:
 [[diagrams]]
 == Diagrams
 Supported Ditaa and PlantUML diagrams.
-
-https://asciidoctor.org/docs/asciidoctor-diagram/
-https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
+* https://asciidoctor.org/docs/asciidoctor-diagram/
+* https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
 
 === Ditaa
 http://ditaa.sourceforge.net/
@@ -159,7 +158,6 @@ AsciiDoctor may be edited in any text editor, but as more comfortable way I use 
 image::_res/eclipse_plugin.png[]
 
 Features:
-[square]
 * structure preview in *Outline* section;
 * hot keys like *Ctrl + b* for typical formatting options.
 
