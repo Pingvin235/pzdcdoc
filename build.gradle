@@ -23,6 +23,7 @@ targetCompatibility = 1.8
 
 ext.admin = hasProperty('sonatypeUsername')
 ext.docSrcDir = "${buildDir}/doc-src"
+ext.docOutDir = "${buildDir}/doc-out"
 
 eclipse {
     classpath {
@@ -75,12 +76,18 @@ tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
 
-defaultTasks 'clean', 'buildDemoDocLocal'
+defaultTasks 'buildDemoDocLocal'
 
-task buildDemoDocLocal(type:JavaExec, dependsOn: compileJava) {
+task buildDemoDocLocal(type:JavaExec, dependsOn: ['clean', 'compileJava']) {
+    doFirst {
+        copy {
+            from 'src/doc/**'
+            into docOutDir
+        }
+    }
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.pzdcdoc.DocGenerator'
-    args 'NOTUSED', 'src/doc', 'target/doc-out'
+    args 'NOTUSED', docSrcDir, docOutDir
 }
 
 task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
@@ -90,7 +97,7 @@ task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
 task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenLocal']) {
     classpath = configurations.pzdcdoc
     main = 'org.pzdcdoc.DocGenerator'
-    args 'NOTUSED', docSrcDir, 'target/doc-out'
+    args 'NOTUSED', docSrcDir, docOutDir
 }
 
 task sourceJar(type: Jar) {
