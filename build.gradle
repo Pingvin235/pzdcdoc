@@ -91,7 +91,10 @@ task buildDemoDocLocal(type:JavaExec, dependsOn: ['compileJava', 'copyDemoDocLoc
 }
 
 task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
-    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'master'
+    doFirst {
+        ext.docBranch = project.hasProperty('docBranch') ? project.findProperty('docBranch') : 'master'
+    }
+    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', "${docBranch}"
 }
 
 task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenLocal']) {
