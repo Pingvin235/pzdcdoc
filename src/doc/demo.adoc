@@ -159,6 +159,7 @@ AsciiDoctor may be edited in any text editor, but as more comfortable way I use 
 image::_res/eclipse_plugin.png[]
 
 Features:
+[square]
 * structure preview in *Outline* section;
 * hot keys like *Ctrl + b* for typical formatting options.
 
