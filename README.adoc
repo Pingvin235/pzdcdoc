@@ -33,9 +33,9 @@ you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].
 * As parameter generator takes input and output directories.
 * Input directory may be taken directly from project or checked out from version control to outside like `target`. 
 First way is easier, in the second one may be combined doc sources out of many GIT projects.
-* In the input directory mast be placed `index.adoc` with table of contents.
-* In the input directory may be placed `pzdcdoc.xml` file with different parameters.
-AsciiDoctor attributes from the file are included in all of converted `.adoc` files.
+In the input directory may be placed:
+* `index.adoc` with table of contents. Only one index on the highest level will be used.
+* `pzdcdoc.xml` file with AsciiDoctor attributes, these will be implicitly included in each of `.adoc` file starting from the directory, where `pzdcdoc.xml` is placed. This means, that this configuration is inherited and may be overwritten.
 * The generator goes through all the files in input dir and converting all with extension `.adoc` them to `.html`.
 ** Directory starting from `.` are skipped.
 ** Includes have to be named `.adocf` to avoid converting.

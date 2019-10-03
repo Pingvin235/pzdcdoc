@@ -54,9 +54,6 @@ public class DocGenerator {
 
     // cached ToC from index.adoc for injecting everywhere
     private Element toc;
-    // global attributes from configuration file
-    private Map<String, Object> attributes;
-    // 
     private Search search = new Search();
     
     public DocGenerator(String configDir, String sourceDir, String targetDir) throws Exception {
@@ -71,7 +68,7 @@ public class DocGenerator {
     }
     
     public void process() throws Exception {
-        process(sourceDir, targetDir, -1, false);
+        process(sourceDir, targetDir, -1, false, new HashMap<>());
         copyScriptsAndStyles();
     }
 
@@ -82,7 +79,7 @@ public class DocGenerator {
         return errors;
     }
 
-    public void process(File source, File target, int depth, boolean resource) throws Exception {
+    public void process(File source, File target, int depth, boolean resource, Map<String, Object> attributes) throws Exception {
         final String sourceName = source.getName();
         
         // hidden resources, names started by .
@@ -112,13 +109,12 @@ public class DocGenerator {
             });
             
             for (File file : files)
-                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, resourceDir);
+                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, resourceDir, attributes);
         } else {
             if (sourceName.endsWith(".adoc")) {
                 log.info("Processing: " + source);
 
-                if (containsIndex(sourceName) && attributes == null)
-                    loadAttributes(source);
+                attributes = loadAttributes(source, attributes);
 
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", depth) + RES)
@@ -161,19 +157,20 @@ public class DocGenerator {
         }
     }
 
-    private void loadAttributes(File source) throws DocumentException {
+    private Map<String, Object> loadAttributes(File source, Map<String, Object> attributes) throws DocumentException {
         Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
         if (configuration.toFile().exists()) {
             log.info("Processing configuration: {}", configuration);
             org.dom4j.Document document = new SAXReader().read(configuration.toFile());
             
-            attributes = new HashMap<>();
+            attributes = new HashMap<>(attributes);
 
             for (Node attr : document.selectNodes("//attributes/*"))
                 attributes.put(attr.getName(), attr.getText());
 
             log.info("Read {} attributes", attributes.size());
         }
+        return attributes;
     }
         
     public void copyScriptsAndStyles() throws IOException {
