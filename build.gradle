@@ -83,11 +83,11 @@ task buildDemoDocLocal(type:JavaExec, dependsOn: compileJava) {
     args 'NOTUSED', 'src/doc', 'target/doc-out'
 }
 
-task checkoutDemoDoc(type: Exec, dependsOn: clean) {
+task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
     commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', 'master'
 }
 
-task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc']) {
+task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenLocal']) {
     classpath = configurations.pzdcdoc
     main = 'org.pzdcdoc.DocGenerator'
     args 'NOTUSED', docSrcDir, 'target/doc-out'
