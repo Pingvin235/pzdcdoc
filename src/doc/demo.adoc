@@ -135,6 +135,7 @@ For any selection except of links use bold font:
 [[diagrams]]
 == Diagrams
 Supported Ditaa and PlantUML diagrams.
+[square]
 * https://asciidoctor.org/docs/asciidoctor-diagram/
 * https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
 
