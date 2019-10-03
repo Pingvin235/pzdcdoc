@@ -112,7 +112,7 @@ Big images may be restricted by width, recommended 600px for horizontal oriented
 
 image::_res/image.png[width="600px"]
 
-Link to JavaDoc of the class: javadoc:ru.bgerp.tool.asciidoc.DocGenerator[]
+Link to JavaDoc of the class: javadoc:ru.bgcrm.dao.user.UserDAO[]
 
 Another document: <<module/index.adoc#, Module>>
 
