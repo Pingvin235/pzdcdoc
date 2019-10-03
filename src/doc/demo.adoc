@@ -132,6 +132,16 @@ Such link causes a validation error, may be used for marking not finished places
 For any selection except of links use bold font: 
 *variable*, *path*, *parameter*, *interface => menu => item*
 
+== Diagrams
+----
+[ditaa]
++------------------+       +---------------+
+|                  |       |               |
+|  Test for Adoc   +------>+   Diagrams    |
+|                  |       |               |
++------------------+       +---------------+
+----
+
 == Tools
 AsciiDoctor may be edited in any text editor, but as more comfortable way I use an Eclipse plugin.
 

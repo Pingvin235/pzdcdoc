@@ -43,9 +43,25 @@ AsciiDoctor attributes from the file are included in all of converted `.adoc` fi
 * All the used references between `.adoc` are relative and automatically converted to HTML.
 
 == How to test
-Clone the GIT repository, after execute in the directory:
+Clone the GIT repository, after execute in the directory one of the following tests.
+You would need Java version 8 or higher.
+Both produce result to `target/doc-out`, these files may be published on HTTP server.
+
+=== Simple test with local files
+[source]
+----
+gradlew
+----
+
+Default task `buildDemoDocLocal` uses `src/doc` directory as an input and compiles classes from sources.
+Good for first start and testing changes.
+
+=== Complex test with checking out GIT
 [source]
 ----
 gradlew buildDemoDoc
 ----
-That will build result to `target/doc-out`, these files may be published on HTTP server.
+
+Extracts the project data from GIT and uses Maven artifact of PzdcDoc for running.
+That sample suits for integrating to other projects.
+

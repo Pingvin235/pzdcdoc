@@ -54,6 +54,7 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
     compile group: 'org.asciidoctor', name: 'asciidoctorj', version: '2.1.0'
     compile group: 'org.asciidoctor', name: 'asciidoctorj-api', version: '2.1.0'
+    compile group: 'org.asciidoctor', name: 'asciidoctorj-diagram', version: '1.5.18'
     compile group: 'com.beust', name: 'jcommander', version: '1.78'
     compile group: 'org.jruby', name: 'jruby-complete', version: '9.2.8.0'
     compile group: 'org.dom4j', name: 'dom4j', version: '2.1.1'
@@ -72,6 +73,14 @@ tasks.withType(JavaCompile) {
 
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
+}
+
+defaultTasks 'clean', 'buildDemoDocLocal'
+
+task buildDemoDocLocal(type:JavaExec, dependsOn: compileJava) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.pzdcdoc.DocGenerator'
+    args 'NOTUSED', 'src/doc', 'target/doc-out'
 }
 
 task checkoutDemoDoc(type: Exec, dependsOn: clean) {
