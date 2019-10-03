@@ -107,14 +107,14 @@ public class DocGenerator {
                     return 1;
                 return 0;
             });
+
+            attributes = loadAttributes(source, attributes);
             
             for (File file : files)
                 process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, resourceDir, attributes);
         } else {
             if (sourceName.endsWith(".adoc")) {
                 log.info("Processing: " + source);
-
-                attributes = loadAttributes(source, attributes);
 
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", depth) + RES)
@@ -157,7 +157,7 @@ public class DocGenerator {
     }
 
     private Map<String, Object> loadAttributes(File source, Map<String, Object> attributes) throws DocumentException {
-        Path configuration = source.toPath().getParent().resolve("pzdcdoc.xml");
+        Path configuration = source.toPath().resolve("pzdcdoc.xml");
         if (configuration.toFile().exists()) {
             log.info("Processing configuration: {}", configuration);
             org.dom4j.Document document = new SAXReader().read(configuration.toFile());
