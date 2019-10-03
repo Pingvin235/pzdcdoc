@@ -213,9 +213,17 @@ public class DocGenerator {
         Document jsoup = Jsoup.parse(html);
         Element head = jsoup.selectFirst("head");
 
+        // add content to search index
         if (search != null) {
             final String relativePath = targetDir.toPath().relativize(Paths.get(targetPath)).toString().replace('\\', '/');
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
+        }
+
+        // patch diagram images links
+        for (Element diag : jsoup.select("img[src^=diag]")) {
+            String src = RES + "/" + diag.attr("src");
+            log.info("Corrected diagram path to: {}", src);
+            diag.attr("src", src);
         }
         
         // inject JS files

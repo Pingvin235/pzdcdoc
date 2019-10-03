@@ -143,7 +143,6 @@ http://ditaa.sourceforge.net/
 
 Use http://asciiflow.com/ for editing.
 
-:imagesdir: _res
 [ditaa]
 ----
 +------------------+       +---------------+
