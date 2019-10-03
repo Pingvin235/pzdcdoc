@@ -63,6 +63,8 @@ public class DocGenerator {
         
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
+
+        asciidoctor.requireLibrary("asciidoctor-diagram");
         
         FileUtils.deleteDirectory(new File(targetDir));
     }
@@ -118,6 +120,7 @@ public class DocGenerator {
 
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", depth) + RES)
+                        .imagesDir(RES)
                         .linkCss(true)
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)

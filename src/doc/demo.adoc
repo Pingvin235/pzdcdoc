@@ -133,8 +133,11 @@ For any selection except of links use bold font:
 *variable*, *path*, *parameter*, *interface => menu => item*
 
 == Diagrams
-----
+
+https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
+
 [ditaa]
+----
 +------------------+       +---------------+
 |                  |       |               |
 |  Test for Adoc   +------>+   Diagrams    |
