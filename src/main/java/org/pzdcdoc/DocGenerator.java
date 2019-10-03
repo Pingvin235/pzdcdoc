@@ -127,8 +127,7 @@ public class DocGenerator {
                 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
 
-                if (attributes != null)
-                    attrs.setAttributes(attributes);
+                attrs.setAttributes(attributes);
 
                 Options options = OptionsBuilder.options()
                         .toFile(false)
@@ -251,7 +250,6 @@ public class DocGenerator {
     }
     
     public static void main(String[] args) throws Exception {
-        // TODO: Use args4j.
         String configDir = args[0], sourceDir = args[1], targetDir = args[2];
         
         DocGenerator gen = new DocGenerator(configDir, sourceDir, targetDir);
