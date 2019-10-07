@@ -34,8 +34,9 @@ import org.jsoup.nodes.Element;
 
 public class DocGenerator {
     private static final Logger log = LogManager.getLogger();
-    
+
     private static final String RES = "_res";
+    private static final String EXT_ADOC = ".adoc";
     
     private final Asciidoctor asciidoctor = Factory.create();
     
@@ -70,18 +71,18 @@ public class DocGenerator {
     }
     
     public void process() throws Exception {
-        process(sourceDir, targetDir, -1, false, new HashMap<>());
+        process(sourceDir, targetDir, -1, new HashMap<>());
         copyScriptsAndStyles();
     }
 
     public int check() throws Exception {
-        int errors = new LinksChecker(targetDir).check();
+        int errors = new LinksChecker().checkDir(targetDir);
         if (errors > 0)
             log.error("ERROR COUNT => " + errors);
         return errors;
     }
 
-    public void process(File source, File target, int depth, boolean resource, Map<String, Object> attributes) throws Exception {
+    public void process(File source, File target, int depth, Map<String, Object> attributes) throws Exception {
         final String sourceName = source.getName();
         
         // hidden resources, names started by .
@@ -97,8 +98,6 @@ public class DocGenerator {
         }
 
         if (source.isDirectory()) {
-            final boolean resourceDir = resource || RES.equals(sourceName);
-            
             File[] files = source.listFiles();
             
             // index.adoc in the root folder must be processed first to be included in all files after
@@ -113,15 +112,14 @@ public class DocGenerator {
             attributes = loadAttributes(source, attributes);
             
             for (File file : files)
-                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, resourceDir, attributes);
+                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, attributes);
         } else {
-            if (sourceName.endsWith(".adoc")) {
+            if (sourceName.endsWith(EXT_ADOC)) {
                 log.info("Processing: " + source);
 
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", depth) + RES)
                         .linkCss(true)
-                        .attribute("imagesoutdir", RES)
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)
                         .tableOfContents(true)
@@ -141,21 +139,18 @@ public class DocGenerator {
 
                 String html = asciidoctor.convertFile(source, options);
 
-                String targetPath = target.getPath().replace(".adoc", ".html").replace('\\','/');
+                Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, ".html"));
 
-                html = correctHtml(html, targetPath, depth);
+                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth);
                 
                 FileUtils.forceMkdirParent(target);
                
-                FileWriterWithEncoding fos = new FileWriterWithEncoding(targetPath, StandardCharsets.UTF_8);
+                FileWriterWithEncoding fos = new FileWriterWithEncoding(targetPath.toFile(), StandardCharsets.UTF_8);
                 fos.write(html);
                 fos.close();
                 
                 return;
-            } 
-            // copy resource
-            else if (resource)
-                FileUtils.copyFile(source, target);
+            }
         }
     }
 
@@ -196,12 +191,12 @@ public class DocGenerator {
         return name.contains("index");
     }
     
-    private String correctHtml(String html, String targetPath, int depth) throws Exception {
+    private String correctHtmlAndCopyResources(Path source, String html, Path targetPath, int depth) throws Exception {
         log.debug("correctHtml targetPath: {}, deep: {}", targetPath, depth);
         
         if (toc == null) {
             // the index file must be placed on the top the root directory
-            if (containsIndex(targetPath)) {
+            if (containsIndex(targetPath.toString())) {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
                 // add search field
@@ -215,15 +210,25 @@ public class DocGenerator {
 
         // add content to search index
         if (search != null) {
-            final String relativePath = targetDir.toPath().relativize(Paths.get(targetPath)).toString().replace('\\', '/');
+            final String relativePath = targetDir.toPath().relativize(targetPath).toString().replace('\\', '/');
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
         }
 
-        // patch diagram images links
-        for (Element diag : jsoup.select("img[src^=diag]")) {
-            String src = RES + "/" + diag.attr("src");
-            log.info("Corrected diagram path to: {}", src);
-            diag.attr("src", src);
+        for (String href : new LinksChecker().getLinks(jsoup)) {
+            href = StringUtils.substringBefore(href, "#");
+
+            File resSrc = source.getParent().resolve(href).toFile();
+            File resTarget = targetPath.getParent().resolve(href).toFile();
+
+            FileUtils.forceMkdirParent(resTarget);
+
+            if (href.startsWith("diag")) {
+                log.info("Move {} to {}", resSrc, resTarget);
+                FileUtils.moveFile(resSrc, resTarget);
+            } else {
+                log.info("Copy {} to {}", resSrc, resTarget);
+                FileUtils.copyFile(resSrc, resTarget);
+            }
         }
         
         // inject JS files
