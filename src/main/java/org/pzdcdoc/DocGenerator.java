@@ -35,8 +35,9 @@ import org.jsoup.nodes.Element;
 public class DocGenerator {
     private static final Logger log = LogManager.getLogger();
 
-    private static final String RES = "_res";
+    private static final String DIR_RES = "_res";
     private static final String EXT_ADOC = ".adoc";
+    private static final String EXT_HTML = ".html";
     
     private final Asciidoctor asciidoctor = Factory.create();
     
@@ -118,7 +119,7 @@ public class DocGenerator {
                 log.info("Processing: " + source);
 
                 Attributes attrs = AttributesBuilder.attributes()
-                        .stylesDir(StringUtils.repeat("../", depth) + RES)
+                        .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
                         .linkCss(true)
                         .sourceHighlighter("coderay")
                         .icons(Attributes.FONT_ICONS)
@@ -139,7 +140,7 @@ public class DocGenerator {
 
                 String html = asciidoctor.convertFile(source, options);
 
-                Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, ".html"));
+                Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
 
                 html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth);
                 
@@ -173,7 +174,7 @@ public class DocGenerator {
     public void copyScriptsAndStyles() throws IOException {
         log.info("Copy scripts and styles.");
         
-        File rootRes = new File(targetDir + "/" + RES);
+        File rootRes = new File(targetDir + "/" + DIR_RES);
         if (!rootRes.exists()) rootRes.mkdirs();
         
         for (String script : SCRIPTS)
@@ -191,12 +192,12 @@ public class DocGenerator {
         return name.contains("index");
     }
     
-    private String correctHtmlAndCopyResources(Path source, String html, Path targetPath, int depth) throws Exception {
-        log.debug("correctHtml targetPath: {}, deep: {}", targetPath, depth);
+    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth) throws Exception {
+        log.debug("correctHtml targetPath: {}, deep: {}", target, depth);
         
         if (toc == null) {
             // the index file must be placed on the top the root directory
-            if (containsIndex(targetPath.toString())) {
+            if (containsIndex(target.toString())) {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
                 // add search field
@@ -210,30 +211,15 @@ public class DocGenerator {
 
         // add content to search index
         if (search != null) {
-            final String relativePath = targetDir.toPath().relativize(targetPath).toString().replace('\\', '/');
+            final String relativePath = targetDir.toPath().relativize(target).toString().replace('\\', '/');
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
         }
 
-        for (String href : new LinksChecker().getLinks(jsoup)) {
-            href = StringUtils.substringBefore(href, "#");
-
-            File resSrc = source.getParent().resolve(href).toFile();
-            File resTarget = targetPath.getParent().resolve(href).toFile();
-
-            FileUtils.forceMkdirParent(resTarget);
-
-            if (href.startsWith("diag")) {
-                log.info("Move {} to {}", resSrc, resTarget);
-                FileUtils.moveFile(resSrc, resTarget);
-            } else {
-                log.info("Copy {} to {}", resSrc, resTarget);
-                FileUtils.copyFile(resSrc, resTarget);
-            }
-        }
+        copyResources(jsoup, source, target);
         
         // inject JS files
         for (String script : SCRIPTS_INJECT)
-            head.append("<script src='" + StringUtils.repeat("../", depth) + RES  + "/" + script + "'/>");
+            head.append("<script src='" + StringUtils.repeat("../", depth) + DIR_RES  + "/" + script + "'/>");
         
         // find of the top ToC
         Element pageToC = jsoup.selectFirst("#toc.toc");
@@ -251,7 +237,7 @@ public class DocGenerator {
         for (Element a : jsoup.select("#toc.toc2 a")) {
             String href = a.attr("href");
 
-            if (targetPath.endsWith(href)) {
+            if (target.endsWith(href)) {
                 a.addClass("current");
                 if (pageToC != null)
                     a.after(pageToC);
@@ -263,6 +249,31 @@ public class DocGenerator {
         html = jsoup.toString();
         
         return html;
+    }
+
+    private void copyResources(Document jsoup, Path source, Path target) throws IOException {
+        for (String href : new LinksChecker().getLinks(jsoup)) {
+            href = StringUtils.substringBefore(href, "#");
+            if (href.endsWith(EXT_HTML))
+                continue;
+
+            File resSrc = source.getParent().resolve(href).toFile();
+            if (!resSrc.exists() || resSrc.isDirectory()) {
+                log.debug("Skip: {}", resSrc);
+                continue;
+            }
+            File resTarget = target.getParent().resolve(href).toFile();
+
+            FileUtils.forceMkdirParent(resTarget);
+
+            if (href.startsWith("diag")) {
+                log.info("Move {} to {}", resSrc, resTarget);
+                FileUtils.moveFile(resSrc, resTarget);
+            } else {
+                log.info("Copy {} to {}", resSrc, resTarget);
+                FileUtils.copyFile(resSrc, resTarget);
+            }
+        }
     }
     
     public static void main(String[] args) throws Exception {
