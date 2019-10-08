@@ -5,5 +5,4 @@
 * <<demo.adoc#, Demo AsciiDoctor>>
 * Modules
 ** <<module/index.adoc#, Module>>
-* External link:https://pzdcdoc.org[link]
-
+* External link:http://pzdcdoc.org[link]
