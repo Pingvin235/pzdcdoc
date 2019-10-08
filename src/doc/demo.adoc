@@ -165,7 +165,8 @@ Use http://asciiflow.com/ for editing.
 === With 3rd party editors
 Schemas can also be produced using third-party editors, for example: link:https://www.yworks.com/downloads#yEd[yEd]
 Source files are stored in `_res` directories under names ending in `_schema.graphml`.
-The documents are inserted into the exported image in PNG format, preferably with the same name.
+Files have to be exported as images in PNG format, preferably with the same name. 
+After any change source files have to be re-exported.
 
 == Tools
 AsciiDoctor may be edited in any text editor, but as more comfortable way I use an Eclipse plugin.
