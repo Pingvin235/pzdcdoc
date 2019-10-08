@@ -1,7 +1,9 @@
 = Demo Local ToC
 :nofooter:
 
+* <<changes.adoc#, Last changes>>
 * <<demo.adoc#, Demo AsciiDoctor>>
 * Modules
 ** <<module/index.adoc#, Module>>
-* <<changes.adoc#, Last changes>>
+* External link:https://pzdcdoc.org[link]
+

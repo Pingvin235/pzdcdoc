@@ -14,7 +14,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class LinksChecker {
+public class Links {
     private static final Logger log = LogManager.getLogger();
     
     private int errors;
@@ -72,27 +72,24 @@ public class LinksChecker {
 
         for (Element ref : doc.select("a")) {
             String href = ref.attr("href");
-            
-            if (href.startsWith("#_") || href.startsWith("mailto:"))
-                continue;
-            
-            // TODO: Check also.
-            if (href.contains("://"))
-                continue;
-            
-           result.add(href);
+            if (!isExternalReference(href))
+                result.add(href);
         }
 
         for (Element img : doc.select("img")) {
             String src = img.attr("src");
-
-            // TODO: Check also.
-            if (src.contains("://"))
-                continue;
-
-            result.add(src);
+            if (!isExternalReference(src))
+                result.add(src);
         }
 
         return result;
+    }
+
+    public static boolean isExternalReference(String href) {
+        return 
+            href.startsWith("#_") || 
+            href.startsWith("mailto:") ||
+            // TODO: Check also.
+            href.contains("://");
     }
 }

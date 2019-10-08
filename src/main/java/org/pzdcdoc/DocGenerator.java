@@ -77,7 +77,7 @@ public class DocGenerator {
     }
 
     public int check() throws Exception {
-        int errors = new LinksChecker().checkDir(targetDir);
+        int errors = new Links().checkDir(targetDir);
         if (errors > 0)
             log.error("ERROR COUNT => " + errors);
         return errors;
@@ -236,6 +236,8 @@ public class DocGenerator {
         
         for (Element a : jsoup.select("#toc.toc2 a")) {
             String href = a.attr("href");
+            if (Links.isExternalReference(href))
+                continue;
 
             if (target.endsWith(href)) {
                 a.addClass("current");
@@ -252,7 +254,7 @@ public class DocGenerator {
     }
 
     private void copyResources(Document jsoup, Path source, Path target) throws IOException {
-        for (String href : new LinksChecker().getLinks(jsoup)) {
+        for (String href : new Links().getLinks(jsoup)) {
             href = StringUtils.substringBefore(href, "#");
             if (href.endsWith(EXT_HTML))
                 continue;
