@@ -6,10 +6,10 @@ Java binding of the excellent software documentation framework link:https://asci
 Additionally to the information below you may have a look on the link:https://docs.google.com/presentation/d/1MEIMT9SEnepZdLMVFv2Koev3TILRGn_cNgdT25eS-Zg/edit?usp=sharing[Presentation]
 
 == About
-PzdcDoc is the complex ready-to-use solution, providing clear way and workflow for organizing software documentation.
+PzdcDoc is the complete ready-to-use solution, providing clear way and workflow for organizing software documentation.
 On top of AsciiDoctor there are added the following features:
 [square]
-* Delivered as a single Java artifact in Maven repository for simple integration in existing build processes.
+* Delivered as a single Java link:https://mvnrepository.com/artifact/org.pzdcdoc/pzdcdoc[artifact] in Maven repository for simple integration in existing build processes.
 * Building documentation out of many files structured in original way with ToC.
 * Preserving structure, preview of documentation is <<src/doc/demo.adoc#, available>> in GitLab and GitHub.
 * Internal references checking, no more broken links.
@@ -66,5 +66,6 @@ In the input directory may be placed:
 * The generator goes through all the files in input dir and converting all with extension `.adoc` them to `.html`.
 ** Directory starting from `.` are skipped.
 ** Includes have to be named `.adocf` to avoid converting.
-** Resources (files, images) must be placed in `_res` subdirectory near of referencing `.adoc` file, they are automatically copied.
+** Resources (files, images) are recommended be placed in `_res` subdirectory near of referencing `.adoc` file, 
+but you may reference as well any project file, it will be copied to the target directory.
 * All the used references between `.adoc` are relative and automatically converted to HTML.
