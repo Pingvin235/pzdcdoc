@@ -87,9 +87,9 @@ always up-to-date and proved code snippet.
 //:src:../main/java/org/pzdcdoc/DocGenerator.java#L66-69
 // the first link is ony for pre
 
-link:../main/java/org/pzdcdoc/DocGenerator.java#L66-69[from="// h", to="t());"]
+link:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[from="// h", to="t());"]
 
-snippet:../main/java/org/pzdcdoc/DocGenerator.java#L66-69[from="// h", to="t());"]
+//snippet:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[from="// h", to="t());"]
 
 === Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
