@@ -5,12 +5,10 @@ import java.util.Map;
 import org.asciidoctor.ast.ContentModel;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.BlockProcessor;
-import org.asciidoctor.extension.Contexts;
 import org.asciidoctor.extension.Name;
 import org.asciidoctor.extension.Reader;
 
 @Name("snippet")
-//@Contexts({ Contexts.PARAGRAPH })
 @ContentModel(ContentModel.SIMPLE)
 public class Snippet extends BlockProcessor {
 
@@ -19,7 +17,7 @@ public class Snippet extends BlockProcessor {
         String content = reader.read();
         String yellContent = content.toUpperCase();
 
-        return createBlock(parent, "paragraph", yellContent, attributes);
+        return createBlock(parent, "listing", yellContent, attributes);
     }
 
     /*@Override
