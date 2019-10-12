@@ -31,6 +31,8 @@ import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.pzdcdoc.ext.JavaDocLink;
+import org.pzdcdoc.ext.Snippet;
 
 public class DocGenerator {
     private static final Logger log = LogManager.getLogger();
@@ -63,8 +65,10 @@ public class DocGenerator {
         this.sourceDir = new File(sourceDir);
         this.targetDir = new File(targetDir);
         
+        // https://github.com/asciidoctor/asciidoctorj/blob/v2.1.0/docs/integrator-guide.adoc
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
+        javaExtensionRegistry.blockMacro(new Snippet());
 
         asciidoctor.requireLibrary("asciidoctor-diagram");
         

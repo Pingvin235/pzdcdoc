@@ -1,4 +1,4 @@
-package org.pzdcdoc;
+package org.pzdcdoc.ext;
 
 import java.util.HashMap;
 import java.util.Map;

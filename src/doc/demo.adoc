@@ -80,6 +80,13 @@ Sample Cloud: myuser@mycompany.com
 
 [[snippets]]
 == Code snippets
+=== Extracted "live snippets"
+Define relative file path, lines range and optionally from and to strings to have 
+always up-to-date and proved code snippet.
+
+snippet::../main/org/pzdcdoc/DocGenerator.java#L66-69[from="// h", to="t());"]
+
+=== Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
 [source]
 ----
