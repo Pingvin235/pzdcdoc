@@ -84,6 +84,8 @@ Sample Cloud: myuser@mycompany.com
 Define relative file path, lines range and optionally from and to strings to have 
 always up-to-date and proved code snippet.
 
+link:../main/org/pzdcdoc/DocGenerator.java#L66-69[]
+
 snippet::../main/org/pzdcdoc/DocGenerator.java#L66-69[from="// h", to="t());"]
 
 === Simple snippets
