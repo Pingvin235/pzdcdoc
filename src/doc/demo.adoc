@@ -84,9 +84,10 @@ Sample Cloud: myuser@mycompany.com
 Define relative file path, lines range and optionally from and to strings to have 
 always up-to-date and proved code snippet.
 
-link:../main/org/pzdcdoc/DocGenerator.java#L66-69[]
-
-snippet::../main/org/pzdcdoc/DocGenerator.java#L66-69[from="// h", to="t());"]
+:src:../main/org/pzdcdoc/DocGenerator.java#L66-69
+// the first link is ony for pre
+link:{src}[]
+snippet:{src}[from="// h", to="t());"]
 
 === Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
