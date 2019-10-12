@@ -66,7 +66,7 @@ public class DocGenerator {
         // https://github.com/asciidoctor/asciidoctorj/blob/v2.1.0/docs/integrator-guide.adoc
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
-        javaExtensionRegistry.blockMacro(new Snippet());
+        javaExtensionRegistry.inlineMacro(new Link());
 
         asciidoctor.requireLibrary("asciidoctor-diagram");
         

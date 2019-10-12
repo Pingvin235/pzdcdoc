@@ -87,7 +87,11 @@ always up-to-date and proved code snippet.
 //:src:../main/java/org/pzdcdoc/DocGenerator.java#L66-69
 // the first link is ony for pre
 
-link:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[from="// h", data-to="t());", target="bla", class="dd"]
+//from="// h", data-to="t());", target="bla", class="dd"
+[source, java]
+----
+link:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[]
+----
 
 //snippet:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[from="// h", to="t());"]
 
