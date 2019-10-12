@@ -31,8 +31,6 @@ import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.pzdcdoc.ext.JavaDocLink;
-import org.pzdcdoc.ext.Snippet;
 
 public class DocGenerator {
     private static final Logger log = LogManager.getLogger();
@@ -129,6 +127,7 @@ public class DocGenerator {
                         .icons(Attributes.FONT_ICONS)
                         .tableOfContents(true)
                         .setAnchors(true)
+                        .linkAttrs(true)
                         .get();
                 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
