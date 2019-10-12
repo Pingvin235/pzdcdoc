@@ -88,10 +88,9 @@ always up-to-date and proved code snippet.
 // the first link is ony for pre
 
 //from="// h", data-to="t());", target="bla", class="dd"
-[snippet, java, from="// h", to="t());"]
-----
+// , from="// h", to="t());"
+[snippet, java]
 link:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[]
-----
 
 //snippet:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[from="// h", to="t());"]
 
