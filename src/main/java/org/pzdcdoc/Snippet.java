@@ -2,6 +2,7 @@ package org.pzdcdoc;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,6 @@ import org.asciidoctor.extension.Reader;
 public class Snippet extends BlockProcessor {
     private static final Logger log = LogManager.getLogger();
 
-    // marker about generating the block by snippet macros
-    public static final String ATTR_MARKER = "pzdcdoc-snippet";
     public static final String ATTR_FROM = "from";
     public static final String ATTR_TO = "to";
 
@@ -35,7 +34,9 @@ public class Snippet extends BlockProcessor {
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
         String content = reader.read();
 
-        attributes = new HashMap<>(attributes);
+        attributes = new HashMap<>();
+
+        List<String> contentList = new ArrayList<>();
 
         try {
             if (content.startsWith(LINK_PREFIX)) {
@@ -54,6 +55,7 @@ public class Snippet extends BlockProcessor {
 
                 // TODO: Make mapping extension - lang
                 String lang = StringUtils.substringAfterLast(path, ".");
+                attributes.put("language", lang);
 
                 List<String> lines = Files.readAllLines(snippet.toPath());
                 int lineFrom = 1;
@@ -71,31 +73,18 @@ public class Snippet extends BlockProcessor {
                     }
                 }
 
-                StringBuilder contentBuilder = new StringBuilder((lineTo - lineFrom) * 100);
-                contentBuilder.append("// PzdcDoc snippet of: '");
-                contentBuilder.append(path);
-                contentBuilder.append("', lines: ");
-                contentBuilder.append(lineFrom);
-                contentBuilder.append(" - ");
-                contentBuilder.append(lineTo);
-                contentBuilder.append("\n");
+                contentList.add("// PzdcDoc snippet of: '" + path + "', lines: " + lineFrom + " - " + lineTo);
 
-                for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
-                    String line = lines.get(lineNum - 1);
-                    contentBuilder.append(line);
-                    contentBuilder.append("\n");
-                }
-
-                content = contentBuilder.toString();
-
-                attributes.put("language", lang); 
-                attributes.put(ATTR_MARKER, "");
+                for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++)
+                    contentList.add(lines.get(lineNum - 1));
             }
         } catch (Exception e) {
             log.error("Not found source file attribute.");
         }
 
-        return createBlock(parent, "listing", content, attributes);
+        attributes.put("style", "source");
+
+        return createBlock(parent, "listing", contentList, attributes);
     }
     
 }

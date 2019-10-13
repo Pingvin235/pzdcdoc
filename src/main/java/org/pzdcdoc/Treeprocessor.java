@@ -12,10 +12,8 @@ public class Treeprocessor extends org.asciidoctor.extension.Treeprocessor {
         return document;
     }
 
+    /* Useful debugging method, for checking through generated tree. */
     private void processBlock(StructuralNode block) {
-        if (block.hasAttribute(Snippet.ATTR_MARKER))
-            block.setStyle("source");
-
         for (StructuralNode child : block.getBlocks())
             processBlock((StructuralNode) child);
     }
