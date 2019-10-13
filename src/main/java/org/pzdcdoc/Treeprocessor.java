@@ -13,7 +13,7 @@ public class Treeprocessor extends org.asciidoctor.extension.Treeprocessor {
     }
 
     private void processBlock(StructuralNode block) {
-        if (block.hasAttribute(Snippet.ATTRIBUTE))
+        if (block.hasAttribute(Snippet.ATTR_MARKER))
             block.setStyle("source");
 
         for (StructuralNode child : block.getBlocks())

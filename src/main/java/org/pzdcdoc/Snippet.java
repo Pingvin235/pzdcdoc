@@ -1,12 +1,15 @@
 package org.pzdcdoc;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.asciidoctor.ast.ContentModel;
@@ -20,7 +23,10 @@ import org.asciidoctor.extension.Reader;
 public class Snippet extends BlockProcessor {
     private static final Logger log = LogManager.getLogger();
 
-    public static final String ATTRIBUTE = "pzdcdoc-snippet";
+    // marker about generating the block by snippet macros
+    public static final String ATTR_MARKER = "pzdcdoc-snippet";
+    public static final String ATTR_FROM = "from";
+    public static final String ATTR_TO = "to";
 
     private static final String LINK_PREFIX = "link:";
     private static final Pattern linesRange = Pattern.compile("L(\\d+)(\\-L(\\d+))?");
@@ -46,8 +52,44 @@ public class Snippet extends BlockProcessor {
                 if (!snippet.exists())
                     throw new Exception("File doesn't exist: " + snippet);
 
-                attributes.put("language", "java");
-                attributes.put(ATTRIBUTE, "");
+                // TODO: Make mapping extension - lang
+                String lang = StringUtils.substringAfterLast(path, ".");
+
+                List<String> lines = Files.readAllLines(snippet.toPath());
+                int lineFrom = 1;
+                int lineTo = lines.size();
+
+                if (StringUtils.isNotBlank(fragment)) {
+                    Matcher m = linesRange.matcher(fragment);
+                    if (m.find()) {
+                        int line  = NumberUtils.toInt(m.group(1));
+                        if (lineFrom <= line && line <= lineTo)
+                            lineFrom = line;
+                        line =  NumberUtils.toInt(m.group(3));
+                        if (lineFrom <= line && line <= lineTo)
+                            lineTo = line;
+                    }
+                }
+
+                StringBuilder contentBuilder = new StringBuilder((lineTo - lineFrom) * 100);
+                contentBuilder.append("// PzdcDoc snippet of: '");
+                contentBuilder.append(path);
+                contentBuilder.append("', lines: ");
+                contentBuilder.append(lineFrom);
+                contentBuilder.append(" - ");
+                contentBuilder.append(lineTo);
+                contentBuilder.append("\n");
+
+                for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
+                    String line = lines.get(lineNum - 1);
+                    contentBuilder.append(line);
+                    contentBuilder.append("\n");
+                }
+
+                content = contentBuilder.toString();
+
+                attributes.put("language", lang); 
+                attributes.put(ATTR_MARKER, "");
             }
         } catch (Exception e) {
             log.error("Not found source file attribute.");
