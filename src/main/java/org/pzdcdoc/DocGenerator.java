@@ -60,6 +60,8 @@ public class DocGenerator {
     // cached ToC from index.adoc for injecting everywhere
     private Element toc;
     private Search search = new Search();
+    // processing errors
+    private int errors;
     
     public DocGenerator(String configDir, String sourceDir, String targetDir) throws Exception {
         this.configDir = new File(configDir);
@@ -77,15 +79,22 @@ public class DocGenerator {
         FileUtils.deleteDirectory(new File(targetDir));
     }
     
-    public void process() throws Exception {
+    public void error() {
+        errors++;
+    }
+
+    public int process() throws Exception {
         process(sourceDir, targetDir, -1, new HashMap<>());
         copyScriptsAndStyles();
+        if (errors > 0)
+            log.error("PROC ERROR COUNT => " + errors);
+        return errors;
     }
 
     public int check() throws Exception {
         int errors = new Links().checkDir(targetDir);
         if (errors > 0)
-            log.error("ERROR COUNT => " + errors);
+            log.error("CHECK ERROR COUNT => " + errors);
         return errors;
     }
 
@@ -136,6 +145,7 @@ public class DocGenerator {
                 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
                 attrs.setAttribute(ATTR_SOURCE, source);
+                attrs.setAttribute(ATTR_GENERATOR, this);
 
                 attrs.setAttributes(attributes);
 
@@ -290,8 +300,8 @@ public class DocGenerator {
         String configDir = args[0], sourceDir = args[1], targetDir = args[2];
         
         DocGenerator gen = new DocGenerator(configDir, sourceDir, targetDir);
-        gen.process();
-        int errors = gen.check();
+        int errors = gen.process();
+        errors += gen.check();
         
         log.info("DONE!");
         

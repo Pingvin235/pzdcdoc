@@ -82,11 +82,11 @@ Sample Cloud: myuser@mycompany.com
 == Code snippets
 === Extracted "live snippets"
 The source link below is automatically extracted to highlighted code snippet during HTML convertion.
-Attributes `from` and `to` allow check actuality of content.
+Attributes `from` and `to` allow check actuality of content, `remove-leading` - deletion of line indent.
 Here is the snippet of connecting plugins to DocGenerator.
 
-[snippet, from="// h", to="r());"]
-link:../main/java/org/pzdcdoc/DocGenerator.java#L68-L72[]
+[snippet, from="// h", to="r());", remove-leading="        "]
+link:../main/java/org/pzdcdoc/DocGenerator.java#L71-L75[]
 
 === Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):

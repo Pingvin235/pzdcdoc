@@ -26,7 +26,7 @@ public class Snippet extends BlockProcessor {
 
     public static final String ATTR_FROM = "from";
     public static final String ATTR_TO = "to";
-    //public static final String ATTR_SUBSTR_FROM = "substring-from";
+    public static final String ATTR_REMOVE_LEADING = "remove-leading";
 
     private static final String LINK_PREFIX = "link:";
     private static final Pattern linesRange = Pattern.compile("L(\\d+)(\\-L(\\d+))?");
@@ -43,7 +43,9 @@ public class Snippet extends BlockProcessor {
                 String fragment = StringUtils.substringAfter(path, "#");
                 if (StringUtils.isNotBlank(fragment))
                     path = path.substring(0, path.length() - fragment.length() - 1);
-    
+
+                DocGenerator generator = (DocGenerator) parent.getDocument().getAttribute(DocGenerator.ATTR_GENERATOR);
+
                 File source = (File) parent.getDocument().getAttribute(DocGenerator.ATTR_SOURCE);
                 if (source == null)
                     throw new Exception("Not found source file attribute.");
@@ -73,24 +75,26 @@ public class Snippet extends BlockProcessor {
 
                 // TODO: Make comment language - specific.
                 contentList.add("// PzdcDoc snippet of: '" + path + "', lines: " + lineFrom + " - " + lineTo);
+                contentList.add("");
 
                 String from = (String) attributes.get(ATTR_FROM);
                 String to = (String) attributes.get(ATTR_TO);
-                //int shiftLeft = NumberUtils.toInt((String) attributes.get(ATTR_SUBSTR_FROM));
+                String removeLeading = (String) attributes.get(ATTR_REMOVE_LEADING);
 
                 for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
                     String line = lines.get(lineNum - 1);
 
-                    // TODO: Count errors and use them to generator execution result.
                     if (from != null && lineNum == lineFrom && !line.trim().startsWith(from)) {
                         log.error("Snippet doesn't start from: '{}', line: {}", from, line.trim());
+                        generator.error();
                     }
                     if (to != null && lineNum == lineTo && !line.trim().endsWith(to)) {
                         log.error("Snippet doesn't end on: '{}', line: {}", to, line.trim());
+                        generator.error();
                     }
                     
-                    /*if (shiftLeft > 0)
-                        line = line.substring(shiftLeft);*/
+                    if (line.startsWith(removeLeading))
+                        line = line.substring(removeLeading.length());
 
                     contentList.add(line);
                 }
