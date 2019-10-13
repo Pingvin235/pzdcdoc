@@ -38,6 +38,8 @@ public class DocGenerator {
     private static final String DIR_RES = "_res";
     private static final String EXT_ADOC = ".adoc";
     private static final String EXT_HTML = ".html";
+
+    public static final String SOURCE_ATTR = "source";
     
     private final Asciidoctor asciidoctor = Factory.create();
     
@@ -132,6 +134,7 @@ public class DocGenerator {
                         .get();
                 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
+                attrs.setAttribute(SOURCE_ATTR, source);
 
                 attrs.setAttributes(attributes);
 
