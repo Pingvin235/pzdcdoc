@@ -16,6 +16,7 @@ On top of AsciiDoctor there are added the following features:
 * Produce embedded JS search over EN, RU and DE using link:https://lunrjs.com/[LunrJS].
 * <<src/doc/demo#diagrams, Diagrams>> generation.
 * Extension for referencing of JavaDoc by class name.
+* <<src/doc/demo#snippets, Live snippets>> for extracting samples directly out of source files with simple validation of actuality.
 * CSS enhancements.
 
 === History
