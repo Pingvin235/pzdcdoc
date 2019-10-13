@@ -35,6 +35,8 @@ public class Snippet extends BlockProcessor {
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
         String content = reader.read();
 
+        DocGenerator generator = (DocGenerator) parent.getDocument().getAttribute(DocGenerator.ATTR_GENERATOR);
+
         List<String> contentList = new ArrayList<>();
         String lang = null;
         try {
@@ -44,14 +46,12 @@ public class Snippet extends BlockProcessor {
                 if (StringUtils.isNotBlank(fragment))
                     path = path.substring(0, path.length() - fragment.length() - 1);
 
-                DocGenerator generator = (DocGenerator) parent.getDocument().getAttribute(DocGenerator.ATTR_GENERATOR);
-
                 File source = (File) parent.getDocument().getAttribute(DocGenerator.ATTR_SOURCE);
                 if (source == null)
                     throw new Exception("Not found source file attribute.");
                 
                 File snippet = source.toPath().getParent().resolve(path).toFile();
-                if (!snippet.exists())
+                if (!snippet.exists()) 
                     throw new Exception("File doesn't exist: " + snippet);
 
                 // TODO: Make mapping extension - lang
@@ -100,7 +100,8 @@ public class Snippet extends BlockProcessor {
                 }
             }
         } catch (Exception e) {
-            log.error("Not found source file attribute.");
+            log.error(e.getMessage());
+            generator.error();
         }
 
         attributes = new HashMap<>();
