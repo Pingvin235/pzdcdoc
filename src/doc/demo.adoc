@@ -1,4 +1,4 @@
-= Demo AsciiDoctor syntax
+= Demo PzdcDoc
 :toc:
 
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
