@@ -83,9 +83,10 @@ Sample Cloud: myuser@mycompany.com
 === Extracted "live snippets"
 The source link below is automatically extracted to highlighted code snippet during HTML convertion.
 Attributes `from` and `to` allow check actuality of content.
+Here is the snippet of connecting plugins to DocGenerator.
 
-[snippet, from="// h", to="t());"]
-link:../main/java/org/pzdcdoc/DocGenerator.java#L66-L69[]
+[snippet, from="// h", to="r());"]
+link:../main/java/org/pzdcdoc/DocGenerator.java#L68-L72[]
 
 === Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):

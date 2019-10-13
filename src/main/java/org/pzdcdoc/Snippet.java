@@ -26,6 +26,7 @@ public class Snippet extends BlockProcessor {
 
     public static final String ATTR_FROM = "from";
     public static final String ATTR_TO = "to";
+    //public static final String ATTR_SUBSTR_FROM = "substring-from";
 
     private static final String LINK_PREFIX = "link:";
     private static final Pattern linesRange = Pattern.compile("L(\\d+)(\\-L(\\d+))?");
@@ -34,10 +35,8 @@ public class Snippet extends BlockProcessor {
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
         String content = reader.read();
 
-        attributes = new HashMap<>();
-
         List<String> contentList = new ArrayList<>();
-
+        String lang = null;
         try {
             if (content.startsWith(LINK_PREFIX)) {
                 String path = content.substring(LINK_PREFIX.length());
@@ -45,7 +44,7 @@ public class Snippet extends BlockProcessor {
                 if (StringUtils.isNotBlank(fragment))
                     path = path.substring(0, path.length() - fragment.length() - 1);
     
-                File source = (File) parent.getDocument().getAttribute(DocGenerator.SOURCE_ATTR);
+                File source = (File) parent.getDocument().getAttribute(DocGenerator.ATTR_SOURCE);
                 if (source == null)
                     throw new Exception("Not found source file attribute.");
                 
@@ -54,8 +53,7 @@ public class Snippet extends BlockProcessor {
                     throw new Exception("File doesn't exist: " + snippet);
 
                 // TODO: Make mapping extension - lang
-                String lang = StringUtils.substringAfterLast(path, ".");
-                attributes.put("language", lang);
+                lang = StringUtils.substringAfterLast(path, ".");
 
                 List<String> lines = Files.readAllLines(snippet.toPath());
                 int lineFrom = 1;
@@ -73,18 +71,40 @@ public class Snippet extends BlockProcessor {
                     }
                 }
 
+                // TODO: Make comment language - specific.
                 contentList.add("// PzdcDoc snippet of: '" + path + "', lines: " + lineFrom + " - " + lineTo);
 
-                for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++)
-                    contentList.add(lines.get(lineNum - 1));
+                String from = (String) attributes.get(ATTR_FROM);
+                String to = (String) attributes.get(ATTR_TO);
+                //int shiftLeft = NumberUtils.toInt((String) attributes.get(ATTR_SUBSTR_FROM));
+
+                for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
+                    String line = lines.get(lineNum - 1);
+
+                    // TODO: Count errors and use them to generator execution result.
+                    if (from != null && lineNum == lineFrom && !line.trim().startsWith(from)) {
+                        log.error("Snippet doesn't start from: '{}', line: {}", from, line.trim());
+                    }
+                    if (to != null && lineNum == lineTo && !line.trim().endsWith(to)) {
+                        log.error("Snippet doesn't end on: '{}', line: {}", to, line.trim());
+                    }
+                    
+                    /*if (shiftLeft > 0)
+                        line = line.substring(shiftLeft);*/
+
+                    contentList.add(line);
+                }
             }
         } catch (Exception e) {
             log.error("Not found source file attribute.");
         }
 
+        attributes = new HashMap<>();
         attributes.put("style", "source");
+        if (lang != null)
+            attributes.put("language", lang);
 
         return createBlock(parent, "listing", contentList, attributes);
     }
-    
+
 }
