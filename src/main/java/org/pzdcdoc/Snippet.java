@@ -1,14 +1,20 @@
 package org.pzdcdoc;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.asciidoctor.Options;
+import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentModel;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.BlockProcessor;
+import org.asciidoctor.extension.Contexts;
 import org.asciidoctor.extension.Name;
 import org.asciidoctor.extension.Reader;
+import org.asciidoctor.jruby.ast.impl.BlockImpl;
 
 @Name("snippet")
+//@Contexts({Contexts.LISTING}) 
 @ContentModel(ContentModel.SIMPLE)
 public class Snippet extends BlockProcessor {
 
@@ -17,7 +23,9 @@ public class Snippet extends BlockProcessor {
         String content = reader.read();
         String yellContent = content.toUpperCase();
 
-        return createBlock(parent, "listing", yellContent, attributes);
+        Block block = createBlock(parent, "paragraph", yellContent, attributes);
+        // block.setStyle("source") doesn"t work as expected to enable hightlight: https://github.com/asciidoctor/asciidoctor/blob/master/lib/asciidoctor/converter/html5.rb#L650
+        return block;
     }
 
     /*@Override
