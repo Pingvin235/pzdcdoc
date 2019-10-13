@@ -23,7 +23,7 @@ public class Snippet extends BlockProcessor {
         String content = reader.read();
         String yellContent = content.toUpperCase();
 
-        Block block = createBlock(parent, "paragraph", yellContent, attributes);
+        Block block = createBlock(parent, "listing", yellContent, attributes);
         // block.setStyle("source") doesn"t work as expected to enable hightlight: https://github.com/asciidoctor/asciidoctor/blob/master/lib/asciidoctor/converter/html5.rb#L650
         return block;
     }
