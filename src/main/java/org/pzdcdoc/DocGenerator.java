@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.DirectoryWalker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
@@ -86,6 +88,7 @@ public class DocGenerator {
     public int process() throws Exception {
         process(sourceDir, targetDir, -1, new HashMap<>());
         copyScriptsAndStyles();
+        deleteTmpFiles();
         if (errors > 0)
             log.error("PROC ERROR COUNT => " + errors);
         return errors;
@@ -189,7 +192,7 @@ public class DocGenerator {
         return attributes;
     }
         
-    public void copyScriptsAndStyles() throws IOException {
+    private void copyScriptsAndStyles() throws IOException {
         log.info("Copy scripts and styles.");
         
         File rootRes = new File(targetDir + "/" + DIR_RES);
@@ -204,6 +207,21 @@ public class DocGenerator {
         for (String style : STYLESHEETS)
             IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style),
                     new FileOutputStream(rootRes.getAbsolutePath() + "/" + style));
+    }
+
+    private void deleteTmpFiles() throws IOException {
+        log.info("Delete temporary directories");
+        Files
+            .walk(sourceDir.toPath())
+            .filter(f -> f.toFile().isDirectory() && f.getFileName().startsWith(".asciidoctor"))
+            .forEach(f -> {
+                try {
+                    log.info(f);
+                    FileUtils.deleteDirectory(f.toFile());
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
     }
 
     private boolean containsIndex(String name) {
