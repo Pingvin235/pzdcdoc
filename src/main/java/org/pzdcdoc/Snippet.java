@@ -33,7 +33,6 @@ public class Snippet extends BlockProcessor {
 
     @Override
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
-        attributes = new HashMap<>();
         String content = reader.read();
 
         DocGenerator generator = (DocGenerator) parent.getDocument().getAttribute(DocGenerator.ATTR_GENERATOR);
@@ -41,8 +40,6 @@ public class Snippet extends BlockProcessor {
         List<String> contentList = new ArrayList<>();
         try {
             if (content.startsWith(LINK_PREFIX)) {
-                attributes.put("style", "source");
-
                 String path = content.substring(LINK_PREFIX.length());
                 path = StringUtils.substringBeforeLast(path, "[");
 
@@ -57,11 +54,6 @@ public class Snippet extends BlockProcessor {
                 File snippet = source.toPath().getParent().resolve(path).toFile();
                 if (!snippet.exists()) 
                     throw new Exception("File doesn't exist: " + snippet);
-
-                // TODO: Make mapping extension - lang
-                String lang = StringUtils.substringAfterLast(path, ".");
-                if (StringUtils.isNotBlank(lang))
-                    attributes.put("language", lang);
 
                 List<String> lines = Files.readAllLines(snippet.toPath());
                 int lineFrom = 1;
@@ -99,14 +91,21 @@ public class Snippet extends BlockProcessor {
                         generator.error();
                     }
                     
-                    if (line.startsWith(removeLeading))
+                    if (removeLeading != null && line.startsWith(removeLeading))
                         line = line.substring(removeLeading.length());
 
                     contentList.add(line);
                 }
+
+                attributes = new HashMap<>();
+                attributes.put("style", "source");
+                // TODO: Make mapping extension - lang
+                String lang = StringUtils.substringAfterLast(path, ".");
+                if (StringUtils.isNotBlank(lang))
+                    attributes.put("language", lang);
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             generator.error();
         }
 
