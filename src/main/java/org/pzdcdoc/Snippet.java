@@ -33,14 +33,16 @@ public class Snippet extends BlockProcessor {
 
     @Override
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
+        attributes = new HashMap<>();
         String content = reader.read();
 
         DocGenerator generator = (DocGenerator) parent.getDocument().getAttribute(DocGenerator.ATTR_GENERATOR);
 
         List<String> contentList = new ArrayList<>();
-        String lang = null;
         try {
             if (content.startsWith(LINK_PREFIX)) {
+                attributes.put("style", "source");
+
                 String path = content.substring(LINK_PREFIX.length());
                 String fragment = StringUtils.substringAfter(path, "#");
                 if (StringUtils.isNotBlank(fragment))
@@ -55,7 +57,9 @@ public class Snippet extends BlockProcessor {
                     throw new Exception("File doesn't exist: " + snippet);
 
                 // TODO: Make mapping extension - lang
-                lang = StringUtils.substringAfterLast(path, ".");
+                String lang = StringUtils.substringAfterLast(path, ".");
+                if (StringUtils.isNotBlank(lang))
+                    attributes.put("language", lang);
 
                 List<String> lines = Files.readAllLines(snippet.toPath());
                 int lineFrom = 1;
@@ -103,11 +107,6 @@ public class Snippet extends BlockProcessor {
             log.error(e.getMessage(), e);
             generator.error();
         }
-
-        attributes = new HashMap<>();
-        attributes.put("style", "source");
-        if (lang != null)
-            attributes.put("language", lang);
 
         return createBlock(parent, "listing", contentList, attributes);
     }
