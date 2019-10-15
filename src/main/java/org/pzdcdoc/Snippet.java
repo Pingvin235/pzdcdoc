@@ -44,6 +44,8 @@ public class Snippet extends BlockProcessor {
                 attributes.put("style", "source");
 
                 String path = content.substring(LINK_PREFIX.length());
+                path = StringUtils.substringBeforeLast(path, "[");
+
                 String fragment = StringUtils.substringAfter(path, "#");
                 if (StringUtils.isNotBlank(fragment))
                     path = path.substring(0, path.length() - fragment.length() - 1);
@@ -104,7 +106,7 @@ public class Snippet extends BlockProcessor {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getMessage());
             generator.error();
         }
 
