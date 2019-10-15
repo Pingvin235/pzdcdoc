@@ -86,7 +86,7 @@ Attributes `from` and `to` allow check actuality of content, `remove-leading` - 
 Here is the snippet of connecting plugins to DocGenerator.
 
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/DocGenerator.java#L71-L75[]
+link:../main/java/org/pzdcdoc/DocGenerator.java#L73-L77[]
 
 === Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
