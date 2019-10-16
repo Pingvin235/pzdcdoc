@@ -315,7 +315,7 @@ public class DocGenerator {
 
                 File resTarget = target.getParent().resolve(relativePath).toFile();
                 log.info("Copy {} to {}", resSrc, resTarget);
-                FileUtils.forceMkdir(resTarget);
+                FileUtils.forceMkdirParent(resTarget);
                 FileUtils.copyFile(resSrc, resTarget);
             }
         }
