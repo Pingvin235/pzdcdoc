@@ -305,15 +305,17 @@ public class DocGenerator {
                 continue;
             }
 
-            File resTarget = target.getParent().resolve(href).toFile();
-
             if (href.startsWith("diag")) {
+                File resTarget = target.getParent().resolve(href).toFile();
                 log.info("Move {} to {}", resSrc, resTarget);
-                FileUtils.forceMkdirParent(resTarget);
                 FileUtils.moveFile(resSrc, resTarget);
             } else {
+                String relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
+                link.set(relativePath);
+
+                File resTarget = target.getParent().resolve(relativePath).toFile();
                 log.info("Copy {} to {}", resSrc, resTarget);
-                //!copy to _res
+                FileUtils.forceMkdir(resTarget);
                 FileUtils.copyFile(resSrc, resTarget);
             }
         }
