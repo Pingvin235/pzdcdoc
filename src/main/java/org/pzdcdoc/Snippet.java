@@ -43,6 +43,7 @@ public class Snippet extends BlockProcessor {
                 String path = content.substring(LINK_PREFIX.length());
 
                 String title = StringUtils.substringBetween(path, "[", "]");
+                path = StringUtils.substringBeforeLast(path, "[");
 
                 String fragment = StringUtils.substringAfter(path, "#");
                 if (StringUtils.isNotBlank(fragment))
