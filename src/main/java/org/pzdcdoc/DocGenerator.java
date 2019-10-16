@@ -271,16 +271,18 @@ public class DocGenerator {
         jsoup.select("#toc").before("<div id=\"toc\" class=\"toc2\">" + toc.toString() + "</div>");
         
         for (Element a : jsoup.select("#toc.toc2 a")) {
-            String href = a.attr("href");
-            if (Links.isExternalReference(href))
+            Link link = new Link(a);
+            if (link.isExternalReference())
                 continue;
+
+            String href = link.get();
 
             if (target.endsWith(href)) {
                 a.addClass("current");
                 if (pageToC != null)
                     a.after(pageToC);
             }
-            a.attr("href", StringUtils.repeat("../", depth) + href);
+            link.set(StringUtils.repeat("../", depth) + href);
             a.attr("title", a.text());
         }
         
@@ -290,7 +292,9 @@ public class DocGenerator {
     }
 
     private void copyResources(Document jsoup, Path source, Path target) throws IOException {
-        for (String href : new Links().getLinks(jsoup)) {
+        for (Link link : Links.getLinks(jsoup)) {
+            String href = link.get();
+
             href = StringUtils.substringBefore(href, "#");
             if (href.endsWith(EXT_HTML))
                 continue;
@@ -300,15 +304,16 @@ public class DocGenerator {
                 log.debug("Skip: {}", resSrc);
                 continue;
             }
-            File resTarget = target.getParent().resolve(href).toFile();
 
-            FileUtils.forceMkdirParent(resTarget);
+            File resTarget = target.getParent().resolve(href).toFile();
 
             if (href.startsWith("diag")) {
                 log.info("Move {} to {}", resSrc, resTarget);
+                FileUtils.forceMkdirParent(resTarget);
                 FileUtils.moveFile(resSrc, resTarget);
             } else {
                 log.info("Copy {} to {}", resSrc, resTarget);
+                //!copy to _res
                 FileUtils.copyFile(resSrc, resTarget);
             }
         }

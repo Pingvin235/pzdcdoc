@@ -39,7 +39,9 @@ public class Links {
         log.info("Checking file: " + file);
 
         org.jsoup.nodes.Document doc = Jsoup.parse(file, StandardCharsets.UTF_8.name());
-        for (String href : getLinks(doc)) {
+        for (Link link : getLinks(doc)) {
+            String href = link.get();
+
             log.debug("Checking: {}", href);
             
             String fragment = null;
@@ -67,29 +69,22 @@ public class Links {
         }
     }
 
-    public Iterable<String> getLinks(Document doc) {
-        List<String> result = new ArrayList<>();
+    public static Iterable<Link> getLinks(Document doc) {
+        List<Link> result = new ArrayList<>();
 
         for (Element ref : doc.select("a")) {
-            String href = ref.attr("href");
-            if (!isExternalReference(href))
-                result.add(href);
+            Link link = new Link(ref);
+            if (!link.isExternalReference())
+                result.add(link);
         }
 
         for (Element img : doc.select("img")) {
-            String src = img.attr("src");
-            if (!isExternalReference(src))
-                result.add(src);
+            Link link = new Link(img);
+            if (!link.isExternalReference())
+                result.add(link);
         }
 
         return result;
     }
-
-    public static boolean isExternalReference(String href) {
-        return 
-            href.startsWith("#_") || 
-            href.startsWith("mailto:") ||
-            // TODO: Check also.
-            href.contains("://");
-    }
+    
 }
