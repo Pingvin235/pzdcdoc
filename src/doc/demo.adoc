@@ -113,6 +113,7 @@ class My {
 ----
 
 == References
+=== Resources
 Image, recommended to be places in directory `_res` near of the file.
 
 image::_res/image.png[]
@@ -121,7 +122,15 @@ Big images may be restricted by width, recommended 600px for horizontal oriented
 
 image::_res/image.png[width="600px"]
 
+Any file from a project may be also referenced and automatically copied to `_res` subdirectory.
+
+Content of class link:../main/java/org/pzdcdoc/Snippet.java[org.pzdcdoc.Snippet]
+
+=== JavaDoc
 Link to JavaDoc of the class: javadoc:ru.bgcrm.dao.user.UserDAO[]
+
+=== Cross documents
+References to `.adoc` files being converted to `.html` links and validated to corectness.
 
 Another document: <<module/index.adoc#, Module>>
 
