@@ -43,7 +43,6 @@ public class Snippet extends BlockProcessor {
                 String path = content.substring(LINK_PREFIX.length());
 
                 String title = StringUtils.substringBetween(path, "[", "]");
-                
 
                 String fragment = StringUtils.substringAfter(path, "#");
                 if (StringUtils.isNotBlank(fragment))
@@ -74,7 +73,7 @@ public class Snippet extends BlockProcessor {
                 }
 
                 // TODO: Make comment language - specific.
-                contentList.add("// PzdcDoc snippet of: '" + path + "', lines: " + lineFrom + " - " + lineTo);
+                contentList.add("// PzdcDoc snippet of: '" + (StringUtils.isNotBlank(title) ? title : path) + "', lines: " + lineFrom + " - " + lineTo);
                 contentList.add("");
 
                 String from = (String) attributes.get(ATTR_FROM);
