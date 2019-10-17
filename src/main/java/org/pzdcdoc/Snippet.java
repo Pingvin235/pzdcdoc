@@ -123,13 +123,19 @@ public class Snippet extends BlockProcessor {
         XML {
             @Override
             protected String commment(String line) {
-                return "<!-- " + line + "-->";
+                return "<!-- " + line + " -->";
             }
         },
         SH {
             @Override
             protected String commment(String line) {
                 return "# " + line;
+            }
+        },
+        JSP {
+            @Override
+            protected String commment(String line) {
+                return "<%-- " + line + " --%>";
             }
         };
 
@@ -145,6 +151,8 @@ public class Snippet extends BlockProcessor {
                 case "py":
                 case "sh":
                     return SH;
+                case "jsp":
+                    return JSP;
                 default:
                     return C;
             }
