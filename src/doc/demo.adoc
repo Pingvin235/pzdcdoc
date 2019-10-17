@@ -1,4 +1,4 @@
-= Demo AsciiDoctor syntax
+= Demo PzdcDoc
 :toc:
 
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
@@ -80,6 +80,15 @@ Sample Cloud: myuser@mycompany.com
 
 [[snippets]]
 == Code snippets
+=== Extracted "live snippets"
+The source link below is automatically extracted to highlighted code snippet during HTML convertion.
+Attributes `from` and `to` allow check actuality of content, `remove-leading` - deletion of line indent.
+Here is the snippet of connecting plugins to DocGenerator.
+
+[snippet, from="// h", to="r());", remove-leading="        "]
+link:../main/java/org/pzdcdoc/DocGenerator.java#L73-L77[org.pzdcdoc.DocGenerator]
+
+=== Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
 [source]
 ----
@@ -104,6 +113,7 @@ class My {
 ----
 
 == References
+=== Resources
 Image, recommended to be places in directory `_res` near of the file.
 
 image::_res/image.png[]
@@ -112,7 +122,15 @@ Big images may be restricted by width, recommended 600px for horizontal oriented
 
 image::_res/image.png[width="600px"]
 
+Any file from a project may be also referenced and automatically copied to `_res` subdirectory.
+
+Content of class link:../main/java/org/pzdcdoc/Snippet.java[org.pzdcdoc.Snippet]
+
+=== JavaDoc
 Link to JavaDoc of the class: javadoc:ru.bgcrm.dao.user.UserDAO[]
+
+=== Cross documents
+References to `.adoc` files being converted to `.html` links and validated to corectness.
 
 Another document: <<module/index.adoc#, Module>>
 

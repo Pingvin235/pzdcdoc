@@ -79,16 +79,10 @@ tasks.withType(Javadoc) {
 
 defaultTasks 'clean', 'buildDemoDocLocal'
 
-task copyDemoDocLocal(type: Copy) {
-    mustRunAfter 'clean'
-    from 'src/doc'
-    into docSrcDir
-}
-
-task buildDemoDocLocal(type:JavaExec, dependsOn: ['compileJava', 'copyDemoDocLocal']) {
+task buildDemoDocLocal(type:JavaExec, dependsOn: ['compileJava']) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.pzdcdoc.DocGenerator'
-    args 'NOTUSED', docSrcDir, docOutDir
+    args 'NOTUSED', 'src/doc', docOutDir
 }
 
 task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {

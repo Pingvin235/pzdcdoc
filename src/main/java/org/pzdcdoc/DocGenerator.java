@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.DirectoryWalker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
@@ -38,6 +40,9 @@ public class DocGenerator {
     private static final String DIR_RES = "_res";
     private static final String EXT_ADOC = ".adoc";
     private static final String EXT_HTML = ".html";
+
+    public static final String ATTR_GENERATOR = "generator";
+    public static final String ATTR_SOURCE = "source";
     
     private final Asciidoctor asciidoctor = Factory.create();
     
@@ -57,29 +62,42 @@ public class DocGenerator {
     // cached ToC from index.adoc for injecting everywhere
     private Element toc;
     private Search search = new Search();
+    // processing errors
+    private int errors;
     
     public DocGenerator(String configDir, String sourceDir, String targetDir) throws Exception {
         this.configDir = new File(configDir);
         this.sourceDir = new File(sourceDir);
         this.targetDir = new File(targetDir);
         
+        // https://github.com/asciidoctor/asciidoctorj/blob/v2.1.0/docs/integrator-guide.adoc
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
+        javaExtensionRegistry.block(new Snippet());
+        javaExtensionRegistry.treeprocessor(new Treeprocessor());
 
         asciidoctor.requireLibrary("asciidoctor-diagram");
         
         FileUtils.deleteDirectory(new File(targetDir));
     }
     
-    public void process() throws Exception {
+    public void error() {
+        errors++;
+    }
+
+    public int process() throws Exception {
         process(sourceDir, targetDir, -1, new HashMap<>());
         copyScriptsAndStyles();
+        deleteTmpFiles();
+        if (errors > 0)
+            log.error("PROC ERRORS => " + errors);
+        return errors;
     }
 
     public int check() throws Exception {
         int errors = new Links().checkDir(targetDir);
         if (errors > 0)
-            log.error("ERROR COUNT => " + errors);
+            log.error("CHECK ERRORS => " + errors);
         return errors;
     }
 
@@ -125,9 +143,12 @@ public class DocGenerator {
                         .icons(Attributes.FONT_ICONS)
                         .tableOfContents(true)
                         .setAnchors(true)
+                        .linkAttrs(true)
                         .get();
                 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
+                attrs.setAttribute(ATTR_SOURCE, source);
+                attrs.setAttribute(ATTR_GENERATOR, this);
 
                 attrs.setAttributes(attributes);
 
@@ -171,7 +192,7 @@ public class DocGenerator {
         return attributes;
     }
         
-    public void copyScriptsAndStyles() throws IOException {
+    private void copyScriptsAndStyles() throws IOException {
         log.info("Copy scripts and styles.");
         
         File rootRes = new File(targetDir + "/" + DIR_RES);
@@ -186,6 +207,21 @@ public class DocGenerator {
         for (String style : STYLESHEETS)
             IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style),
                     new FileOutputStream(rootRes.getAbsolutePath() + "/" + style));
+    }
+
+    private void deleteTmpFiles() throws IOException {
+        log.info("Delete temporary directories");
+        Files
+            .walk(sourceDir.toPath())
+            .filter(f -> f.toFile().isDirectory() && f.getFileName().startsWith(".asciidoctor"))
+            .forEach(f -> {
+                try {
+                    log.info(f);
+                    FileUtils.deleteDirectory(f.toFile());
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
     }
 
     private boolean containsIndex(String name) {
@@ -235,16 +271,18 @@ public class DocGenerator {
         jsoup.select("#toc").before("<div id=\"toc\" class=\"toc2\">" + toc.toString() + "</div>");
         
         for (Element a : jsoup.select("#toc.toc2 a")) {
-            String href = a.attr("href");
-            if (Links.isExternalReference(href))
+            Link link = new Link(a);
+            if (link.isExternalReference())
                 continue;
+
+            String href = link.get();
 
             if (target.endsWith(href)) {
                 a.addClass("current");
                 if (pageToC != null)
                     a.after(pageToC);
             }
-            a.attr("href", StringUtils.repeat("../", depth) + href);
+            link.set(StringUtils.repeat("../", depth) + href);
             a.attr("title", a.text());
         }
         
@@ -254,7 +292,9 @@ public class DocGenerator {
     }
 
     private void copyResources(Document jsoup, Path source, Path target) throws IOException {
-        for (String href : new Links().getLinks(jsoup)) {
+        for (Link link : Links.getLinks(jsoup)) {
+            String href = link.get();
+
             href = StringUtils.substringBefore(href, "#");
             if (href.endsWith(EXT_HTML))
                 continue;
@@ -264,15 +304,18 @@ public class DocGenerator {
                 log.debug("Skip: {}", resSrc);
                 continue;
             }
-            File resTarget = target.getParent().resolve(href).toFile();
-
-            FileUtils.forceMkdirParent(resTarget);
 
             if (href.startsWith("diag")) {
+                File resTarget = target.getParent().resolve(href).toFile();
                 log.info("Move {} to {}", resSrc, resTarget);
                 FileUtils.moveFile(resSrc, resTarget);
             } else {
+                String relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
+                link.set(relativePath);
+
+                File resTarget = target.getParent().resolve(relativePath).toFile();
                 log.info("Copy {} to {}", resSrc, resTarget);
+                FileUtils.forceMkdirParent(resTarget);
                 FileUtils.copyFile(resSrc, resTarget);
             }
         }
@@ -282,10 +325,13 @@ public class DocGenerator {
         String configDir = args[0], sourceDir = args[1], targetDir = args[2];
         
         DocGenerator gen = new DocGenerator(configDir, sourceDir, targetDir);
-        gen.process();
-        int errors = gen.check();
-        
+        int errors = gen.process();
+        errors += gen.check();
+
         log.info("DONE!");
+        
+        if (errors > 0)
+            log.error("ERRORS => " + errors);
         
         System.exit(errors);
     }
