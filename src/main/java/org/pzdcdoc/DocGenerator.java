@@ -90,14 +90,14 @@ public class DocGenerator {
         copyScriptsAndStyles();
         deleteTmpFiles();
         if (errors > 0)
-            log.error("PROC ERROR COUNT => " + errors);
+            log.error("PROC ERRORS => " + errors);
         return errors;
     }
 
     public int check() throws Exception {
         int errors = new Links().checkDir(targetDir);
         if (errors > 0)
-            log.error("CHECK ERROR COUNT => " + errors);
+            log.error("CHECK ERRORS => " + errors);
         return errors;
     }
 
@@ -327,8 +327,11 @@ public class DocGenerator {
         DocGenerator gen = new DocGenerator(configDir, sourceDir, targetDir);
         int errors = gen.process();
         errors += gen.check();
-        
+
         log.info("DONE!");
+        
+        if (errors > 0)
+            log.error("ERRORS => " + errors);
         
         System.exit(errors);
     }
