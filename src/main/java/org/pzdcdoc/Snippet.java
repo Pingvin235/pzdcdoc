@@ -73,9 +73,10 @@ public class Snippet extends BlockProcessor {
                     }
                 }
 
-                // TODO: Make comment language - specific.
-                contentList.add("// PzdcDoc snippet of: '" + (StringUtils.isNotBlank(title) ? title : path) + "', lines: " + lineFrom + " - " + lineTo);
-                contentList.add("");
+                // TODO: Make mapping extension - lang
+                String lang = StringUtils.substringAfterLast(path, ".");
+
+                addComment(contentList, path, title, lineFrom, lineTo, lang);
 
                 String from = (String) attributes.get(ATTR_FROM);
                 String to = (String) attributes.get(ATTR_TO);
@@ -101,8 +102,6 @@ public class Snippet extends BlockProcessor {
 
                 attributes = new HashMap<>();
                 attributes.put("style", "source");
-                // TODO: Make mapping extension - lang
-                String lang = StringUtils.substringAfterLast(path, ".");
                 if (StringUtils.isNotBlank(lang))
                     attributes.put("language", lang);
             }
@@ -112,6 +111,49 @@ public class Snippet extends BlockProcessor {
         }
 
         return createBlock(parent, "listing", contentList, attributes);
+    }
+
+    private static enum LangGroup {
+        C {
+            @Override
+            protected String commment(String line) {
+                return "// " + line;
+            }
+        },
+        XML {
+            @Override
+            protected String commment(String line) {
+                return "<!-- " + line + "-->";
+            }
+        },
+        SH {
+            @Override
+            protected String commment(String line) {
+                return "# " + line;
+            }
+        };
+
+        protected abstract String commment(String line);
+
+        private static LangGroup of(String lang) {
+            switch(lang) {
+                case "xml":
+                case "html":
+                case "htm":
+                    return XML;
+                case "pl":
+                case "py":
+                case "sh":
+                    return SH;
+                default:
+                    return C;
+            }
+        }
+    }
+
+    private void addComment(List<String> contentList, String path, String title, int lineFrom, int lineTo, String lang) {
+        contentList.add(LangGroup.of(lang).commment("PzdcDoc snippet of: '" + (StringUtils.isNotBlank(title) ? title : path) + "', lines: " + lineFrom + " - " + lineTo));
+        contentList.add("");
     }
 
 }
