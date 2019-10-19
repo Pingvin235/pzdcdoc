@@ -74,7 +74,7 @@ public class DocGenerator {
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
         javaExtensionRegistry.block(new Snippet());
-        javaExtensionRegistry.treeprocessor(new Treeprocessor());
+        //javaExtensionRegistry.treeprocessor(new Treeprocessor());
 
         asciidoctor.requireLibrary("asciidoctor-diagram");
         
