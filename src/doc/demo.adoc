@@ -31,7 +31,11 @@ List:
 * Position 1
 * Position 2
 
-=== Third level header
+=== Third level header, description list
+CPU::
+Sometimes is needed for PC.
+RAM::
+Is also needed.
 
 == Tables
 === Simple example
