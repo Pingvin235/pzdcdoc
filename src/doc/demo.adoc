@@ -5,7 +5,7 @@
 ====
 See this article published to HTML5: http://pzdcdoc.org/demo/src/doc/demo.html
 
-The source page is: https://github.com/pzdcdoc/pzdcdoc/src/doc/demo.adoc
+The source page is: https://github.com/pzdcdoc/pzdcdoc/tree/master/src/doc/demo.adoc
 ====
 
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual

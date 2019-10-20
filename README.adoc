@@ -5,7 +5,7 @@
 ====
 See this article published to HTML5: http://pzdcdoc.org/demo/README.html 
 
-The source page is: https://github.com/pzdcdoc/pzdcdoc/README.adoc
+The source page is: https://github.com/pzdcdoc/pzdcdoc/tree/master/README.adoc
 ====
 
 == About
