@@ -85,3 +85,12 @@ but you may reference as well any project file, it will be copied to the target 
 * All the used references between `.adoc` are relative and automatically converted to HTML.
 
 == GIT workflow
+Documentation sources have to be treated as high-level program code, written for humans.
+For easily managing all of those sources together, recommended to do each change in separated GIT branch,
+do not merge it on master, but pick all the modification in single commit on master whenever work is done. 
+Use merge squash of similar operations. You may found link:https://drive.google.com/open?id=15NptRsx1qrdiWEew23EFz6gbxD6S12VQpnBQ6X9NbiQ[here] detailed description of such workflow.
+
+For doing modifications in documentation only recommended to make one more branch *doc-no-merge*
+in each repo, do there intermediate changes and use it for building documentation.
+Periodically content of this branch is picked to master using merge with squash.
+ 
