@@ -1,6 +1,13 @@
 = Demo PzdcDoc
 :toc:
 
+[NOTE]
+====
+See this article published to HTML5: http://pzdcdoc.org/demo/src/doc/demo.html
+
+The source page is: https://github.com/pzdcdoc/pzdcdoc/tree/master/src/doc/demo.adoc
+====
+
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
 
 == Second level header
@@ -171,9 +178,13 @@ Advantages:
 * no need to export.
 
 ==== Ditaa
-http://ditaa.sourceforge.net/
+Ditaa is a ASCII-based format of block diagrams.
+Here is the original page: http://ditaa.sourceforge.net/ and actual repo: https://github.com/stathissideris/ditaa 
 
-Use http://asciiflow.com/ for editing.
+References:
+[square]
+* http://asciiflow.com/ - online editor;
+* https://blog.regehr.org/archives/1653 - examples of ASCII Art including diagrams.
 
 [ditaa]
 ----
@@ -182,6 +193,29 @@ Use http://asciiflow.com/ for editing.
 |  Test for Adoc   +------>+   Diagrams    |
 |                  |       |               |
 +------------------+       +---------------+
+----
+
+And a complex sample.
+[ditaa]
+----
+                /-----------\
+           /--->+  context  |
+           |    \------+----/
+  all jobs |           |       knows root job                  points to super job
+  point to |     seeds |   /-----------------------------+------------------------------\
+   context |           |   |                             :                              |
+           |           v   v     splits/merges           v         splits/merges        |
+           :    +------+---+--+     starts       +-------+-------+      starts    +------+------+
+           \----+ (root) job  +----------------->+ sub/super job +--------------->|   sub job   |
+                +------+---+--+                  +-------+-------+                +------+------+
+                       |   ^                             :                              ^
+               creates |   :                             |                              |
+                       |   | know each other             \------------------------------/
+      starts on change |   | (parent <-> child)                 points to sub job
+                       v   v
+                +------+---+--+
+                |  child job  |
+                +-------------+
 ----
 
 === With 3rd party editors
