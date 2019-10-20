@@ -1,6 +1,8 @@
 = Demo PzdcDoc
 :toc:
 
+NOTE: See this article published to HTML5: http://pzdcdoc.org/demo/demo.html
+
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
 
 == Second level header
