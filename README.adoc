@@ -1,12 +1,17 @@
 = PzdcDoc documentation generator
 :toc:
 
-Based on link:https://asciidoctor.org/docs/asciidoctorj[AsciidoctorJ], 
-Java binding of the excellent software documentation framework link:https://asciidoctor.org/docs[Asciidoctor].
-Additionally to the information below you may have a look on the link:https://docs.google.com/presentation/d/1MEIMT9SEnepZdLMVFv2Koev3TILRGn_cNgdT25eS-Zg/edit?usp=sharing[Presentation]
+ifndef::backend-html5,backend-docbook5[Only shown when converting to HTML5 or DocBook 5.]
+NOTE: See this article in converted format: http://pzdcdoc.org/demo/README.html
+endif::[]
 
 == About
 PzdcDoc is the complete ready-to-use solution, providing clear way and workflow for organizing software documentation.
+
+Based on link:https://asciidoctor.org/docs/asciidoctorj[AsciidoctorJ], 
+Java binding of the excellent software documentation framework link:https://asciidoctor.org/docs[Asciidoctor].
+Thanks to 100% compatibity to AsciiDoctor, existing documentation files may be re-used.
+
 On top of AsciiDoctor there are added the following features:
 [square]
 * Delivered as a single Java link:https://mvnrepository.com/artifact/org.pzdcdoc/pzdcdoc[artifact] in Maven repository for simple integration in existing build processes.
@@ -18,6 +23,30 @@ On top of AsciiDoctor there are added the following features:
 * Extension for referencing of JavaDoc by class name.
 * <<src/doc/demo#snippets, Live snippets>> for extracting samples directly out of source files with simple validation of actuality.
 * CSS enhancements.
+
+== Demo
+Clone the GIT repository, after execute in the directory one of the following tests.
+You would need Java version 8 or higher.
+Both produce result to `target/doc-out`, these files may be published on HTTP server.
+
+=== Complex test with checking out GIT
+[source]
+----
+gradlew buildDemoDoc
+----
+
+Extracts the project data from GIT and uses Maven artifact of PzdcDoc for running.
+That sample suits for integrating to other projects. 
+You may see the result here: http://pzdcdoc.org/demo
+
+=== Simple test with local files
+[source]
+----
+gradlew
+----
+
+Default task `buildDemoDocLocal` uses `src/doc` directory as an input and compiles classes from sources.
+Good for first start and testing changes.
 
 === History
 Initially this tool was developed for the link:https://bgerp.org[BGERP], project of Open Source ERP/CRM system.
@@ -31,30 +60,6 @@ The single tool has replaced Confluence + MediaWiki + self-written DB structure 
 Ideally fits for continuous delivery approach, when documentation is considered as essential part of product and written, 
 stored, handled together with other sources. Documentation is automatically built using GitLab CI and published, 
 you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].
-
-== Demo
-Clone the GIT repository, after execute in the directory one of the following tests.
-You would need Java version 8 or higher.
-Both produce result to `target/doc-out`, these files may be published on HTTP server.
-
-=== Simple test with local files
-[source]
-----
-gradlew
-----
-
-Default task `buildDemoDocLocal` uses `src/doc` directory as an input and compiles classes from sources.
-Good for first start and testing changes.
-
-=== Complex test with checking out GIT
-[source]
-----
-gradlew buildDemoDoc
-----
-
-Extracts the project data from GIT and uses Maven artifact of PzdcDoc for running.
-That sample suits for integrating to other projects. 
-You may see the result here: http://pzdcdoc.org/demo
 
 == How does it work
 [square]
