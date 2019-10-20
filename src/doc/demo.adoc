@@ -3,7 +3,7 @@
 
 [NOTE]
 ====
-See this article published to HTML5: http://pzdcdoc.org/demo/demo.html
+See this article published to HTML5: http://pzdcdoc.org/demo/src/doc/demo.html
 
 The source page is: https://github.com/pzdcdoc/pzdcdoc/src/doc/demo.adoc
 ====
