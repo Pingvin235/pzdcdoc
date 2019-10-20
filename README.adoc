@@ -27,7 +27,12 @@ On top of AsciiDoctor there are added the following features:
 * <<src/doc/demo#snippets, Live snippets>> for extracting samples directly out of source files with simple validation of actuality.
 * CSS enhancements.
 
-== Test samples
+=== References
+[square]
+* https://powerman.name/doc/asciidoc - AsciiDoc cheatsheet;
+* https://mrhaki.blogspot.com/2014/06/awesome-asciidoc-use-link-attributes.html - seria of articles about AsciiDoc.
+
+== Demo samples
 Clone the GIT repository, after execute in the directory one of the following tests.
 You would need Java version 8 or higher.
 Both produce result to `target/doc-out`, these files may be published on HTTP server.
@@ -78,3 +83,5 @@ In the input directory may be placed:
 ** Resources (files, images) are recommended be placed in `_res` subdirectory near of referencing `.adoc` file, 
 but you may reference as well any project file, it will be copied to the target directory.
 * All the used references between `.adoc` are relative and automatically converted to HTML.
+
+== GIT workflow

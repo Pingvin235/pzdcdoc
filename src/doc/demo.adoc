@@ -178,9 +178,13 @@ Advantages:
 * no need to export.
 
 ==== Ditaa
-http://ditaa.sourceforge.net/
+Ditaa is a ASCII-based format of block diagrams.
+Here is the original page: http://ditaa.sourceforge.net/ and actual repo: https://github.com/stathissideris/ditaa 
 
-Use http://asciiflow.com/ for editing.
+References:
+[square]
+* http://asciiflow.com/ - online editor;
+* https://blog.regehr.org/archives/1653 - examples of ASCII Art including diagrams.
 
 [ditaa]
 ----
