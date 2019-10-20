@@ -46,7 +46,7 @@ gradlew
 Default task `buildDemoDocLocal` uses `src/doc` directory as an input and compiles classes from sources.
 Good for first start and testing changes.
 
-=== History
+== History
 Initially this tool was developed for the link:https://bgerp.org[BGERP], project of Open Source ERP/CRM system.
 It was successfully used there as one system with GIT stored sources for support of:
 [square]
