@@ -36,8 +36,9 @@ On top of AsciiDoctor there are added the following features:
 Clone the GIT repository, after execute in the directory one of the following tests.
 You would need Java version 8 or higher.
 Both produce result to `target/doc-out`, these files may be published on HTTP server.
+See tasks configuration in link:build.gradle[] file.
 
-=== Complex test with checking out GIT
+=== Complex case with checking out GIT
 [source]
 ----
 gradlew buildDemoDoc
@@ -47,7 +48,7 @@ Extracts the project data from GIT and uses Maven artifact of PzdcDoc for runnin
 That sample may be useful for the case of building documentation out of many GIT projects. 
 The result from *master* branch is published to: http://pzdcdoc.org/demo
 
-=== Simple test with local files
+=== Simple case with local files
 [source]
 ----
 gradlew
