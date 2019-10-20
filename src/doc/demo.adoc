@@ -195,6 +195,29 @@ References:
 +------------------+       +---------------+
 ----
 
+And a complex sample.
+[ditaa]
+----
+                /-----------\
+           /--->+  context  |
+           |    \------+----/
+  all jobs |           |       knows root job                  points to super job
+  point to |     seeds |   /-----------------------------+------------------------------\
+   context |           |   |                             :                              |
+           |           v   v     splits/merges           v         splits/merges        |
+           :    +------+---+--+     starts       +-------+-------+      starts    +------+------+
+           \----+ (root) job  +----------------->+ sub/super job +--------------->|   sub job   |
+                +------+---+--+                  +-------+-------+                +------+------+
+                       |   ^                             :                              ^
+               creates |   :                             |                              |
+                       |   | know each other             \------------------------------/
+      starts on change |   | (parent <-> child)                 points to sub job
+                       v   v
+                +------+---+--+
+                |  child job  |
+                +-------------+
+----
+
 === With 3rd party editors
 Schemas can also be produced using third-party editors, for example: link:https://www.yworks.com/downloads#yEd[yEd]
 Source files are stored in `_res` directories under names ending in `_schema.graphml`.
