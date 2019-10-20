@@ -32,7 +32,7 @@ On top of AsciiDoctor there are added the following features:
 * https://powerman.name/doc/asciidoc - AsciiDoc cheatsheet;
 * https://mrhaki.blogspot.com/2014/06/awesome-asciidoc-use-link-attributes.html - seria of articles about AsciiDoc.
 
-== Demo samples
+== How to use
 Clone the GIT repository, after execute in the directory one of the following tests.
 You would need Java version 8 or higher.
 Both produce result to `target/doc-out`, these files may be published on HTTP server.
