@@ -1,8 +1,12 @@
 = PzdcDoc documentation generator
 :toc:
 
-NOTE: See this article published to HTML5: http://pzdcdoc.org/demo/README.html 
+[NOTE]
+====
+See this article published to HTML5: http://pzdcdoc.org/demo/README.html 
+
 The source page is: https://github.com/pzdcdoc/pzdcdoc/README.adoc
+====
 
 == About
 PzdcDoc is the complete ready-to-use solution, providing clear way and workflow for organizing software documentation.
