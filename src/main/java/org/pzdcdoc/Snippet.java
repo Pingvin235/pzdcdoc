@@ -86,11 +86,11 @@ public class Snippet extends BlockProcessor {
                     String line = lines.get(lineNum - 1);
 
                     if (from != null && lineNum == lineFrom && !line.trim().startsWith(from)) {
-                        log.error("Snippet '{}' doesn't start from: '{}', line: {}", path, from, line.trim());
+                        log.error("Snippet '{}' doesn't start from: '{}', line number: {}, content: {}", path, from, String.valueOf(lineNum), line.trim());
                         generator.error();
                     }
                     if (to != null && lineNum == lineTo && !line.trim().endsWith(to)) {
-                        log.error("Snippet '{}' doesn't end on: '{}', line: {}", path, to, line.trim());
+                        log.error("Snippet '{}' doesn't end on: '{}', line number: {}, content: {}", path, to, String.valueOf(lineNum), line.trim());
                         generator.error();
                     }
                     
