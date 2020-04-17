@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,9 +53,9 @@ public class Snippet extends BlockProcessor {
                 File source = (File) parent.getDocument().getAttribute(DocGenerator.ATTR_SOURCE);
                 if (source == null)
                     throw new Exception("Not found source file attribute.");
-                
+
                 File snippet = source.toPath().getParent().resolve(path).toFile();
-                if (!snippet.exists()) 
+                if (!snippet.exists())
                     throw new Exception("File doesn't exist: " + snippet);
 
                 List<String> lines = Files.readAllLines(snippet.toPath());
@@ -64,10 +65,10 @@ public class Snippet extends BlockProcessor {
                 if (StringUtils.isNotBlank(fragment)) {
                     Matcher m = linesRange.matcher(fragment);
                     if (m.find()) {
-                        int line  = NumberUtils.toInt(m.group(1));
+                        int line = NumberUtils.toInt(m.group(1));
                         if (lineFrom <= line && line <= lineTo)
                             lineFrom = line;
-                        line =  NumberUtils.toInt(m.group(3));
+                        line = NumberUtils.toInt(m.group(3));
                         if (lineFrom <= line && line <= lineTo)
                             lineTo = line;
                     }
@@ -82,18 +83,24 @@ public class Snippet extends BlockProcessor {
                 String to = (String) attributes.get(ATTR_TO);
                 String removeLeading = (String) attributes.get(ATTR_REMOVE_LEADING);
 
+                PossibleLine pl = null;
+
                 for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
                     String line = lines.get(lineNum - 1);
 
                     if (from != null && lineNum == lineFrom && !line.trim().startsWith(from)) {
-                        log.error("Snippet '{}' doesn't start from: '{}', line number: {}, content: {}", path, from, String.valueOf(lineNum), line.trim());
+                        pl = PossibleLine.find(lines, lineNum, null, l -> l.trim().startsWith(from));
+                        log.error("Snippet '{}' doesn't start from: '{}', line number: {}{}, content: {}", path, from,
+                                String.valueOf(lineNum), PossibleLine.toString(pl), line.trim());
                         generator.error();
                     }
                     if (to != null && lineNum == lineTo && !line.trim().endsWith(to)) {
-                        log.error("Snippet '{}' doesn't end on: '{}', line number: {}, content: {}", path, to, String.valueOf(lineNum), line.trim());
+                        pl = PossibleLine.find(lines, lineNum, pl, l -> l.trim().endsWith(to));
+                        log.error("Snippet '{}' doesn't end on: '{}', line number: {}{}, content: {}", path, to,
+                                String.valueOf(lineNum), PossibleLine.toString(pl), line.trim());
                         generator.error();
                     }
-                    
+
                     if (removeLeading != null && line.startsWith(removeLeading))
                         line = line.substring(removeLeading.length());
 
@@ -111,6 +118,44 @@ public class Snippet extends BlockProcessor {
         }
 
         return createBlock(parent, "listing", contentList, attributes);
+    }
+
+    private static final class PossibleLine {
+        // how many lines before and after to search
+        private static final int SEARCH_OFFSET = 30;
+
+        private final int num;
+        private final int offset;
+
+        private PossibleLine(int line, int shift) {
+            this.num = line;
+            this.offset = shift;
+        }
+
+        private static String toString(PossibleLine line) {
+            return line == null ? "" : " (possible: " + line.num + ")";
+        }
+
+        private static PossibleLine find(List<String> lines, int num, PossibleLine before, Function<String, Boolean> checkF) {
+            if (before != null) {
+                num = num + before.offset;
+                if (0 < num && num <= lines.size() -1 && checkF.apply(lines.get(num - 1)))
+                    return new PossibleLine(num, before.offset);
+                return null;
+            }
+
+            for (int offset = 1; offset <= SEARCH_OFFSET; offset++) {
+                int numBefore = num - offset;
+                if (numBefore > 1 && checkF.apply(lines.get(numBefore - 1)))
+                    return new PossibleLine(numBefore, -offset);
+                
+                int numAfter = num + offset;
+                if (numAfter <= lines.size() && checkF.apply(lines.get(numBefore - 1)))
+                    return new PossibleLine(numAfter, offset);
+            }
+
+            return null;
+        }
     }
 
     private static enum LangGroup {
