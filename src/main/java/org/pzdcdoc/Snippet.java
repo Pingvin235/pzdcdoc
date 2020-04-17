@@ -146,11 +146,11 @@ public class Snippet extends BlockProcessor {
 
             for (int offset = 1; offset <= SEARCH_OFFSET; offset++) {
                 int numBefore = num - offset;
-                if (numBefore > 1 && checkF.apply(lines.get(numBefore - 1)))
+                if (1 < numBefore && checkF.apply(lines.get(numBefore - 1)))
                     return new PossibleLine(numBefore, -offset);
                 
                 int numAfter = num + offset;
-                if (numAfter <= lines.size() && checkF.apply(lines.get(numBefore - 1)))
+                if (numAfter <= lines.size() && checkF.apply(lines.get(numAfter - 1)))
                     return new PossibleLine(numAfter, offset);
             }
 
