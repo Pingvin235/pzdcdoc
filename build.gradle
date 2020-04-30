@@ -86,7 +86,7 @@ task buildDemoDocLocal(type:JavaExec, dependsOn: ['compileJava']) {
 }
 
 task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
-    commandLine 'git', 'clone', 'https://github.com/pzdcdoc/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', "${docBranch}"
+    commandLine 'git', 'clone', 'https://github.com/Pingvin235/pzdcdoc.git', docSrcDir, '--depth', '1', '--branch', "${docBranch}"
 }
 
 // Sample of generation out of branch:
@@ -95,6 +95,16 @@ task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenL
     classpath = configurations.pzdcdoc
     main = 'org.pzdcdoc.DocGenerator'
     args 'NOTUSED', docSrcDir, docOutDir
+}
+
+// Sample of generation out of branch:
+// bash -c "./gradlew publishDemoDoc -PdocBranch=i5-diagrams"
+task publishDemoDoc(dependsOn: 'buildDemoDoc') {
+    doFirst {
+        def command = "rsync --delete -Pav target/doc-out/ pzdcdoc@pzdc.de:/home/pzdcdoc/www/demo"
+        println "Running: $command"
+        println command.execute().text
+    }
 }
 
 task sourceJar(type: Jar) {
@@ -195,25 +205,25 @@ def customizePom(pom) {
 
             description 'AsciiDoctor based documentation generation tool'
             name 'PzdcDoc'
-            url 'https://github.com/pzdcdoc/pzdcdoc'
+            url 'https://github.com/Pingvin235/pzdcdoc'
             organization {
                 name 'org.pzdcdoc'
                 url 'https://github.com/pzdcdoc'
             }
             issueManagement {
                 system 'GitHub'
-                url 'https://github.com/pzdcdoc/pzdcdoc/issues'
+                url 'https://github.com/Pingvin235/pzdcdoc/issues'
             }
             licenses {
                 license {
                     name 'MIT License'
-                    url 'https://github.com/pzdcdoc/pzdcdoc/blob/master/LICENSE'
+                    url 'https://github.com/Pingvin235/pzdcdoc/blob/master/LICENSE'
                     distribution 'repo'
                 }
             }
             scm {
-                url 'https://github.com/pzdcdoc/pzdcdoc'
-                connection 'scm:git:git://github.com/pzdcdoc/pzdcdoc.git'
+                url 'https://github.com/Pingvin235/pzdcdoc'
+                connection 'scm:git:git://github.com/Pingvin235/pzdcdoc.git'
                 developerConnection 'scm:git:ssh://git@github.com:pzdcdoc/pzdcdoc.git'
             }
             developers {
