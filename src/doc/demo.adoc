@@ -3,7 +3,7 @@
 
 [NOTE]
 ====
-See this article published to HTML5: http://pzdcdoc.org/demo/src/doc/demo.html
+See this article published to HTML5: https://pzdcdoc.org/demo/src/doc/demo.html
 
 The source page is: https://github.com/Pingvin235/pzdcdoc/tree/master/src/doc/demo.adoc
 ====
@@ -97,7 +97,7 @@ Attributes `from` and `to` allow check actuality of content, `remove-leading` - 
 Here is the snippet of connecting plugins to DocGenerator.
 
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/DocGenerator.java#L72-L76[org.pzdcdoc.DocGenerator]
+link:../main/java/org/pzdcdoc/DocGenerator.java#L79-L83[org.pzdcdoc.DocGenerator]
 
 === Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
@@ -135,7 +135,7 @@ image::_res/image.png[width="600px"]
 
 Any file from a project may be also referenced and automatically copied to `_res` subdirectory.
 
-Content of class link:../main/java/org/pzdcdoc/Snippet.java[org.pzdcdoc.Snippet]
+Content of class link:../main/java/org/pzdcdoc/processor/Snippet.java[org.pzdcdoc.processor.Snippet]
 
 === JavaDoc
 Link to JavaDoc of the class: javadoc:ru.bgcrm.dao.user.UserDAO[]

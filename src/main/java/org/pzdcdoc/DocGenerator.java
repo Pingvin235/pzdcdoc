@@ -32,7 +32,14 @@ import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.pzdcdoc.processor.JavaDocLink;
+import org.pzdcdoc.processor.Snippet;
 
+/**
+ * The main runnable class, converting AsciiDoc sources to HTML.
+ * 
+ * @author Shamil Vakhitov
+ */
 public class DocGenerator {
     private static final Logger log = LogManager.getLogger();
 

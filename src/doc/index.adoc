@@ -5,4 +5,4 @@
 * <<demo.adoc#, Demo>>
 * Modules
 ** <<module/index.adoc#, Module>>
-* External link:http://pzdcdoc.org[link]
+* External link:https://pzdcdoc.org[link]

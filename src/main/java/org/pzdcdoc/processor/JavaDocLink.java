@@ -1,4 +1,4 @@
-package org.pzdcdoc;
+package org.pzdcdoc.processor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,9 +7,14 @@ import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
 
+/**
+ * AsciiDoctor-J extension, converts 'javadoc:package.Class[]' to URLs.
+ * 
+ * @author Shamil Vakhitov
+ */
 @Name("javadoc")
 public class JavaDocLink extends InlineMacroProcessor {
-
+    /** Attribute defining JavaDoc root URL. */
     private static final String ATTR_PATH_PREFIX_NAME = "pzdc-javadoc";
 
     @Override

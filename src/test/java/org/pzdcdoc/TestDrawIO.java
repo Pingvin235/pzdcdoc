@@ -10,12 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class TestDrawIO {
     @Test
@@ -38,7 +36,7 @@ public class TestDrawIO {
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        var json = mapper.writeValueAsString(data);
+        String json = mapper.writeValueAsString(data);
         var body = RequestBody.create(JSON, json);
         
         var request = new Request.Builder()

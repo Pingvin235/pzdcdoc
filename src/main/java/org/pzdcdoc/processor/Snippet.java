@@ -1,4 +1,4 @@
-package org.pzdcdoc;
+package org.pzdcdoc.processor;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -19,7 +19,13 @@ import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.BlockProcessor;
 import org.asciidoctor.extension.Name;
 import org.asciidoctor.extension.Reader;
+import org.pzdcdoc.DocGenerator;
 
+/**
+ * AsciiDoctor-J extension supporting 'live snippets'.
+ * 
+ * @author Shamil Vakhitov
+ */
 @Name("snippet")
 @ContentModel(ContentModel.SIMPLE)
 public class Snippet extends BlockProcessor {
@@ -30,7 +36,7 @@ public class Snippet extends BlockProcessor {
     public static final String ATTR_REMOVE_LEADING = "remove-leading";
 
     private static final String LINK_PREFIX = "link:";
-    private static final Pattern linesRange = Pattern.compile("L(\\d+)(\\-L(\\d+))?");
+    private static final Pattern LINES_RANGE = Pattern.compile("L(\\d+)(\\-L(\\d+))?");
 
     @Override
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
@@ -63,7 +69,7 @@ public class Snippet extends BlockProcessor {
                 int lineTo = lines.size();
 
                 if (StringUtils.isNotBlank(fragment)) {
-                    Matcher m = linesRange.matcher(fragment);
+                    Matcher m = LINES_RANGE.matcher(fragment);
                     if (m.find()) {
                         int line = NumberUtils.toInt(m.group(1));
                         if (lineFrom <= line && line <= lineTo)

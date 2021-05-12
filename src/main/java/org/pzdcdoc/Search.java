@@ -14,6 +14,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.select.Elements;
 
+/**
+ * Embedded JS search.
+ * 
+ * @author Shamil Vakhitov
+ */
 public class Search {
     private static final Logger log = LogManager.getLogger();
 
