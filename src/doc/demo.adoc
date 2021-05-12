@@ -44,6 +44,7 @@ Sometimes is needed for PC.
 RAM::
 Is also needed.
 
+[[table]]
 == Tables
 === Simple example
 [%header,cols=1*]
@@ -89,8 +90,10 @@ Sample Cloud: myuser@mycompany.com
  
 |===
 
-[[snippets]]
+[[snippet]]
 == Code snippets
+
+[[snippet-live]]
 === Extracted "live snippets"
 The source link below is automatically extracted to highlighted code snippet during HTML convertion.
 Attributes `from` and `to` allow check actuality of content, `remove-leading` - deletion of line indent.
@@ -99,6 +102,7 @@ Here is the snippet of connecting plugins to DocGenerator.
 [snippet, from="// h", to="r());", remove-leading="        "]
 link:../main/java/org/pzdcdoc/DocGenerator.java#L79-L83[org.pzdcdoc.DocGenerator]
 
+[[snippet-simple]]
 === Simple snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
 [source]
@@ -118,12 +122,15 @@ class My {
    private int a;
    
    public My() {
-   		a = 5;
+      a = 5;
    }
 }
 ----
 
+[[ref]]
 == References
+
+[[ref-res]]
 === Resources
 Image, recommended to be places in directory `_res` near of the file.
 
@@ -137,15 +144,17 @@ Any file from a project may be also referenced and automatically copied to `_res
 
 Content of class link:../main/java/org/pzdcdoc/processor/Snippet.java[org.pzdcdoc.processor.Snippet]
 
+[[ref-javadoc]]
 === JavaDoc
 Link to JavaDoc of the class: javadoc:ru.bgcrm.dao.user.UserDAO[]
 
+[[ref-cross]]
 === Cross documents
 References to `.adoc` files being converted to `.html` links and validated to corectness.
 
 Another document: <<module/index.adoc#, Module>>
 
-Chapter in the current document: <<#snippets, Snippets>>
+Chapter in the current document: <<#snippet, Snippets>>
 
 Chapter in another document: <<module/index.adoc#module-about, About>>
 
@@ -157,17 +166,21 @@ Such link causes a validation error, may be used for marking not finished places
 <<todo, todo>>
 ----
 
+[[sel]]
 == Selections
 For any selection except of links use bold font: 
 *variable*, *path*, *parameter*, *interface => menu => item*
 
 [[diagrams]]
 == Diagrams
-=== Embedded
-Supported Ditaa and PlantUML diagrams.
-[square]
-* https://asciidoctor.org/docs/asciidoctor-diagram/
-* https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
+[[diagrams-drawio]]
+=== Diagrams.NET (former Draw.IO)
+
+
+[[diagrams-ditaa]]
+=== Ditaa
+Ditaa is a ASCII-based format of block diagrams.
+Here is the original page: http://ditaa.sourceforge.net/ and actual repo: https://github.com/stathissideris/ditaa 
 
 Advantages:
 [square]
@@ -176,10 +189,6 @@ Advantages:
 * simplicity and uniformity;
 * storage and editing in the text of the document;
 * no need to export.
-
-==== Ditaa
-Ditaa is a ASCII-based format of block diagrams.
-Here is the original page: http://ditaa.sourceforge.net/ and actual repo: https://github.com/stathissideris/ditaa 
 
 References:
 [square]
@@ -218,20 +227,37 @@ And a complex sample.
                 +-------------+
 ----
 
-=== With 3rd party editors
+[[diagrams-plantuml]]
+=== PlantUML
+PlantUML diagrams are also supported.
+[square]
+* https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
+
+[[diagrams-3rd-party]]
+=== Other 3rd party formats
 Schemas can also be produced using third-party editors, for example: link:https://www.yworks.com/downloads#yEd[yEd]
 Source files are stored in `_res` directories under names ending in `_schema.graphml`.
 Files have to be exported as images in PNG format, preferably with the same name. 
 After any change source files have to be re-exported.
 
+[[tools]]
 == Tools
-AsciiDoctor may be edited in any text editor, but as more comfortable way I use an Eclipse plugin.
-
-image::_res/eclipse_plugin.png[]
+AsciiDoctor may be edited in any text editor, or using plugins in modern IDEs.
 
 Features:
 [square]
 * structure preview in *Outline* section;
-* hot keys like *Ctrl + b* for typical formatting options.
+* syntax highting;
+* spell checking;
+* hot keys for typical formatting options.
 
-Preview I normally do not use, just do generation and refresh in the running browser.
+[[tools-vscode]]
+=== link:https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[VSCode Plugin]
+
+image::_res/vscode_plugin.png[]
+
+[[tools-eclipse]]
+=== link:https://marketplace.eclipse.org/content/asciidoctor-editor[Eclipse Plugin]
+
+image::_res/eclipse_plugin.png[]
+
