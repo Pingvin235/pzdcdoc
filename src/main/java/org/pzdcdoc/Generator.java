@@ -57,11 +57,6 @@ public class Generator {
     
     private final Asciidoctor asciidoctor = Factory.create();
     
-    @Option(required = true, name = "-i", aliases = { "--in" }, usage = "Source directory path")
-    private File sourceDir;
-    @Option(required = true, name = "-o", aliases = { "--out" }, usage = "Target directory path")
-    private File targetDir;
-    
     private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js", 
         // https://lunrjs.com/guides/language_support.html
         "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js",
@@ -70,8 +65,14 @@ public class Generator {
     private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
     private static final String[] STYLESHEETS = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
 
+    @Option(required = true, name = "-i", aliases = { "--in" }, usage = "Source directory path")
+    private File sourceDir;
+    @Option(required = true, name = "-o", aliases = { "--out" }, usage = "Target directory path")
+    private File targetDir;
+
     /** Cached ToC from index.adoc for injecting everywhere. */
     private Element toc;
+    /** Search supporting object. */
     private final Search search = new Search();
     /** Processing errors counter. */ 
     private int errors;
@@ -86,13 +87,20 @@ public class Generator {
 
         asciidoctor.requireLibrary("asciidoctor-diagram");
     }
-    
+
+    /**
+     * Increments error's counter.
+     */
     public void error() {
         errors++;
     }
 
-    public int process() throws Exception {
-        // TODO: Check dirs.
+    private int process() throws Exception {
+        if (!sourceDir.isDirectory())
+            throw new IllegalArgumentException("Incorrect source directory: " + sourceDir);
+
+        if (!targetDir.isDirectory() || !targetDir.canWrite())
+        throw new IllegalArgumentException("Incorrect target directory: " + targetDir);
 
         FileUtils.deleteDirectory(targetDir);
 
@@ -104,14 +112,14 @@ public class Generator {
         return errors;
     }
 
-    public int check() throws Exception {
+    private int check() throws Exception {
         int errors = new Links().checkDir(targetDir);
         if (errors > 0)
             log.error("CHECK ERRORS => " + errors);
         return errors;
     }
 
-    public void process(File source, File target, int depth, Map<String, Object> attributes) throws Exception {
+    private void process(File source, File target, int depth, Map<String, Object> attributes) throws Exception {
         final String sourceName = source.getName();
         
         // hidden resources, names started by .
