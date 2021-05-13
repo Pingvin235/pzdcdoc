@@ -1,7 +1,7 @@
 = Demo Local ToC
 :nofooter:
 
-* <<changes.adoc#, Last changes>>
+* <<changes.adoc#, Changes>>
 * <<demo.adoc#, Demo>>
 * Modules
 ** <<module/index.adoc#, Module>>

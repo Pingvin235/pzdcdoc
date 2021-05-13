@@ -2,6 +2,8 @@
 <!-- PzdcDoc onfiguration file, may be placed together over *.adoc sources -->
 <pzdcdoc>
 	<attributes>
+		<!-- use your own favicon URL instead -->
+		<favicon>https://bgerp.org/img/favicon-doc.svg</favicon>
 		<!-- root path for JavaDoc, used by JavaDocLink processor -->
 		<pzdc-javadoc>https://bgerp.org/doc/3.0/javadoc/</pzdc-javadoc>
 		<!-- converter URL, used by DrawIO processor -->
