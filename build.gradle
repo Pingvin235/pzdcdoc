@@ -1,10 +1,3 @@
-/*
-  Local publishing:
-    gradlew publishToMavenLocal
-  To Sonatype:
-    gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
-*/
-
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
@@ -143,6 +136,13 @@ signing {
 
 // https://medium.com/@nmauti/publishing-a-project-on-maven-central-8106393db2c3
 // https://medium.com/@nmauti/sign-and-publish-on-maven-central-a-project-with-the-new-maven-publish-gradle-plugin-22a72a4bfd4b
+
+/*
+  Local publishing:
+    gradlew publishToMavenLocal
+  To Sonatype:
+    gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
+*/
 
 publishing {
     publications {
