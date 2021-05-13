@@ -34,7 +34,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.pzdcdoc.processor.DrawIO;
 import org.pzdcdoc.processor.JavaDocLink;
-import org.pzdcdoc.processor.Snippet;
+import org.pzdcdoc.processor.snippet.Snippet;
 
 /**
  * The main runnable class, converting AsciiDoc sources to HTML.

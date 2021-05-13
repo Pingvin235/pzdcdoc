@@ -77,6 +77,7 @@ public class DrawIO extends InlineMacroProcessor {
             Path targetDocPath = (Path) doc.getAttribute(DocGenerator.ATTR_TARGET);
             Path targetPath = targetDocPath.getParent().resolve(target);
 
+            // TODO: Conditional running,  
             convert(converterUrl, srcPath, targetPath, format);
             
             return target;

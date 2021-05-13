@@ -1,4 +1,4 @@
-package org.pzdcdoc;
+package org.pzdcdoc.processor.snippet;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,17 +15,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-public class TestDrawIO {
-    @Test
+public class PossibleLineTest {
+    /* @Test
     public void testExportToSVG() throws Exception {
         OkHttpClient client = new OkHttpClient();
 
         //MediaType XML = MediaType.get("text/xml; charset=utf-8");
 
-        /* var body = new FormBody.Builder()
+        * var body = new FormBody.Builder()
             .add("source", IOUtils.toString(new FileInputStream("src/doc/_res/test.drawio"), StandardCharsets.UTF_8))
             .add("format", "svg")
-            .build(); */
+            .build(); *
 
         var data = Map.of(
             "source", IOUtils.toString(new FileInputStream("src/doc/_res/test.drawio"), StandardCharsets.UTF_8),
@@ -51,5 +51,5 @@ public class TestDrawIO {
 
     public static void main(String[] args) throws Exception {
         new TestDrawIO().testExportToSVG();
-    }
+    } */
 }

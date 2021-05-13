@@ -1,4 +1,4 @@
-package org.pzdcdoc.processor;
+package org.pzdcdoc.processor.snippet;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,92 +125,9 @@ public class Snippet extends BlockProcessor {
         return createBlock(parent, "listing", contentList, attributes);
     }
 
-    private static final class PossibleLine {
-        // how many lines before and after to search
-        private static final int SEARCH_OFFSET = 30;
-
-        private final int num;
-        private final int offset;
-
-        private PossibleLine(int line, int shift) {
-            this.num = line;
-            this.offset = shift;
-        }
-
-        private static String toString(PossibleLine line) {
-            return line == null ? "" : " (possible: " + line.num + ")";
-        }
-
-        private static PossibleLine find(List<String> lines, int num, PossibleLine before, Function<String, Boolean> checkF) {
-            if (before != null) {
-                num = num + before.offset;
-                if (0 < num && num <= lines.size() -1 && checkF.apply(lines.get(num - 1)))
-                    return new PossibleLine(num, before.offset);
-                return null;
-            }
-
-            for (int offset = 1; offset <= SEARCH_OFFSET; offset++) {
-                int numBefore = num - offset;
-                if (1 < numBefore && checkF.apply(lines.get(numBefore - 1)))
-                    return new PossibleLine(numBefore, -offset);
-                
-                int numAfter = num + offset;
-                if (numAfter <= lines.size() && checkF.apply(lines.get(numAfter - 1)))
-                    return new PossibleLine(numAfter, offset);
-            }
-
-            return null;
-        }
-    }
-
-    private static enum LangGroup {
-        C {
-            @Override
-            protected String commment(String line) {
-                return "// " + line;
-            }
-        },
-        XML {
-            @Override
-            protected String commment(String line) {
-                return "<!-- " + line + " -->";
-            }
-        },
-        SH {
-            @Override
-            protected String commment(String line) {
-                return "# " + line;
-            }
-        },
-        JSP {
-            @Override
-            protected String commment(String line) {
-                return "<%-- " + line + " --%>";
-            }
-        };
-
-        protected abstract String commment(String line);
-
-        private static LangGroup of(String lang) {
-            switch(lang) {
-                case "xml":
-                case "html":
-                case "htm":
-                    return XML;
-                case "pl":
-                case "py":
-                case "sh":
-                    return SH;
-                case "jsp":
-                    return JSP;
-                default:
-                    return C;
-            }
-        }
-    }
-
     private void addComment(List<String> contentList, String path, String title, int lineFrom, int lineTo, String lang) {
-        contentList.add(LangGroup.of(lang).commment("PzdcDoc snippet of: '" + (StringUtils.isNotBlank(title) ? title : path) + "', lines: " + lineFrom + " - " + lineTo));
+        contentList.add(LangGroup.of(lang)
+                .commment("PzdcDoc snippet of: '" + (StringUtils.isNotBlank(title) ? title : path) + "', lines: " + lineFrom + " - " + lineTo));
         contentList.add("");
     }
 
