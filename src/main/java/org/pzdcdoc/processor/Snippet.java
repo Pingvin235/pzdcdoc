@@ -22,7 +22,7 @@ import org.asciidoctor.extension.Reader;
 import org.pzdcdoc.DocGenerator;
 
 /**
- * AsciiDoctor-J extension supporting 'live snippets'.
+ * AsciiDoctor-J processor supporting 'live snippets'.
  * 
  * @author Shamil Vakhitov
  */

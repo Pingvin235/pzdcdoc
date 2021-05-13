@@ -8,7 +8,7 @@ import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
 
 /**
- * AsciiDoctor-J extension, converts 'javadoc:package.Class[]' to URLs.
+ * AsciiDoctor-J processor converting 'javadoc:package.Class[]' to JavaDoc URLs.
  * 
  * @author Shamil Vakhitov
  */

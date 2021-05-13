@@ -32,6 +32,7 @@ import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.pzdcdoc.processor.DrawIO;
 import org.pzdcdoc.processor.JavaDocLink;
 import org.pzdcdoc.processor.Snippet;
 
@@ -48,6 +49,7 @@ public class DocGenerator {
     private static final String EXT_HTML = ".html";
 
     public static final String ATTR_GENERATOR = "generator";
+    public static final String ATTR_TARGET = "target";
     public static final String ATTR_SOURCE = "source";
     
     private final Asciidoctor asciidoctor = Factory.create();
@@ -79,6 +81,7 @@ public class DocGenerator {
         // https://github.com/asciidoctor/asciidoctorj/blob/v2.1.0/docs/integrator-guide.adoc
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
+        javaExtensionRegistry.inlineMacro(new DrawIO());
         javaExtensionRegistry.block(new Snippet());
         //javaExtensionRegistry.treeprocessor(new Treeprocessor());
 
@@ -142,6 +145,8 @@ public class DocGenerator {
             if (sourceName.endsWith(EXT_ADOC)) {
                 log.info("Processing: " + source);
 
+                Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
+
                 Attributes attrs = AttributesBuilder.attributes()
                         .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
                         .linkCss(true)
@@ -154,6 +159,7 @@ public class DocGenerator {
                 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
                 attrs.setAttribute(ATTR_SOURCE, source);
+                attrs.setAttribute(ATTR_TARGET, targetPath);
                 attrs.setAttribute(ATTR_GENERATOR, this);
 
                 attrs.setAttributes(attributes);
@@ -166,8 +172,6 @@ public class DocGenerator {
                         .get();
 
                 String html = asciidoctor.convertFile(source, options);
-
-                Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
 
                 html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth);
                 

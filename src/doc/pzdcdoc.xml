@@ -4,5 +4,7 @@
 	<attributes>
 		<!-- root path for JavaDoc, used by JavaDocLink processor -->
 		<pzdc-javadoc>https://bgerp.org/doc/3.0/javadoc/</pzdc-javadoc>
+		<!-- converter URL, used by DrawIO processor -->
+		<pzdc-drawio-converter>http://bgerp.org:5000/convert</pzdc-drawio-converter>
 	</attributes>
 </pzdcdoc>

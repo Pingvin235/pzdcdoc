@@ -173,9 +173,15 @@ For any selection except of links use bold font:
 
 [[diagrams]]
 == Diagrams
+
 [[diagrams-drawio]]
 === Diagrams.NET (former Draw.IO)
 
+// TODO: Embedded in IDE editor.
+
+// TODO: How to run converter container.
+
+drawio:_res/diagram.drawio[]
 
 [[diagrams-ditaa]]
 === Ditaa
@@ -260,4 +266,3 @@ image::_res/vscode_plugin.png[]
 === link:https://marketplace.eclipse.org/content/asciidoctor-editor[Eclipse Plugin]
 
 image::_res/eclipse_plugin.png[]
-
