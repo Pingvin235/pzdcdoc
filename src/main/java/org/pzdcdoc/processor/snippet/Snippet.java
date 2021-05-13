@@ -93,16 +93,21 @@ public class Snippet extends BlockProcessor {
                 for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
                     String line = lines.get(lineNum - 1);
 
-                    if (from != null && lineNum == lineFrom && !line.trim().startsWith(from)) {
-                        pl = PossibleLine.find(lines, lineNum, null, l -> l.trim().startsWith(from));
-                        log.error("Snippet '{}' doesn't start from: '{}', line number: {}{}, content: {}", path, from,
-                                String.valueOf(lineNum), PossibleLine.toString(pl), line.trim());
+                    LineFunction f = new LineFunction.Starts(from);
+
+                    if (from != null && lineNum == lineFrom && !f.apply(line)) {
+                        pl = PossibleLine.find(lines, lineNum, null, f);
+                        log.error("Snippet '{}' doesn't start from: '{}', line number: {}{}, content: {}", path, from, String.valueOf(lineNum),
+                                PossibleLine.toString(pl), line.trim());
                         generator.error();
                     }
-                    if (to != null && lineNum == lineTo && !line.trim().endsWith(to)) {
-                        pl = PossibleLine.find(lines, lineNum, pl, l -> l.trim().endsWith(to));
-                        log.error("Snippet '{}' doesn't end on: '{}', line number: {}{}, content: {}", path, to,
-                                String.valueOf(lineNum), PossibleLine.toString(pl), line.trim());
+
+                    f = new LineFunction.Ends(to);
+
+                    if (to != null && lineNum == lineTo && !f.apply(line)) {
+                        pl = PossibleLine.find(lines, lineNum, pl, f);
+                        log.error("Snippet '{}' doesn't end on: '{}', line number: {}{}, content: {}", path, to, String.valueOf(lineNum),
+                                PossibleLine.toString(pl), line.trim());
                         generator.error();
                     }
 

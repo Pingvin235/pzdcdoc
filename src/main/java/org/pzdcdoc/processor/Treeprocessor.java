@@ -1,4 +1,4 @@
-package org.pzdcdoc;
+package org.pzdcdoc.processor;
 
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.StructuralNode;
