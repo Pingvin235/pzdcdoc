@@ -20,7 +20,7 @@ import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
-import org.pzdcdoc.DocGenerator;
+import org.pzdcdoc.Generator;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -74,7 +74,7 @@ public class DrawIO extends InlineMacroProcessor {
 
             target = StringUtils.substringBeforeLast(target, ".") + "." + format;
 
-            Path targetDocPath = (Path) doc.getAttribute(DocGenerator.ATTR_TARGET);
+            Path targetDocPath = (Path) doc.getAttribute(Generator.ATTR_TARGET);
             Path targetPath = targetDocPath.getParent().resolve(target);
 
             // TODO: Conditional running,  

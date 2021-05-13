@@ -59,6 +59,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.10.0.pr3'
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
     implementation 'com.squareup.okio:okio:1.17.2'
+    implementation 'args4j:args4j:2.33'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.hamcrest:hamcrest-core:1.3'

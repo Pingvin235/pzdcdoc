@@ -18,7 +18,7 @@ import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.BlockProcessor;
 import org.asciidoctor.extension.Name;
 import org.asciidoctor.extension.Reader;
-import org.pzdcdoc.DocGenerator;
+import org.pzdcdoc.Generator;
 
 /**
  * AsciiDoctor-J processor supporting 'live snippets'.
@@ -41,7 +41,7 @@ public class Snippet extends BlockProcessor {
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
         String content = reader.read();
 
-        DocGenerator generator = (DocGenerator) parent.getDocument().getAttribute(DocGenerator.ATTR_GENERATOR);
+        Generator generator = (Generator) parent.getDocument().getAttribute(Generator.ATTR_GENERATOR);
 
         List<String> contentList = new ArrayList<>(100);
         try {
@@ -55,7 +55,7 @@ public class Snippet extends BlockProcessor {
                 if (StringUtils.isNotBlank(fragment))
                     path = path.substring(0, path.length() - fragment.length() - 1);
 
-                File source = (File) parent.getDocument().getAttribute(DocGenerator.ATTR_SOURCE);
+                File source = (File) parent.getDocument().getAttribute(Generator.ATTR_SOURCE);
                 if (source == null)
                     throw new Exception("Not found source file attribute.");
 
@@ -124,7 +124,7 @@ public class Snippet extends BlockProcessor {
      * @param lineFrom line from, 1 based.
      * @param lineTo line end, 1 based.
      */
-    private void include(DocGenerator generator, Map<String, Object> attributes, String path, List<String> contentList, List<String> lines,
+    private void include(Generator generator, Map<String, Object> attributes, String path, List<String> contentList, List<String> lines,
             int lineFrom, int lineTo) {
         String from = (String) attributes.get(ATTR_FROM);
         String to = (String) attributes.get(ATTR_TO);

@@ -10,14 +10,14 @@ public class PossibleLineTest {
     @Test
     public void testMovedSnippet() throws Exception {
        /*  [snippet, from="// h", to="r());", remove-leading="        "]
-        link:../main/java/org/pzdcdoc/DocGenerator.java#L81-L86[org.pzdcdoc.DocGenerator] */
-        var lines = Files.readAllLines(Path.of("src/main/java/org/pzdcdoc/DocGenerator.java"));
+        link:../main/java/org/pzdcdoc/Generator.java#L80-L85[org.pzdcdoc.Generator] */
+        var lines = Files.readAllLines(Path.of("src/main/java/org/pzdcdoc/Generator.java"));
 
         LineFunction fromF = new LineFunction.Starts("// h");
         LineFunction toF = new LineFunction.Ends("r());");
 
-        final int from = 81; 
-        final int to = 86;
+        final int from = 80; 
+        final int to = 85;
 
         var plFrom = PossibleLine.find(lines, from - 1, null, fromF);
         Assert.assertNotNull(plFrom);
