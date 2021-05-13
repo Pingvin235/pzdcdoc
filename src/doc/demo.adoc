@@ -176,12 +176,33 @@ For any selection except of links use bold font:
 
 [[diagrams-drawio]]
 === Diagrams.NET (former Draw.IO)
+Using link:https://diagrams.net[Diagrams.NET] in software documentation allows to combine
+text-based source format link:_res/diagram.drawio[stored] in same GIT repo with other and nice representation.
 
-// TODO: Embedded in IDE editor.
+drawio:_res/diagram.drawio[width="600px"]
 
-// TODO: How to run converter container.
+Diagrams may be edited in VSCode using plugin: https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio
 
-drawio:_res/diagram.drawio[]
+image::_res/vscode_drawio.png[width="600px"]
+
+[[diagrams-drawio-renderer]]
+==== DrawIO renderer
+For converting DrawIO format to graphic files is used container:
+https://hub.docker.com/r/tomkludy/drawio-renderer
+
+Converter URL to there has to be defined in link:pzdcdoc.xml[configuration] file.
+
+[CAUTION]
+====
+The value used there points to our test server. Keeping it in production configurations is strictly unrecommended.
+All the data from your diagrams may be analyzed with AI in Cambridge Analytics, therefore start your own container using the
+command below and use it instead. 
+====
+
+[source]
+----
+docker run -d -p 5000:5000 --shm-size=1g tomkludy/drawio-renderer:latest
+----
 
 [[diagrams-ditaa]]
 === Ditaa
