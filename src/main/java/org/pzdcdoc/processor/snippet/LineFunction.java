@@ -8,6 +8,14 @@ import java.util.function.Function;
  * @author Shamil Vakhitov
  */
 abstract class LineFunction implements Function<String, Boolean> {
+
+    public static final LineFunction PASS = new LineFunction() {
+        @Override
+        public Boolean apply(String t) {
+            return true;
+        }
+    };
+
     static final class Starts extends LineFunction {
         private final String prefix;
 

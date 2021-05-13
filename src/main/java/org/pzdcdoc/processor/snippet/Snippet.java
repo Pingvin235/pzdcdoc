@@ -43,7 +43,7 @@ public class Snippet extends BlockProcessor {
 
         DocGenerator generator = (DocGenerator) parent.getDocument().getAttribute(DocGenerator.ATTR_GENERATOR);
 
-        List<String> contentList = new ArrayList<>();
+        List<String> contentList = new ArrayList<>(100);
         try {
             if (content.startsWith(LINK_PREFIX)) {
                 String path = content.substring(LINK_PREFIX.length());
@@ -102,7 +102,7 @@ public class Snippet extends BlockProcessor {
     /**
      * Adds generated commented line at beginning of snippet.
      * @param path snippet's file path.
-     * @param contentList snippet's file lines.
+     * @param contentList snippet's lines to be included.
      * @param title title path, shown as link.
      * @param lineFrom start line of the snippet.
      * @param lineTo end line of the snippet.
@@ -116,13 +116,13 @@ public class Snippet extends BlockProcessor {
 
     /**
      * Check and include a snippet's lines.
-     * @param generator
-     * @param attributes
-     * @param path
-     * @param contentList
-     * @param lines
-     * @param lineFrom
-     * @param lineTo
+     * @param generator generator.
+     * @param attributes Asciidoctor-J attributes.
+     * @param path snippet's file path.
+     * @param contentList snippet's lines to be included.
+     * @param lines snippet's file lines.
+     * @param lineFrom line from, 1 based.
+     * @param lineTo line end, 1 based.
      */
     private void include(DocGenerator generator, Map<String, Object> attributes, String path, List<String> contentList, List<String> lines,
             int lineFrom, int lineTo) {
@@ -132,22 +132,21 @@ public class Snippet extends BlockProcessor {
 
         PossibleLine pl = null;
 
+        LineFunction fromF = from != null ? new LineFunction.Starts(from) : LineFunction.PASS;
+        LineFunction toF = to != null ? new LineFunction.Ends(to) : LineFunction.PASS;
+
         for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
             String line = lines.get(lineNum - 1);
 
-            LineFunction f = new LineFunction.Starts(from);
-
-            if (from != null && lineNum == lineFrom && !f.apply(line)) {
-                pl = PossibleLine.find(lines, lineNum, null, f);
+            if (lineNum == lineFrom && !fromF.apply(line)) {
+                pl = PossibleLine.find(lines, lineNum, null, fromF);
                 log.error("Snippet '{}' doesn't start from: '{}', line number: {}{}, content: {}", path, from, String.valueOf(lineNum),
                         PossibleLine.toString(pl), line.trim());
                 generator.error();
             }
 
-            f = new LineFunction.Ends(to);
-
-            if (to != null && lineNum == lineTo && !f.apply(line)) {
-                pl = PossibleLine.find(lines, lineNum, pl, f);
+            if (lineNum == lineTo && !toF.apply(line)) {
+                pl = PossibleLine.find(lines, lineNum, pl, toF);
                 log.error("Snippet '{}' doesn't end on: '{}', line number: {}{}, content: {}", path, to, String.valueOf(lineNum),
                         PossibleLine.toString(pl), line.trim());
                 generator.error();
