@@ -95,12 +95,12 @@ Sample Cloud: myuser@mycompany.com
 
 [[snippet-live]]
 === Extracted "live snippets"
-The source link below is automatically extracted to highlighted code snippet during HTML convertion.
+The source link below is automatically extracted to highlighted code snippet during HTML converting.
 Attributes `from` and `to` allow check actuality of content, `remove-leading` - deletion of line indent.
 Here is the snippet of connecting plugins to DocGenerator.
 
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/DocGenerator.java#L79-L83[org.pzdcdoc.DocGenerator]
+link:../main/java/org/pzdcdoc/DocGenerator.java#L81-L86[org.pzdcdoc.DocGenerator]
 
 [[snippet-simple]]
 === Simple snippets
@@ -142,7 +142,7 @@ image::_res/image.png[width="600px"]
 
 Any file from a project may be also referenced and automatically copied to `_res` subdirectory.
 
-Content of class link:../main/java/org/pzdcdoc/processor/Snippet.java[org.pzdcdoc.processor.Snippet]
+Content of class link:../main/java/org/pzdcdoc/processor/snippet/Snippet.java[org.pzdcdoc.processor.snippet.Snippet]
 
 [[ref-javadoc]]
 === JavaDoc
