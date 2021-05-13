@@ -54,7 +54,7 @@ public class Search {
         public Article(String ref, String title, String content) {
             this.ref = ref;
             this.title = title;
-            this.content = content;
+            this.content = content.toLowerCase();
             log.debug("Add article, ref: {}, title: {}", ref, title);
         }
 
