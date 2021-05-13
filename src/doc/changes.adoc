@@ -1,8 +1,10 @@
-= Last changes
+= Changes
 :toc:
 
-Last changes in the documentation.
-
-== Log of changes
+== Log in reversed time order
 [square]
+* 14.05.2021 Substring search additionally to full-text.
+* <<demo.adoc#, 14.05.2021>> ToC title points to root index file. 
+* 14.05.2021 Java 11, Args4j for parsing parameters. 
+* <<demo.adoc#diagrams-drawio, 14.05.2021>> Draw.IO diagrams.
 * <<demo.adoc#, 01.10.2019>> Added the chapter "Demo".
