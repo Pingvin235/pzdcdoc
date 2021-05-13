@@ -94,3 +94,6 @@ Use merge squash of similar operations. You may found link:https://drive.google.
 For doing modifications in documentation only recommended to make one more branch *doc-no-merge*
 in each repo, do there intermediate changes and use it for building documentation.
 Periodically content of this branch is picked to master using merge with squash.
+
+== Feedback
+The list of currently known issues same as new wishes can be sent here: https://team.bgerp.org/open/process/14247
