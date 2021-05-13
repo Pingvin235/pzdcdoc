@@ -12,13 +12,14 @@ import java.util.function.Function;
 class PossibleLine {
     /** How many lines before and after to search. */ 
     private static final int SEARCH_OFFSET = 30;
-
-    private final int num;
+    /** A possible line number. */
+    final int num;
+    /** Offset from an original line number. */
     private final int offset;
 
-    private PossibleLine(int line, int shift) {
-        this.num = line;
-        this.offset = shift;
+    private PossibleLine(int num, int offset) {
+        this.num = num;
+        this.offset = offset;
     }
 
     static String toString(PossibleLine line) {
