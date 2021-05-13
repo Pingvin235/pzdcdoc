@@ -130,25 +130,25 @@ public class Snippet extends BlockProcessor {
         String to = (String) attributes.get(ATTR_TO);
         String removeLeading = (String) attributes.get(ATTR_REMOVE_LEADING);
 
-        PossibleLine pl = null;
-
         LineFunction fromF = from != null ? new LineFunction.Starts(from) : LineFunction.PASS;
         LineFunction toF = to != null ? new LineFunction.Ends(to) : LineFunction.PASS;
+
+        PossibleLine plFrom = null;
 
         for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
             String line = lines.get(lineNum - 1);
 
             if (lineNum == lineFrom && !fromF.apply(line)) {
-                pl = PossibleLine.find(lines, lineNum, null, fromF);
+                plFrom = PossibleLine.find(lines, lineNum, null, fromF);
                 log.error("Snippet '{}' doesn't start from: '{}', line number: {}{}, content: {}", path, from, String.valueOf(lineNum),
-                        PossibleLine.toString(pl), line.trim());
+                        PossibleLine.toString(plFrom), line.trim());
                 generator.error();
             }
 
             if (lineNum == lineTo && !toF.apply(line)) {
-                pl = PossibleLine.find(lines, lineNum, pl, toF);
+                var plTo = PossibleLine.find(lines, lineNum, plFrom, toF);
                 log.error("Snippet '{}' doesn't end on: '{}', line number: {}{}, content: {}", path, to, String.valueOf(lineNum),
-                        PossibleLine.toString(pl), line.trim());
+                        PossibleLine.toString(plTo), line.trim());
                 generator.error();
             }
 
