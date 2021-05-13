@@ -1,3 +1,4 @@
+// this index file is used only for local tests
 = Demo Local ToC
 :nofooter:
 

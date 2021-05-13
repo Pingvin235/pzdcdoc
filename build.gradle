@@ -115,7 +115,7 @@ task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenL
 // bash -c "./gradlew publishDemoDoc -PdocBranch=i5-diagrams"
 task publishDemoDoc(dependsOn: 'buildDemoDoc') {
     doFirst {
-        def command = "rsync --delete -Pav target/doc-out/ pzdcdoc@pzdc.de:/home/pzdcdoc/www/demo"
+        def command = "rsync --delete -Pav target/doc-out/ pzdcdoc@bgerp.org:/home/pzdcdoc/www/demo"
         println "Running: $command"
         println command.execute().text
     }
