@@ -82,40 +82,9 @@ public class Snippet extends BlockProcessor {
                 // TODO: Make mapping extension - lang
                 String lang = StringUtils.substringAfterLast(path, ".");
 
-                addComment(contentList, path, title, lineFrom, lineTo, lang);
+                addComment(path, contentList, title, lineFrom, lineTo, lang);
 
-                String from = (String) attributes.get(ATTR_FROM);
-                String to = (String) attributes.get(ATTR_TO);
-                String removeLeading = (String) attributes.get(ATTR_REMOVE_LEADING);
-
-                PossibleLine pl = null;
-
-                for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
-                    String line = lines.get(lineNum - 1);
-
-                    LineFunction f = new LineFunction.Starts(from);
-
-                    if (from != null && lineNum == lineFrom && !f.apply(line)) {
-                        pl = PossibleLine.find(lines, lineNum, null, f);
-                        log.error("Snippet '{}' doesn't start from: '{}', line number: {}{}, content: {}", path, from, String.valueOf(lineNum),
-                                PossibleLine.toString(pl), line.trim());
-                        generator.error();
-                    }
-
-                    f = new LineFunction.Ends(to);
-
-                    if (to != null && lineNum == lineTo && !f.apply(line)) {
-                        pl = PossibleLine.find(lines, lineNum, pl, f);
-                        log.error("Snippet '{}' doesn't end on: '{}', line number: {}{}, content: {}", path, to, String.valueOf(lineNum),
-                                PossibleLine.toString(pl), line.trim());
-                        generator.error();
-                    }
-
-                    if (removeLeading != null && line.startsWith(removeLeading))
-                        line = line.substring(removeLeading.length());
-
-                    contentList.add(line);
-                }
+                include(generator, attributes, path, contentList, lines, lineFrom, lineTo);
 
                 attributes = new HashMap<>();
                 attributes.put("style", "source");
@@ -130,10 +99,65 @@ public class Snippet extends BlockProcessor {
         return createBlock(parent, "listing", contentList, attributes);
     }
 
-    private void addComment(List<String> contentList, String path, String title, int lineFrom, int lineTo, String lang) {
+    /**
+     * Adds generated commented line at beginning of snippet.
+     * @param path snippet's file path.
+     * @param contentList snippet's file lines.
+     * @param title title path, shown as link.
+     * @param lineFrom start line of the snippet.
+     * @param lineTo end line of the snippet.
+     * @param lang snippets programming language.
+     */
+    private void addComment(String path, List<String> contentList, String title, int lineFrom, int lineTo, String lang) {
         contentList.add(LangGroup.of(lang)
                 .commment("PzdcDoc snippet of: '" + (StringUtils.isNotBlank(title) ? title : path) + "', lines: " + lineFrom + " - " + lineTo));
         contentList.add("");
+    }
+
+    /**
+     * Check and include a snippet's lines.
+     * @param generator
+     * @param attributes
+     * @param path
+     * @param contentList
+     * @param lines
+     * @param lineFrom
+     * @param lineTo
+     */
+    private void include(DocGenerator generator, Map<String, Object> attributes, String path, List<String> contentList, List<String> lines,
+            int lineFrom, int lineTo) {
+        String from = (String) attributes.get(ATTR_FROM);
+        String to = (String) attributes.get(ATTR_TO);
+        String removeLeading = (String) attributes.get(ATTR_REMOVE_LEADING);
+
+        PossibleLine pl = null;
+
+        for (int lineNum = lineFrom; lineNum <= lineTo; lineNum++) {
+            String line = lines.get(lineNum - 1);
+
+            LineFunction f = new LineFunction.Starts(from);
+
+            if (from != null && lineNum == lineFrom && !f.apply(line)) {
+                pl = PossibleLine.find(lines, lineNum, null, f);
+                log.error("Snippet '{}' doesn't start from: '{}', line number: {}{}, content: {}", path, from, String.valueOf(lineNum),
+                        PossibleLine.toString(pl), line.trim());
+                generator.error();
+            }
+
+            f = new LineFunction.Ends(to);
+
+            if (to != null && lineNum == lineTo && !f.apply(line)) {
+                pl = PossibleLine.find(lines, lineNum, pl, f);
+                log.error("Snippet '{}' doesn't end on: '{}', line number: {}{}, content: {}", path, to, String.valueOf(lineNum),
+                        PossibleLine.toString(pl), line.trim());
+                generator.error();
+            }
+
+            if (removeLeading != null && line.startsWith(removeLeading))
+                line = line.substring(removeLeading.length());
+
+            contentList.add(line);
+        }
     }
 
 }
