@@ -5,6 +5,8 @@
 	<attributes>
 		<!-- the path with main doc sources -->
 		<doc-path>src/doc</doc-path>
+		<!-- use your own favicon URL instead -->
+		<favicon>https://bgerp.org/img/favicon-doc.svg</favicon>
 
 		<!-- sample of labels customization
 		https://asciidoctor.org/docs/user-manual/#customizing-labels
