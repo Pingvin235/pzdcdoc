@@ -55,7 +55,7 @@ Good for first start and testing changes.
 === Complex case with checking out GIT
 [NOTE]
 ====
-In most of project such the complex solution doesn't make sense.
+In most of projects such a complex solution doesn't make sense.
 Was created for demo purposes and to re-use shown by default in GitLab/GitHub `README.adoc` file.
 ====
 
