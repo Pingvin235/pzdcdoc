@@ -1,10 +1,3 @@
-/*
-  Local publishing:
-    gradlew publishToMavenLocal
-  To Sonatype:
-    gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
-*/
-
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
@@ -18,8 +11,8 @@ repositories {
 
 buildDir = 'target'
 version = '2.0'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 ext.admin = hasProperty('sonatypeUsername')
 ext.docBranch = project.hasProperty('docBranch') ? project.findProperty('docBranch') : 'master'
@@ -49,24 +42,30 @@ configurations {
 }
 
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.2'
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
-    compile group: 'org.asciidoctor', name: 'asciidoctorj', version: '2.1.0'
-    compile group: 'org.asciidoctor', name: 'asciidoctorj-api', version: '2.1.0'
-    compile group: 'org.asciidoctor', name: 'asciidoctorj-diagram', version: '1.5.18'
-    compile group: 'com.beust', name: 'jcommander', version: '1.78'
-    compile group: 'org.jruby', name: 'jruby-complete', version: '9.2.8.0'
-    compile group: 'org.dom4j', name: 'dom4j', version: '2.1.1'
-    compile group: 'jaxen', name: 'jaxen', version: '1.2.0'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.0.pr3'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0.pr3'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.0.pr3'
-    
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'org.apache.logging.log4j:log4j-core:2.11.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.11.2'
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.asciidoctor:asciidoctorj:2.1.0'
+    implementation 'org.asciidoctor:asciidoctorj-api:2.1.0'
+    implementation 'org.asciidoctor:asciidoctorj-diagram:1.5.18'
+    implementation 'com.beust:jcommander:1.78'
+    implementation 'org.jruby:jruby-complete:9.2.8.0'
+    implementation 'org.dom4j:dom4j:2.1.1'
+    implementation 'jaxen:jaxen:1.2.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.0.pr3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0.pr3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.10.0.pr3'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+    implementation 'com.squareup.okio:okio:1.17.2'
+    implementation 'args4j:args4j:2.33'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.hamcrest:hamcrest-core:1.3'
+
     // for demo build
-    pzdcdoc group: 'org.pzdcdoc', name: 'pzdcdoc', version: "${project.version}"
+    pzdcdoc "org.pzdcdoc:pzdcdoc:${project.version}"
 }
 
 tasks.withType(JavaCompile) {
@@ -75,6 +74,15 @@ tasks.withType(JavaCompile) {
 
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
+}
+
+test {
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat = "full"
+        events "passed", "skipped", "failed"
+    }
+    outputs.upToDateWhen {false}
 }
 
 defaultTasks 'clean', 'buildDemoDocLocal'
@@ -101,7 +109,7 @@ task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenL
 // bash -c "./gradlew publishDemoDoc -PdocBranch=i5-diagrams"
 task publishDemoDoc(dependsOn: 'buildDemoDoc') {
     doFirst {
-        def command = "rsync --delete -Pav target/doc-out/ pzdcdoc@pzdc.de:/home/pzdcdoc/www/demo"
+        def command = "rsync --delete -Pav target/doc-out/ pzdcdoc@bgerp.org:/home/pzdcdoc/www/demo"
         println "Running: $command"
         println command.execute().text
     }
@@ -129,6 +137,16 @@ signing {
 
 // https://medium.com/@nmauti/publishing-a-project-on-maven-central-8106393db2c3
 // https://medium.com/@nmauti/sign-and-publish-on-maven-central-a-project-with-the-new-maven-publish-gradle-plugin-22a72a4bfd4b
+
+/*
+  Local publishing:
+    gradlew publishToMavenLocal
+  To Sonatype:
+    gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
+    log in to https://oss.sonatype.org/#stagingRepositories using LOGIN and PSWD
+    find a new staging repo, check content and 'Close'
+    wait for all close checks in 'Activity' and 'Release' the repo
+*/
 
 publishing {
     publications {
@@ -208,7 +226,7 @@ def customizePom(pom) {
             url 'https://github.com/Pingvin235/pzdcdoc'
             organization {
                 name 'org.pzdcdoc'
-                url 'https://github.com/pzdcdoc'
+                url 'https://pzdcdoc.org'
             }
             issueManagement {
                 system 'GitHub'

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pzdcdoc>	
+<!-- PzdcDoc onfiguration file, may be placed together over *.adoc sources -->
+<pzdcdoc>
 	<attributes>
-		<pzdc-javadoc>http://bgerp.ru/doc/3.0/javadoc/</pzdc-javadoc>
+		<!-- root path for JavaDoc, used by JavaDocLink processor -->
+		<pzdc-javadoc>https://bgerp.org/doc/3.0/javadoc/</pzdc-javadoc>
+		<!-- converter URL, used by DrawIO processor -->
+		<pzdc-drawio-converter>http://bgerp.org:5000/convert</pzdc-drawio-converter>
 	</attributes>
 </pzdcdoc>

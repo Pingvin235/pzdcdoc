@@ -6,7 +6,7 @@ const $$ = new function() {
 		const toc2 = document.querySelector('#toc.toc2');
 		const selected = $(toc2).find('li a.current').last()[0];
 		toc2.scrollTop = selected.offsetTop - toc2.offsetTop;
-	};
+	}
 	
 	const markPart = () => {
 		const mark = function () {
@@ -23,11 +23,11 @@ const $$ = new function() {
 		
 		mark();
 		$(window).bind('hashchange', mark);
-	};
+	}
 
 	const enterPressed = ($e) => {
 		return ($e.keyCode || $e.which) == 13;
-	};
+	}
 
 	const buildIndex = () => {
 		return lunr(function () {
@@ -60,7 +60,7 @@ const $$ = new function() {
 			const $searchCount = $('#search-count');
 			$searchCount.text('');
 
-			let searchValue = $input.val();
+			let searchValue = $input.val().toLowerCase();
 			if (searchValue) {
 				const tokens = searchValue.split(/\s+/);
 				
@@ -71,7 +71,8 @@ const $$ = new function() {
 					searchValue += token + ' ';
 				});
 
-				const searchResult = idx.search(searchValue);
+				const searchResult = idx.search(searchValue).concat(substringSearch(searchValue));
+
 				$searchCount.text(searchResult.length);
 				searchResult.forEach(hit => {
 					$tocLinks.each(function () {
@@ -83,7 +84,18 @@ const $$ = new function() {
 				});
 			}
 		});
-	};
+	}
+
+	const substringSearch = (value) => {
+		const result = [];
+
+		$$.documents.forEach(doc => {
+			if (doc.content.includes(value) || doc.title.toLowerCase().includes(value))
+				result.push[doc]
+		})
+
+		return result;
+	}
 	
 	// public functions
 	this.scrollTocToVisible = scrollTocToVisible;

@@ -14,6 +14,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.select.Elements;
 
+/**
+ * Embedded JS search.
+ * 
+ * @author Shamil Vakhitov
+ */
 public class Search {
     private static final Logger log = LogManager.getLogger();
 
@@ -49,7 +54,7 @@ public class Search {
         public Article(String ref, String title, String content) {
             this.ref = ref;
             this.title = title;
-            this.content = content;
+            this.content = content.toLowerCase();
             log.debug("Add article, ref: {}, title: {}", ref, title);
         }
 

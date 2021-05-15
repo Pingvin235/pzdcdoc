@@ -1,9 +1,8 @@
 = Demo ToC
 :nofooter:
 
+* <<{doc-path}/changes.adoc#, Changes>>
 * <<README.adoc#, README>>
 * <<{doc-path}/demo.adoc#, Demo>>
 * Modules
 ** <<{doc-path}/module/index.adoc#, Module>>
-* <<{doc-path}/changes.adoc#, Last changes>>
-

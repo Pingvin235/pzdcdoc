@@ -1,8 +1,9 @@
+// this index file is used only for local tests
 = Demo Local ToC
 :nofooter:
 
-* <<changes.adoc#, Last changes>>
+* <<changes.adoc#, Changes>>
 * <<demo.adoc#, Demo>>
 * Modules
 ** <<module/index.adoc#, Module>>
-* External link:http://pzdcdoc.org[link]
+* External link:https://pzdcdoc.org[link]
