@@ -99,7 +99,7 @@ public class Generator {
         if (!sourceDir.isDirectory())
             throw new IllegalArgumentException("Incorrect source directory: " + sourceDir);
 
-        if (!targetDir.isDirectory() || !targetDir.canWrite())
+        if (!targetDir.getParentFile().canWrite())
         throw new IllegalArgumentException("Incorrect target directory: " + targetDir);
 
         FileUtils.deleteDirectory(targetDir);
