@@ -143,6 +143,9 @@ signing {
     gradlew publishToMavenLocal
   To Sonatype:
     gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
+    log in to https://oss.sonatype.org/#stagingRepositories using LOGIN and PSWD
+    find a new staging repo, check content and 'Close'
+    wait for all close checks in 'Activity' and 'Release' the repo
 */
 
 publishing {
