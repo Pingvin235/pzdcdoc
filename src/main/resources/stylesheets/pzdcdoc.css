@@ -7,6 +7,10 @@ p {margin-bottom: 1rem}
   #toc.toc2{width:25em; overflow-x: scroll;}
 }
 
+#toc.toc2 {
+  padding: 0em 1em;
+}
+
 #toc.toc2 div.ulist {
    margin-bottom: 0;
 }
@@ -40,6 +44,10 @@ body.article > #header {
 
 body * {
   scrollbar-width: thin;
+}
+
+#header > h1:first-child {
+  margin-top: 1rem;
 }
 
 .exampleblock > .content {
