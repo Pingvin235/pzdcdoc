@@ -65,6 +65,7 @@ body * {
   margin-top: 1rem;
 }
 
+/* elements */
 .exampleblock > .content {
   overflow: auto;
   white-space: nowrap;
@@ -76,6 +77,12 @@ body * {
   white-space: pre;
 }
 
+/* for asciidoc table columns */
+td.tableblock * {
+  font-size: 1em;
+}
+
+/* search */
 #search > * {
   display: table-cell;
 }
