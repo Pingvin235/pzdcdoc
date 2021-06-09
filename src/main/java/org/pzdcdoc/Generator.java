@@ -55,13 +55,13 @@ public class Generator {
 
     private final Asciidoctor asciidoctor = Factory.create();
 
-    private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js",
+    private static final String[] SCRIPTS = { "jquery-3.3.1.js", "pzdcdoc.js",
         // https://lunrjs.com/guides/language_support.html
-        "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js",
-        "pzdcdoc.js"};
+        "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js"
+    };
 
     private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
-    private static final String[] STYLESHEETS = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
+    private static final String[] STYLESHEETS = { "asciidoctor.css", "coderay-asciidoctor.css" };
 
     @Option(required = true, name = "-i", aliases = { "--in" }, usage = "Source directory path")
     private File sourceDir;
