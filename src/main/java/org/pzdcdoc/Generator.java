@@ -21,9 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Asciidoctor.Factory;
 import org.asciidoctor.Attributes;
-import org.asciidoctor.AttributesBuilder;
 import org.asciidoctor.Options;
-import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
 import org.asciidoctor.extension.JavaExtensionRegistry;
 import org.dom4j.DocumentException;
@@ -153,15 +151,15 @@ public class Generator {
 
                 Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
 
-                Attributes attrs = AttributesBuilder.attributes()
-                        .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
-                        .linkCss(true)
-                        .sourceHighlighter("coderay")
-                        .icons(Attributes.FONT_ICONS)
-                        .tableOfContents(true)
-                        .setAnchors(true)
-                        .linkAttrs(true)
-                        .get();
+                var attrs = Attributes.builder()
+                    .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
+                    .linkCss(true)
+                    .sourceHighlighter("coderay")
+                    .icons(Attributes.FONT_ICONS)
+                    .tableOfContents(true)
+                    .setAnchors(true)
+                    .linkAttrs(true)
+                    .build();
 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
                 attrs.setAttribute(ATTR_SOURCE, source);
@@ -170,12 +168,12 @@ public class Generator {
 
                 attrs.setAttributes(attributes);
 
-                Options options = OptionsBuilder.options()
-                        .toFile(false)
-                        .headerFooter(true)
-                        .safe(SafeMode.UNSAFE)
-                        .attributes(attrs)
-                        .get();
+                var options = Options.builder()
+                    .toFile(false)
+                    .headerFooter(true)
+                    .safe(SafeMode.UNSAFE)
+                    .attributes(attrs)
+                    .build();
 
                 String html = asciidoctor.convertFile(source, options);
 

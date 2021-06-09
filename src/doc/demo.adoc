@@ -101,7 +101,7 @@ Here is the snippet of connecting plugins to Generator.
 
 // this snippet is used in 
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/Generator.java#L81-L86[org.pzdcdoc.Generator]
+link:../main/java/org/pzdcdoc/Generator.java#L79-L84[org.pzdcdoc.Generator]
 
 [[snippet-simple]]
 === Simple snippets
