@@ -41,6 +41,7 @@ configurations {
     }
 }
 
+// https://tomgregory.com/gradle-implementation-vs-compile-dependencies/
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.8.1'
     implementation 'commons-io:commons-io:2.6'
@@ -49,7 +50,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'org.asciidoctor:asciidoctorj:2.5.1'
     implementation 'org.asciidoctor:asciidoctorj-api:2.5.1'
-    implementation 'org.asciidoctor:asciidoctorj-diagram:2.1.2'
+    // version 2.1.2 places resulting PNG files in the project root, that brakes generation
+    implementation 'org.asciidoctor:asciidoctorj-diagram:1.5.18'
     implementation 'com.beust:jcommander:1.78'
     implementation 'org.jruby:jruby-complete:9.2.17.0'
     implementation 'org.dom4j:dom4j:2.1.1'
