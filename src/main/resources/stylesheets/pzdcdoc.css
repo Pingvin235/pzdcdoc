@@ -31,8 +31,11 @@ p {margin-bottom: 1rem}
   color: #bf3400;
 }
 
-.article #header {
+body.article > #header {
   position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: #fff;
 }
 
 .exampleblock > .content {
