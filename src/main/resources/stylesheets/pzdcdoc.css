@@ -38,6 +38,10 @@ body.article > #header {
   background-color: #fff;
 }
 
+body * {
+  scrollbar-width: thin;
+}
+
 .exampleblock > .content {
   overflow: auto;
   white-space: nowrap;
