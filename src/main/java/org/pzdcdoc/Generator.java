@@ -59,9 +59,12 @@ public class Generator {
         // https://lunrjs.com/guides/language_support.html
         "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js"
     };
-
     private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
-    private static final String[] STYLESHEETS = { "asciidoctor.css", "coderay-asciidoctor.css" };
+
+    private static final String ASCIIDOCTOR_DEFAULT_CSS = "asciidoctor-default.css";
+    private static final String PZDCDOC_CSS = "pzdcdoc.css";
+    private static final String[] STYLESHEETS = { ASCIIDOCTOR_DEFAULT_CSS, PZDCDOC_CSS, "coderay-asciidoctor.css" };
+    private static final String[] STYLESHEETS_INJECT = { PZDCDOC_CSS };
 
     @Option(required = true, name = "-i", aliases = { "--in" }, usage = "Source directory path")
     private File sourceDir;
@@ -153,6 +156,7 @@ public class Generator {
 
                 var attrs = Attributes.builder()
                     .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
+                    .styleSheetName(ASCIIDOCTOR_DEFAULT_CSS)
                     .linkCss(true)
                     .sourceHighlighter("coderay")
                     .icons(Attributes.FONT_ICONS)
@@ -267,15 +271,21 @@ public class Generator {
 
         copyResources(jsoup, source, target);
 
-        // inject JS files
-        for (String script : SCRIPTS_INJECT)
-            head.append("<script src='" + StringUtils.repeat("../", depth) + DIR_RES  + "/" + script + "'/>");
+        injectScriptsAndStyles(depth, head);
 
         correctToC(jsoup, target, depth);
 
         html = jsoup.toString();
 
         return html;
+    }
+
+    private void injectScriptsAndStyles(int depth, Element head) {
+        var pathPrefix = StringUtils.repeat("../", depth) + DIR_RES  + "/";
+        for (String script : SCRIPTS_INJECT)
+            head.append("<script src='" + pathPrefix + script + "'/>");
+        for (String css : STYLESHEETS_INJECT)
+            head.append("<link rel='stylesheet' href='" + pathPrefix + css + "'>");
     }
 
     private void correctToC(Document jsoup, Path target, int depth) {

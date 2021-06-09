@@ -1,0 +1,61 @@
+/** Patch on AsciiDoctor styles */
+html, body {font-size: .9em; line-height: .8em}
+p {margin-bottom: 1rem}
+
+@media only screen and (min-width:1280px){
+  body.toc2{padding-left:25em;padding-right:0}
+  #toc.toc2{width:25em; overflow-x: scroll;}
+}
+
+#toc.toc2 div.ulist {
+   margin-bottom: 0;
+}
+
+#toc.toc2 li {
+   margin-top: 0;
+}
+
+#toc.toc2 li > p {
+  margin-bottom: 0;
+}
+
+#toc.toc2 li a {
+  white-space: nowrap;
+}
+
+#toc.toc2 li a.current {
+  font-weight: bold;
+}
+
+#toc.toc2 li a.search {
+  color: #bf3400;
+}
+
+.exampleblock > .content {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.listingblock code {
+  display: block;
+  overflow: auto;
+  white-space: pre;
+}
+
+#search > * {
+  display: table-cell;
+}
+
+#search-input {
+  width: 100%;
+  padding-left: 0.5em;
+}
+
+#search-input input {
+  width: 100%;
+}
+
+#search-count {
+  color: #bf3400;
+  padding-left: 0.5em;
+}
