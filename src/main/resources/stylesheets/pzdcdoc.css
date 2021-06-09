@@ -57,6 +57,10 @@ body.article > #header {
   background-color: #fff;
 }
 
+body.article > #header #source-link {
+  float: right;
+}
+
 body * {
   scrollbar-width: thin;
 }

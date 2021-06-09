@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +41,7 @@ public class DrawIO extends InlineMacroProcessor {
     private static final String ATTR_CONVERTER = "pzdc-drawio-converter";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient.Builder().readTimeout(20, TimeUnit.SECONDS).build();
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override

@@ -182,7 +182,7 @@ public class Generator {
 
                 String html = asciidoctor.convertFile(source, options);
 
-                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth);
+                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new LinkToSource(attributes));
 
                 FileUtils.forceMkdirParent(target);
 
@@ -247,7 +247,7 @@ public class Generator {
         return name.contains("index");
     }
 
-    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth) throws Exception {
+    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth, LinkToSource linkToSource) throws Exception {
         log.debug("correctHtml targetPath: {}, deep: {}", target, depth);
 
         if (toc == null) {
@@ -276,9 +276,9 @@ public class Generator {
 
         correctToC(jsoup, target, depth);
 
-        html = jsoup.toString();
+        linkToSource.inject(jsoup, source);
 
-        return html;
+        return jsoup.toString();
     }
 
     private void injectScriptsAndStyles(int depth, Element head) {

@@ -7,6 +7,8 @@
 		<doc-path>src/doc</doc-path>
 		<!-- use your own favicon URL instead -->
 		<favicon>https://bgerp.org/img/favicon-doc.svg</favicon>
+		<!-- source link root -->
+		<pzdc-source-link-root>https://github.com/Pingvin235/pzdcdoc/blob/master</pzdc-source-link-root>
 
 		<!-- sample of labels customization
 		https://asciidoctor.org/docs/user-manual/#customizing-labels
