@@ -31,6 +31,10 @@ p {margin-bottom: 1rem}
   color: #bf3400;
 }
 
+.article #header {
+  position: sticky;
+}
+
 .exampleblock > .content {
   overflow: auto;
   white-space: nowrap;
