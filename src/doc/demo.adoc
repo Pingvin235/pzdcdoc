@@ -4,8 +4,6 @@
 [NOTE]
 ====
 See this article published to HTML5: https://pzdcdoc.org/demo/src/doc/demo.html
-
-The source page is: https://github.com/Pingvin235/pzdcdoc/tree/master/src/doc/demo.adoc
 ====
 
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
