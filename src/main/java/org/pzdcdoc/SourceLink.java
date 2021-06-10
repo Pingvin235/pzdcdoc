@@ -11,11 +11,11 @@ import org.jsoup.nodes.Document;
  * 
  * @author Shamil Vakhitov
  */
-public class LinkToSource {
+public class SourceLink {
     private static final String ATTR_SOURCE_LINK_ROOT = "pzdc-source-link-root";
     private final String linkRootUrl;
 
-    public LinkToSource(Map<String, Object> attributes) {
+    public SourceLink(Map<String, Object> attributes) {
         this.linkRootUrl = (String) attributes.get(ATTR_SOURCE_LINK_ROOT);
     }
 

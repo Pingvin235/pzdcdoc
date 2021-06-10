@@ -182,7 +182,7 @@ public class Generator {
 
                 String html = asciidoctor.convertFile(source, options);
 
-                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new LinkToSource(attributes));
+                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new SourceLink(attributes));
 
                 FileUtils.forceMkdirParent(target);
 
@@ -247,7 +247,7 @@ public class Generator {
         return name.contains("index");
     }
 
-    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth, LinkToSource linkToSource) throws Exception {
+    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth, SourceLink linkToSource) throws Exception {
         log.debug("correctHtml targetPath: {}, deep: {}", target, depth);
 
         if (toc == null) {
