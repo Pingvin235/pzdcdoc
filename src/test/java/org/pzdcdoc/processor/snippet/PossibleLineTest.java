@@ -15,8 +15,8 @@ public class PossibleLineTest {
         LineFunction toF = new LineFunction.Ends("r());");
 
         // take the right values from snippet in demo.adoc 
-        final int from = 81; 
-        final int to = 86;
+        final int from = 83; 
+        final int to = 88;
 
         var plFrom = PossibleLine.find(lines, from - 1, null, fromF);
         Assert.assertNotNull(plFrom);

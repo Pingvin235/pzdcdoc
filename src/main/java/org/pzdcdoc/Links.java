@@ -14,18 +14,29 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+/**
+ * References manager.
+ *
+ * @author Shamil Vakhitov
+ */
 public class Links {
     private static final Logger log = LogManager.getLogger();
-    
+
     private int errors;
-    
-    int checkDir(File outputDir) throws Exception {
+
+    /**
+     * Checks all the files in the dir.
+     * @param dir
+     * @return count of errors.
+     * @throws Exception
+     */
+    int checkDir(File dir) throws Exception {
         log.info("Start checking");
         errors = 0;
-        checkFile(outputDir);
+        checkFile(dir);
         return errors;
     }
-    
+
     private void checkFile(File file) throws Exception {
         if (file.isDirectory()) {
             for (File child : file.listFiles())
@@ -43,15 +54,15 @@ public class Links {
             String href = link.get();
 
             log.debug("Checking: {}", href);
-            
+
             String fragment = null;
             int pos = href.indexOf('#');
             if (pos >= 0) {
                 fragment = href.substring(pos + 1);
                 href = href.substring(0, pos);
             }
-            
-            File refFile = file; 
+
+            File refFile = file;
             if (!StringUtils.isBlank(href)) {
                 refFile = file.toPath().getParent().resolve(href).toFile();
                 if (!refFile.exists()) {
@@ -60,7 +71,7 @@ public class Links {
                     continue;
                 }
             }
-            
+
             if (!StringUtils.isBlank(fragment) &&
                 !IOUtils.toString(new FileInputStream(refFile), StandardCharsets.UTF_8.name()).contains("id=\"" + fragment + "\"")) {
                 log.error("Not found referenced fragment: " + fragment);
@@ -69,6 +80,11 @@ public class Links {
         }
     }
 
+    /**
+     * Extracts 'href' attributes from 'a' tags and 'src' from 'img'.
+     * @param doc HTML document.
+     * @return found links.
+     */
     public static Iterable<Link> getLinks(Document doc) {
         List<Link> result = new ArrayList<>();
 
@@ -86,5 +102,5 @@ public class Links {
 
         return result;
     }
-    
+
 }

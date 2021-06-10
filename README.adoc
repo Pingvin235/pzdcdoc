@@ -4,8 +4,6 @@
 [NOTE]
 ====
 See this article published to HTML5: http://pzdcdoc.org/demo/README.html 
-
-The source page is: https://github.com/Pingvin235/pzdcdoc/tree/master/README.adoc
 ====
 
 [[about]]

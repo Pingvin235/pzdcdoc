@@ -4,8 +4,6 @@
 [NOTE]
 ====
 See this article published to HTML5: https://pzdcdoc.org/demo/src/doc/demo.html
-
-The source page is: https://github.com/Pingvin235/pzdcdoc/tree/master/src/doc/demo.adoc
 ====
 
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
@@ -101,7 +99,7 @@ Here is the snippet of connecting plugins to Generator.
 
 // this snippet is used in 
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/Generator.java#L81-L86[org.pzdcdoc.Generator]
+link:../main/java/org/pzdcdoc/Generator.java#L83-L88[org.pzdcdoc.Generator]
 
 [[snippet-simple]]
 === Simple snippets

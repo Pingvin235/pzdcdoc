@@ -2,6 +2,11 @@ package org.pzdcdoc;
 
 import org.jsoup.nodes.Element;
 
+/**
+ * HTML reference object: a, img.
+ * 
+ * @author Shamil Vakhitov
+ */
 public class Link {
     private final Element node;
     private final String attrName;

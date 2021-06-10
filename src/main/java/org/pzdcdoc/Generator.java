@@ -21,9 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Asciidoctor.Factory;
 import org.asciidoctor.Attributes;
-import org.asciidoctor.AttributesBuilder;
 import org.asciidoctor.Options;
-import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
 import org.asciidoctor.extension.JavaExtensionRegistry;
 import org.dom4j.DocumentException;
@@ -57,13 +55,17 @@ public class Generator {
 
     private final Asciidoctor asciidoctor = Factory.create();
 
-    private static final String[] SCRIPTS = new String[] {"jquery-3.3.1.js",
+    private static final String[] SCRIPTS = { "jquery-3.3.1.js", "pzdcdoc.js",
         // https://lunrjs.com/guides/language_support.html
-        "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js",
-        "pzdcdoc.js"};
-
+        "lunr-2.3.6.js", "lunr.stemmer.support.js", "lunr.multi.js", "lunr.ru.js", "lunr.de.js"
+    };
     private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
-    private static final String[] STYLESHEETS = new String[] {"asciidoctor.css", "coderay-asciidoctor.css"};
+
+    private static final String ASCIIDOCTOR_DEFAULT_CSS = "asciidoctor-default.css";
+    private static final String PZDCDOC_CSS = "pzdcdoc.css";
+    private static final String FONT_CSS = "font.css";
+    private static final String[] STYLESHEETS = { ASCIIDOCTOR_DEFAULT_CSS, PZDCDOC_CSS, FONT_CSS, "coderay-asciidoctor.css" };
+    private static final String[] STYLESHEETS_INJECT = { PZDCDOC_CSS, FONT_CSS };
 
     @Option(required = true, name = "-i", aliases = { "--in" }, usage = "Source directory path")
     private File sourceDir;
@@ -153,15 +155,16 @@ public class Generator {
 
                 Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
 
-                Attributes attrs = AttributesBuilder.attributes()
-                        .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
-                        .linkCss(true)
-                        .sourceHighlighter("coderay")
-                        .icons(Attributes.FONT_ICONS)
-                        .tableOfContents(true)
-                        .setAnchors(true)
-                        .linkAttrs(true)
-                        .get();
+                var attrs = Attributes.builder()
+                    .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
+                    .styleSheetName(ASCIIDOCTOR_DEFAULT_CSS)
+                    .linkCss(true)
+                    .sourceHighlighter("coderay")
+                    .icons(Attributes.FONT_ICONS)
+                    .tableOfContents(true)
+                    .setAnchors(true)
+                    .linkAttrs(true)
+                    .build();
 
                 attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
                 attrs.setAttribute(ATTR_SOURCE, source);
@@ -170,16 +173,16 @@ public class Generator {
 
                 attrs.setAttributes(attributes);
 
-                Options options = OptionsBuilder.options()
-                        .toFile(false)
-                        .headerFooter(true)
-                        .safe(SafeMode.UNSAFE)
-                        .attributes(attrs)
-                        .get();
+                var options = Options.builder()
+                    .toFile(false)
+                    .headerFooter(true)
+                    .safe(SafeMode.UNSAFE)
+                    .attributes(attrs)
+                    .build();
 
                 String html = asciidoctor.convertFile(source, options);
 
-                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth);
+                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new SourceLink(attributes));
 
                 FileUtils.forceMkdirParent(target);
 
@@ -244,7 +247,7 @@ public class Generator {
         return name.contains("index");
     }
 
-    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth) throws Exception {
+    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth, SourceLink linkToSource) throws Exception {
         log.debug("correctHtml targetPath: {}, deep: {}", target, depth);
 
         if (toc == null) {
@@ -269,15 +272,21 @@ public class Generator {
 
         copyResources(jsoup, source, target);
 
-        // inject JS files
-        for (String script : SCRIPTS_INJECT)
-            head.append("<script src='" + StringUtils.repeat("../", depth) + DIR_RES  + "/" + script + "'/>");
+        injectScriptsAndStyles(depth, head);
 
         correctToC(jsoup, target, depth);
 
-        html = jsoup.toString();
+        linkToSource.inject(jsoup, source);
 
-        return html;
+        return jsoup.toString();
+    }
+
+    private void injectScriptsAndStyles(int depth, Element head) {
+        var pathPrefix = StringUtils.repeat("../", depth) + DIR_RES  + "/";
+        for (String script : SCRIPTS_INJECT)
+            head.append("<script src='" + pathPrefix + script + "'/>");
+        for (String css : STYLESHEETS_INJECT)
+            head.append("<link rel='stylesheet' href='" + pathPrefix + css + "'>");
     }
 
     private void correctToC(Document jsoup, Path target, int depth) {
