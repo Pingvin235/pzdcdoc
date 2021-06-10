@@ -3,6 +3,9 @@
 
 == Log in reversed time order
 [square]
+* 10.06.2021 Sticky header, other CSS enhancements.
+* 10.06.2021 Source links.
+* 10.06.2021 Libraries update.
 * 14.05.2021 Substring search additionally to full-text.
 * <<demo.adoc#, 14.05.2021>> ToC title points to root index file. 
 * 14.05.2021 Java 11, Args4j for parsing parameters. 
