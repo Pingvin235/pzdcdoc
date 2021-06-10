@@ -82,8 +82,8 @@ public class Links {
 
     /**
      * Extracts 'href' attributes from 'a' tags and 'src' from 'img'.
-     * @param doc
-     * @return
+     * @param doc HTML document.
+     * @return found links.
      */
     public static Iterable<Link> getLinks(Document doc) {
         List<Link> result = new ArrayList<>();
