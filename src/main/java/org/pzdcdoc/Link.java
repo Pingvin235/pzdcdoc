@@ -18,7 +18,7 @@ public class Link {
 
     /**
      * Link reference from node specific attribute: href or src.
-     * @return
+     * @return link value.
      */
     public String get() {
         return node.attr(attrName);
@@ -26,7 +26,7 @@ public class Link {
 
     /**
      * Set reference to a node specific attribute.
-     * @param value
+     * @param value link value.
      */
     public void set(String value) {
         node.attr(attrName, value);

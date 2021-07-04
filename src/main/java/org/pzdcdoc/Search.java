@@ -27,8 +27,8 @@ public class Search {
     private List<Article> articles = new ArrayList<>();
     
     /**
-     * Add an article to search index.
-     * @param article
+     * Adds an article to search index.
+     * @param article article instance.
      */
     public void addArticle(Article article) {
         articles.add(article);
@@ -44,7 +44,7 @@ public class Search {
 
     /**
      * Generates search JS file.
-     * @param rootRes
+     * @param rootRes root directory with resources.
      */
     public void writeScript(File rootRes) {
         log.info("Write search script.");
@@ -74,24 +74,21 @@ public class Search {
         }
 
         /**
-         * Relative URL.
-         * @return
+         * @return relative URL value.
          */
         public String getRef() {
             return ref;
         }
 
         /**
-         * Title.
-         * @return
+         * @return article title.
          */
         public String getTitle() {
             return title;
         }
 
         /**
-         * Plain text content.
-         * @return
+         * @return plain text content.
          */
         public String getContent() {
             return content;
