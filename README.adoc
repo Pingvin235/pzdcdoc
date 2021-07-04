@@ -1,10 +1,12 @@
 = PzdcDoc documentation generator
 :toc:
 
+ifndef::backend-html5[]
 [NOTE]
 ====
 See this article published to HTML5: http://pzdcdoc.org/demo/README.html 
 ====
+endif::[]
 
 [[about]]
 == About

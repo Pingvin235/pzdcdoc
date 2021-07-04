@@ -15,9 +15,9 @@ p {margin-bottom: 1rem}
 }
 
 body.article > #header,
-#content,
-#footnotes,
-#footer {
+body.article > #content,
+body.article > #footnotes,
+body.article > #footer {
   padding-left: 2em;
   padding-right: 2em;
 }
@@ -27,11 +27,15 @@ body.article > #header,
 }
 
 #toc.toc2 div.ulist {
-   margin-bottom: 0;
+  margin-bottom: 0;
+}
+
+#toc.toc2 div.ulist ul {
+  margin-left: 0;
 }
 
 #toc.toc2 li {
-   margin-top: 0;
+  margin-top: 0;
 }
 
 #toc.toc2 li > p {

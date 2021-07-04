@@ -61,7 +61,7 @@ public class Generator {
     };
     private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
 
-    private static final String ASCIIDOCTOR_DEFAULT_CSS = "asciidoctor-default.css";
+    private static final String ASCIIDOCTOR_DEFAULT_CSS = "asciidoctor.css";
     private static final String PZDCDOC_CSS = "pzdcdoc.css";
     private static final String FONT_CSS = "font.css";
     private static final String[] STYLESHEETS = { ASCIIDOCTOR_DEFAULT_CSS, PZDCDOC_CSS, FONT_CSS, "coderay-asciidoctor.css" };
@@ -156,6 +156,7 @@ public class Generator {
                 Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
 
                 var attrs = Attributes.builder()
+                    .backend("html5")
                     .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
                     .styleSheetName(ASCIIDOCTOR_DEFAULT_CSS)
                     .linkCss(true)
@@ -186,9 +187,9 @@ public class Generator {
 
                 FileUtils.forceMkdirParent(target);
 
-                FileWriterWithEncoding fos = new FileWriterWithEncoding(targetPath.toFile(), StandardCharsets.UTF_8);
-                fos.write(html);
-                fos.close();
+                try (var writer = new FileWriterWithEncoding(targetPath.toFile(), StandardCharsets.UTF_8)) {
+                    writer.write(html);
+                }
 
                 return;
             }
@@ -266,7 +267,7 @@ public class Generator {
 
         // add content to search index
         if (search != null) {
-            final String relativePath = targetDir.toPath().relativize(target).toString().replace('\\', '/');
+            final String relativePath = targetDir.toPath().relativize(target).toString();
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
         }
 
@@ -276,7 +277,7 @@ public class Generator {
 
         correctToC(jsoup, target, depth);
 
-        linkToSource.inject(jsoup, source);
+        linkToSource.inject(jsoup, sourceDir.toPath().relativize(source).toString());
 
         return jsoup.toString();
     }
