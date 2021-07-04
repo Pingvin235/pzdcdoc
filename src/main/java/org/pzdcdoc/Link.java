@@ -16,10 +16,18 @@ public class Link {
         this.attrName = "a".equals(node.nodeName()) ? "href" : "src";
     }
 
+    /**
+     * Link reference from node specific attribute: href or src.
+     * @return
+     */
     public String get() {
         return node.attr(attrName);
     }
 
+    /**
+     * Set reference to a node specific attribute.
+     * @param value
+     */
     public void set(String value) {
         node.attr(attrName, value);
     }

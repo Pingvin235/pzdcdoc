@@ -1,6 +1,5 @@
 package org.pzdcdoc;
 
-import java.nio.file.Path;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,11 +18,16 @@ public class SourceLink {
         this.linkRootUrl = (String) attributes.get(ATTR_SOURCE_LINK_ROOT);
     }
 
-    public void inject(Document jsoup, Path source) {
+    /**
+     * Inserts HTTP link to a source file.
+     * @param jsoup document.
+     * @param sourceRelativePath path string, relative to a source dir.
+     */
+    public void inject(Document jsoup, String sourceRelativePath) {
         if (StringUtils.isBlank(linkRootUrl))
             return;
         var el = jsoup.selectFirst("#header > h1");
         if (el != null)
-            el.append("<a title='View source' href='" + linkRootUrl + "/" + source.toString().replace('\\', '/') + "' id='source-link'>S</a>");
+            el.append("<a title='View source' href='" + linkRootUrl + "/" + Utils.pathToUnix(sourceRelativePath) + "' id='source-link'>S</a>");
     }
 }

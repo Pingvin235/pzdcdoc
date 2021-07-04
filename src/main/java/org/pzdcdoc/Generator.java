@@ -266,7 +266,7 @@ public class Generator {
 
         // add content to search index
         if (search != null) {
-            final String relativePath = targetDir.toPath().relativize(target).toString().replace('\\', '/');
+            final String relativePath = targetDir.toPath().relativize(target).toString();
             search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
         }
 
@@ -276,7 +276,7 @@ public class Generator {
 
         correctToC(jsoup, target, depth);
 
-        linkToSource.inject(jsoup, source);
+        linkToSource.inject(jsoup, sourceDir.toPath().relativize(source).toString());
 
         return jsoup.toString();
     }
