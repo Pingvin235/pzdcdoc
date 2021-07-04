@@ -61,7 +61,7 @@ public class Generator {
     };
     private static final String[] SCRIPTS_INJECT = ArrayUtils.add(SCRIPTS, Search.SCRIPT);
 
-    private static final String ASCIIDOCTOR_DEFAULT_CSS = "asciidoctor-default.css";
+    private static final String ASCIIDOCTOR_DEFAULT_CSS = "asciidoctor.css";
     private static final String PZDCDOC_CSS = "pzdcdoc.css";
     private static final String FONT_CSS = "font.css";
     private static final String[] STYLESHEETS = { ASCIIDOCTOR_DEFAULT_CSS, PZDCDOC_CSS, FONT_CSS, "coderay-asciidoctor.css" };
