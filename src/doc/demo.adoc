@@ -1,10 +1,12 @@
 = Demo PzdcDoc
 :toc:
 
+ifndef::backend-html5[]
 [NOTE]
 ====
 See this article published to HTML5: https://pzdcdoc.org/demo/src/doc/demo.html
 ====
+endif::[]
 
 Full reference of AsciiDoctor syntax is available here: https://asciidoctor.org/docs/user-manual
 

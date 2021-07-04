@@ -156,6 +156,7 @@ public class Generator {
                 Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
 
                 var attrs = Attributes.builder()
+                    .backend("html5")
                     .stylesDir(StringUtils.repeat("../", depth) + DIR_RES)
                     .styleSheetName(ASCIIDOCTOR_DEFAULT_CSS)
                     .linkCss(true)
