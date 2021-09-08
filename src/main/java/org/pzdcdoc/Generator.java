@@ -377,10 +377,10 @@ public class Generator {
 
         log.info("DONE!");
 
-        if (errors > 0)
+        if (errors > 0) {
             log.error("ERRORS => " + errors);
-
-        System.exit(errors);
+            System.exit(errors);
+        }
     }
 
 }

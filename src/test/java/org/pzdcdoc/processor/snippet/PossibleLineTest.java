@@ -6,6 +6,11 @@ import java.nio.file.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Unit test for possible line predictor.
+ * 
+ * @author Shamil Vakhitov
+ */
 public class PossibleLineTest {
     @Test
     public void testMovedSnippet() throws Exception {
