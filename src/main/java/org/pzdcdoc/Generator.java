@@ -101,8 +101,6 @@ public class Generator {
         if (!sourceDir.isDirectory())
             throw new IllegalArgumentException("Incorrect source directory: " + sourceDir);
 
-        FileUtils.deleteDirectory(targetDir);
-
         process(sourceDir, targetDir, -1, new HashMap<>());
         copyScriptsAndStyles();
         deleteTmpFiles();
@@ -337,23 +335,28 @@ public class Generator {
 
             File resSrc = source.getParent().resolve(href).toFile();
             if (!resSrc.exists() || resSrc.isDirectory()) {
-                log.debug("Skip: {}", resSrc);
+                log.debug("Skipping: {}", resSrc);
                 continue;
             }
 
             // Ditaa generated images
             if (href.startsWith("diag")) {
                 File resTarget = target.getParent().resolve(href).toFile();
-                log.info("Move {} to {}", resSrc, resTarget);
+                log.info("Moving {} to {}", resSrc, resTarget);
+                // without the deletion moving after fails in case of existing file
+                FileUtils.deleteQuietly(resTarget);
                 FileUtils.moveFile(resSrc, resTarget);
             } else {
                 String relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
                 link.set(relativePath);
 
                 File resTarget = target.getParent().resolve(relativePath).toFile();
-                log.info("Copy {} to {}", resSrc, resTarget);
+                log.info("Copying {} to {}", resSrc, resTarget);
                 FileUtils.forceMkdirParent(resTarget);
-                FileUtils.copyFile(resSrc, resTarget);
+                if (resTarget.exists() && resTarget.lastModified() == resSrc.lastModified())
+                    log.info("Not changed.");
+                else
+                    FileUtils.copyFile(resSrc, resTarget);
             }
         }
     }

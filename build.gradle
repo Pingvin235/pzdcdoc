@@ -44,7 +44,7 @@ configurations {
 // https://tomgregory.com/gradle-implementation-vs-compile-dependencies/
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'commons-io:commons-io:2.9.0'
+    implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
     runtimeOnly 'org.apache.logging.log4j:log4j-core:2.14.1'
     implementation 'org.jsoup:jsoup:1.13.1'
