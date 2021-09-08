@@ -46,7 +46,9 @@ public class Generator {
     private static final Logger log = LogManager.getLogger();
 
     private static final String DIR_RES = "_res";
+
     private static final String EXT_ADOC = ".adoc";
+    private static final String EXT_ADOCF = ".adocf";
     private static final String EXT_HTML = ".html";
 
     public static final String ATTR_GENERATOR = "generator";
@@ -101,8 +103,6 @@ public class Generator {
         if (!sourceDir.isDirectory())
             throw new IllegalArgumentException("Incorrect source directory: " + sourceDir);
 
-        FileUtils.deleteDirectory(targetDir);
-
         process(sourceDir, targetDir, -1, new HashMap<>());
         copyScriptsAndStyles();
         deleteTmpFiles();
@@ -123,13 +123,13 @@ public class Generator {
 
         // hidden resources, names started by .
         if (sourceName.startsWith(".")) {
-            log.debug("Skip hidden: {}", source);
+            log.debug("Skipping hidden: {}", source);
             return;
         }
 
         // include - skipping
-        if (sourceName.endsWith(".adocf")) {
-            log.debug("Skip include: {}", source);
+        if (sourceName.endsWith(EXT_ADOCF)) {
+            log.debug("Skipping include: {}", source);
             return;
         }
 
@@ -167,7 +167,7 @@ public class Generator {
                     .linkAttrs(true)
                     .build();
 
-                attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
+                attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='https://pzdcdoc.org'>PzdcDoc</a> at: ");
                 attrs.setAttribute(ATTR_SOURCE, source);
                 attrs.setAttribute(ATTR_TARGET, targetPath);
                 attrs.setAttribute(ATTR_GENERATOR, this);
@@ -213,7 +213,7 @@ public class Generator {
     }
 
     private void copyScriptsAndStyles() throws IOException {
-        log.info("Copy scripts and styles.");
+        log.info("Copying scripts and styles.");
 
         File rootRes = new File(targetDir + "/" + DIR_RES);
         if (!rootRes.exists()) rootRes.mkdirs();
@@ -230,7 +230,7 @@ public class Generator {
     }
 
     private void deleteTmpFiles() throws IOException {
-        log.info("Delete temporary directories");
+        log.info("Deleting temporary directories.");
         Files
             .walk(sourceDir.toPath())
             .filter(f -> f.toFile().isDirectory() && f.getFileName().startsWith(".asciidoctor"))
@@ -337,23 +337,28 @@ public class Generator {
 
             File resSrc = source.getParent().resolve(href).toFile();
             if (!resSrc.exists() || resSrc.isDirectory()) {
-                log.debug("Skip: {}", resSrc);
+                log.debug("Skipping: {}", resSrc);
                 continue;
             }
 
             // Ditaa generated images
             if (href.startsWith("diag")) {
                 File resTarget = target.getParent().resolve(href).toFile();
-                log.info("Move {} to {}", resSrc, resTarget);
+                log.info("Moving {} to {}", resSrc, resTarget);
+                // without the deletion moving after fails in case of existing file
+                FileUtils.deleteQuietly(resTarget);
                 FileUtils.moveFile(resSrc, resTarget);
             } else {
                 String relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
                 link.set(relativePath);
 
                 File resTarget = target.getParent().resolve(relativePath).toFile();
-                log.info("Copy {} to {}", resSrc, resTarget);
+                log.info("Copying {} to {}", resSrc, resTarget);
                 FileUtils.forceMkdirParent(resTarget);
-                FileUtils.copyFile(resSrc, resTarget);
+                if (resTarget.exists() && resTarget.lastModified() == resSrc.lastModified())
+                    log.info("Not changed.");
+                else
+                    FileUtils.copyFile(resSrc, resTarget);
             }
         }
     }
@@ -374,10 +379,10 @@ public class Generator {
 
         log.info("DONE!");
 
-        if (errors > 0)
+        if (errors > 0) {
             log.error("ERRORS => " + errors);
-
-        System.exit(errors);
+            System.exit(errors);
+        }
     }
 
 }

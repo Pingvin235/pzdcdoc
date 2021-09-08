@@ -1,5 +1,6 @@
 package org.pzdcdoc.processor;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,7 +42,7 @@ public class DrawIO extends InlineMacroProcessor {
     private static final String ATTR_CONVERTER = "pzdc-drawio-converter";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-    private final OkHttpClient client = new OkHttpClient.Builder().readTimeout(20, TimeUnit.SECONDS).build();
+    private final OkHttpClient http = new OkHttpClient.Builder().readTimeout(20, TimeUnit.SECONDS).build();
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
@@ -78,7 +79,6 @@ public class DrawIO extends InlineMacroProcessor {
             Path targetDocPath = (Path) doc.getAttribute(Generator.ATTR_TARGET);
             Path targetPath = targetDocPath.getParent().resolve(target);
 
-            // TODO: Conditional running,  
             convert(converterUrl, srcPath, targetPath, format);
             
             return target;
@@ -103,6 +103,13 @@ public class DrawIO extends InlineMacroProcessor {
     private void convert(String converterUrl, String srcPath, Path targetPath, String format)
             throws JsonProcessingException, IOException, FileNotFoundException {
         log.info("Converting URL: {}, srcPath: {}, targetPath: {}", converterUrl, srcPath, targetPath);
+
+        var targetFile = targetPath.toFile();
+        if (targetFile.exists() && new File(srcPath).lastModified() < targetFile.lastModified()) {
+            log.info("Skipping converting. Target file already exists and newer than source.");
+            return;
+        }
+
         long time = System.currentTimeMillis();
 
         var json = mapper.writeValueAsString(Map.of(
@@ -115,7 +122,7 @@ public class DrawIO extends InlineMacroProcessor {
             .post(RequestBody.create(JSON, json))
             .build();
 
-        try (var response = client.newCall(request).execute()) {
+        try (var response = http.newCall(request).execute()) {
             targetPath.getParent().toFile().mkdirs();
             IOUtils.write(response.body().string(), new FileOutputStream(targetPath.toString()), StandardCharsets.UTF_8);
         }

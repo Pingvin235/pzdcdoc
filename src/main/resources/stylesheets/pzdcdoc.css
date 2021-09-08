@@ -14,6 +14,15 @@ p {margin-bottom: 1rem}
   max-width: none;
 }
 
+#header > h1:first-child {
+  margin-top: 1rem;
+}
+
+.stretch {
+  width: 100%;
+}
+
+/* body */
 body.article > #header,
 body.article > #content,
 body.article > #footnotes,
@@ -22,6 +31,22 @@ body.article > #footer {
   padding-right: 2em;
 }
 
+body.article > #header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: #fff;
+}
+
+body.article > #header #source-link {
+  float: right;
+}
+
+body * {
+  scrollbar-width: thin;
+}
+
+/* toc */
 #toc.toc2 {
   padding: 0em 1em;
 }
@@ -52,25 +77,6 @@ body.article > #footer {
 
 #toc.toc2 li a.search {
   color: #bf3400;
-}
-
-body.article > #header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background-color: #fff;
-}
-
-body.article > #header #source-link {
-  float: right;
-}
-
-body * {
-  scrollbar-width: thin;
-}
-
-#header > h1:first-child {
-  margin-top: 1rem;
 }
 
 /* elements */

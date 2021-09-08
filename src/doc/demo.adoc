@@ -46,18 +46,32 @@ Is also needed.
 
 [[table]]
 == Tables
+[[table-simple]]
 === Simple example
-[%header,cols=1*]
+[cols="1*", options="header"]
 |===
 |Service / Component
 
 |Converter Service
 
 |Index and Search Service
-
 |===
 
-=== Sample with joined cells
+[[table-proportional-cols]]
+=== Proportional column widths
+[cols="2,3,1", options="header"]
+|===
+|Header 2
+|Header 3
+|Header 1
+
+|Column 2
+|Column 3
+|Column 1
+|===
+
+[[table-complex]]
+=== Joined cells
 [cols="a,a", options="header"]
 |===
 |Key
@@ -87,7 +101,6 @@ indexer.context.sharepoint.request.url.preprocess:
 SharePoint access user.
 Sample: myuser 
 Sample Cloud: myuser@mycompany.com
- 
 |===
 
 [[snippet]]
@@ -101,7 +114,7 @@ Here is the snippet of connecting plugins to Generator.
 
 // this snippet is used in 
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/Generator.java#L83-L88[org.pzdcdoc.Generator]
+link:../main/java/org/pzdcdoc/Generator.java#L85-L90[org.pzdcdoc.Generator]
 
 [[snippet-simple]]
 === Simple snippets
@@ -191,7 +204,10 @@ image::_res/vscode_drawio.png[width="600px"]
 For converting DrawIO format to graphic files is used container:
 https://hub.docker.com/r/tomkludy/drawio-renderer
 
-Converter URL to there has to be defined in link:pzdcdoc.xml[configuration] file.
+Converter URL to there has to be defined in `pzdcdoc.xml` configuration file.
+
+[snippet, from="<!-- co", to="-->", remove-leading="		"]
+link:pzdcdoc.xml#L7-L11[src/doc/pzdcdoc.xml]
 
 [CAUTION]
 ====
@@ -204,6 +220,8 @@ command below and use it instead.
 ----
 docker run -d -p 5000:5000 --shm-size=1g tomkludy/drawio-renderer:latest
 ----
+
+After running a container uncomment the second block in the configuration above.
 
 [[diagrams-ditaa]]
 === Ditaa
