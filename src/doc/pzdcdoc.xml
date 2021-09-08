@@ -9,7 +9,8 @@
 		<!-- converter URL for locally running Docker image
 		<pzdc-drawio-converter>http://127.0.0.1:5000/convert</pzdc-drawio-converter>
 		-->
-		<!-- source link root -->
-		<pzdc-source-link-root>https://github.com/Pingvin235/pzdcdoc/blob/master</pzdc-source-link-root>
+		<!-- source link root when generating demo only
+		<pzdc-source-link-root>https://github.com/Pingvin235/pzdcdoc/blob/master/src/doc</pzdc-source-link-root>
+		-->
 	</attributes>
 </pzdcdoc>
