@@ -5,7 +5,10 @@
 		<!-- root path for JavaDoc, used by JavaDocLink processor -->
 		<pzdc-javadoc>https://bgerp.org/doc/3.0/javadoc/</pzdc-javadoc>
 		<!-- converter URL, used by DrawIO processor -->
-		<pzdc-drawio-converter>http://bgerp.org:5000/convert</pzdc-drawio-converter>
+		<pzdc-drawio-converter>http://drawio.bgerp.org/convert</pzdc-drawio-converter>
+		<!-- converter URL for locally running Docker image
+		<pzdc-drawio-converter>http://127.0.0.1:5000/convert</pzdc-drawio-converter>
+		-->
 		<!-- source link root -->
 		<pzdc-source-link-root>https://github.com/Pingvin235/pzdcdoc/blob/master</pzdc-source-link-root>
 	</attributes>

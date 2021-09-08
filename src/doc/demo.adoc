@@ -191,7 +191,10 @@ image::_res/vscode_drawio.png[width="600px"]
 For converting DrawIO format to graphic files is used container:
 https://hub.docker.com/r/tomkludy/drawio-renderer
 
-Converter URL to there has to be defined in link:pzdcdoc.xml[configuration] file.
+Converter URL to there has to be defined in `pzdcdoc.xml` configuration file.
+
+[snippet, from="<!-- co", to="-->", remove-leading="		"]
+link:pzdcdoc.xml#L7-L11[src/doc/pzdcdoc.xml]
 
 [CAUTION]
 ====
@@ -204,6 +207,8 @@ command below and use it instead.
 ----
 docker run -d -p 5000:5000 --shm-size=1g tomkludy/drawio-renderer:latest
 ----
+
+After running a container uncomment the second block in the configuration above.
 
 [[diagrams-ditaa]]
 === Ditaa
