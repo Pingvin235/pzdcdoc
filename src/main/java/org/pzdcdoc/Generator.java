@@ -165,7 +165,7 @@ public class Generator {
                     .linkAttrs(true)
                     .build();
 
-                attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='http://pzdcdoc.org'>PzdcDoc</a> at: ");
+                attrs.setAttribute("last-update-label", "Powered by <a target='_blank' href='https://pzdcdoc.org'>PzdcDoc</a> at: ");
                 attrs.setAttribute(ATTR_SOURCE, source);
                 attrs.setAttribute(ATTR_TARGET, targetPath);
                 attrs.setAttribute(ATTR_GENERATOR, this);
