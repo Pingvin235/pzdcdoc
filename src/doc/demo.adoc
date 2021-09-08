@@ -46,18 +46,32 @@ Is also needed.
 
 [[table]]
 == Tables
+[[table-simple]]
 === Simple example
-[%header,cols=1*]
+[cols="1*", options="header"]
 |===
 |Service / Component
 
 |Converter Service
 
 |Index and Search Service
-
 |===
 
-=== Sample with joined cells
+[[table-proportional-cols]]
+=== Proportional column widths
+[cols="2,3,1", options="header"]
+|===
+|Header 2
+|Header 3
+|Header 1
+
+|Column 2
+|Column 3
+|Column 1
+|===
+
+[[table-complex]]
+=== Joined cells
 [cols="a,a", options="header"]
 |===
 |Key
@@ -87,7 +101,6 @@ indexer.context.sharepoint.request.url.preprocess:
 SharePoint access user.
 Sample: myuser 
 Sample Cloud: myuser@mycompany.com
- 
 |===
 
 [[snippet]]

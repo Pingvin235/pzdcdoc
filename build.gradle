@@ -156,12 +156,12 @@ publishing {
             groupId 'org.pzdcdoc'
             artifactId 'pzdcdoc'
             version "${project.version}"
-                    
+
             from components.java
 
             if (admin) {
                 customizePom(pom)
-                
+
                 // create the sign pom artifact
                 pom.withXml {
                     def pomFile = file("${project.buildDir}/generated-pom.xml")
@@ -172,14 +172,14 @@ publishing {
                         extension = 'pom.asc'
                     }
                 }
-                
+
                 artifact(sourceJar) {
                     classifier = 'sources'
                 }
                 artifact(javadocJar) {
                     classifier = 'javadoc'
                 }
-                
+
                 // create the signed artifacts
                 project.tasks.signArchives.signatureFiles.each {
                     artifact(it) {
@@ -210,7 +210,7 @@ publishing {
 def customizePom(pom) {
     pom.withXml {
         def root = asNode()
-        
+
         // change packaging from pom
         root.packaging[0].value = 'jar'
 
