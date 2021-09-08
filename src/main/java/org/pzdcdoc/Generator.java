@@ -46,7 +46,9 @@ public class Generator {
     private static final Logger log = LogManager.getLogger();
 
     private static final String DIR_RES = "_res";
+
     private static final String EXT_ADOC = ".adoc";
+    private static final String EXT_ADOCF = ".adocf";
     private static final String EXT_HTML = ".html";
 
     public static final String ATTR_GENERATOR = "generator";
@@ -121,13 +123,13 @@ public class Generator {
 
         // hidden resources, names started by .
         if (sourceName.startsWith(".")) {
-            log.debug("Skip hidden: {}", source);
+            log.debug("Skipping hidden: {}", source);
             return;
         }
 
         // include - skipping
-        if (sourceName.endsWith(".adocf")) {
-            log.debug("Skip include: {}", source);
+        if (sourceName.endsWith(EXT_ADOCF)) {
+            log.debug("Skipping include: {}", source);
             return;
         }
 
@@ -211,7 +213,7 @@ public class Generator {
     }
 
     private void copyScriptsAndStyles() throws IOException {
-        log.info("Copy scripts and styles.");
+        log.info("Copying scripts and styles.");
 
         File rootRes = new File(targetDir + "/" + DIR_RES);
         if (!rootRes.exists()) rootRes.mkdirs();
@@ -228,7 +230,7 @@ public class Generator {
     }
 
     private void deleteTmpFiles() throws IOException {
-        log.info("Delete temporary directories");
+        log.info("Deleting temporary directories.");
         Files
             .walk(sourceDir.toPath())
             .filter(f -> f.toFile().isDirectory() && f.getFileName().startsWith(".asciidoctor"))
