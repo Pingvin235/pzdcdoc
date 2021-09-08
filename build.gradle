@@ -91,8 +91,8 @@ defaultTasks 'clean', 'buildDemoDocLocal'
 
 task buildDemoDocLocal(type:JavaExec, dependsOn: ['compileJava']) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'org.pzdcdoc.DocGenerator'
-    args 'NOTUSED', 'src/doc', docOutDir
+    main = 'org.pzdcdoc.Generator'
+    args '--in', 'src/doc', '--out', docOutDir
 }
 
 task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
@@ -103,8 +103,8 @@ task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
 // gradlew buildDemoDoc -PdocBranch=i5-diagrams
 task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenLocal']) {
     classpath = configurations.pzdcdoc
-    main = 'org.pzdcdoc.DocGenerator'
-    args 'NOTUSED', docSrcDir, docOutDir
+    main = 'org.pzdcdoc.Generator'
+    args '--in', docSrcDir, '--out', docOutDir
 }
 
 // Sample of generation out of branch:
