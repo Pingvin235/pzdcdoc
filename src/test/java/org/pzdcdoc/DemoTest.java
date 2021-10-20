@@ -45,7 +45,7 @@ public class DemoTest {
     public void checkFileDemo() throws Exception {
         var file = new File(TARGET_DIR, "demo.html");
         Assert.assertTrue("File exists", file.exists());
-        Assert.assertEquals("File size", 26387, file.length());
+        Assert.assertEquals("File size", 26279, file.length());
 
         var doc = Jsoup.parse(file, StandardCharsets.UTF_8.name());
         checkFileDemoHeader(doc);
