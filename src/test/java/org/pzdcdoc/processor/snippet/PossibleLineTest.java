@@ -8,7 +8,7 @@ import org.junit.Test;
 
 /**
  * Unit test for possible line predictor.
- * 
+ *
  * @author Shamil Vakhitov
  */
 public class PossibleLineTest {
@@ -19,9 +19,9 @@ public class PossibleLineTest {
         LineFunction fromF = new LineFunction.Starts("// h");
         LineFunction toF = new LineFunction.Ends("r());");
 
-        // take the right values from snippet in demo.adoc 
-        final int from = 83; 
-        final int to = 88;
+        // take the right values from snippet in demo.adoc
+        final int from = 85;
+        final int to = 90;
 
         var plFrom = PossibleLine.find(lines, from - 1, null, fromF);
         Assert.assertNotNull(plFrom);
