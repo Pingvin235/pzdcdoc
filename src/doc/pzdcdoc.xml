@@ -6,9 +6,10 @@
 		<pzdc-javadoc>https://bgerp.org/doc/3.0/javadoc/</pzdc-javadoc>
 		<!-- converter URL, used by DrawIO processor -->
 		<pzdc-drawio-converter>http://drawio.bgerp.org/convert</pzdc-drawio-converter>
-		<!-- converter URL for locally running Docker image
+		<!-- converter URL in locally running Docker container
 		<pzdc-drawio-converter>http://127.0.0.1:5000/convert</pzdc-drawio-converter>
 		-->
+		<pzdc-drawio-request-timeout-sec>120</pzdc-drawio-request-timeout-sec>
 		<!-- source link root when generating demo only
 		<pzdc-source-link-root>https://github.com/Pingvin235/pzdcdoc/blob/master/src/doc</pzdc-source-link-root>
 		-->

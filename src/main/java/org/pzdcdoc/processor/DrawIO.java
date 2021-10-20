@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.asciidoctor.ast.ContentNode;
@@ -40,10 +41,12 @@ public class DrawIO extends InlineMacroProcessor {
 
     /** Attribute defining JavaDoc root URL. */
     private static final String ATTR_CONVERTER = "pzdc-drawio-converter";
-    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private static final String ATTR_TIMEOUT = "pzdc-drawio-request-timeout-sec";
 
-    private final OkHttpClient http = new OkHttpClient.Builder().readTimeout(20, TimeUnit.SECONDS).build();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private OkHttpClient http;
 
     @Override
     public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
@@ -68,6 +71,9 @@ public class DrawIO extends InlineMacroProcessor {
                 throw new IllegalArgumentException("Attribute '" + ATTR_CONVERTER + "' is not defined");
             }
 
+            int timeout = NumberUtils.toInt((String) doc.getAttribute(ATTR_TIMEOUT), 60);
+            http = new OkHttpClient.Builder().readTimeout(timeout, TimeUnit.SECONDS).build();
+
             String srcDocDir = (String) doc.getAttribute("docdir");
             String srcPath = srcDocDir + "/" + target;
 
@@ -80,7 +86,7 @@ public class DrawIO extends InlineMacroProcessor {
             Path targetPath = targetDocPath.getParent().resolve(target);
 
             convert(converterUrl, srcPath, targetPath, format);
-            
+
             return target;
         } catch (Exception e) {
             log.error("Export error", e);
@@ -89,9 +95,9 @@ public class DrawIO extends InlineMacroProcessor {
     }
 
     /**
-     * Sends request to converter container: 
-     * https://hub.docker.com/r/tomkludy/drawio-renderer 
-     * 
+     * Sends request to converter container:
+     * https://hub.docker.com/r/tomkludy/drawio-renderer
+     *
      * @param converterUrl URL to convert
      * @param srcPath path of source Draw.IO file.
      * @param targetPath path of resulting file.
@@ -112,7 +118,7 @@ public class DrawIO extends InlineMacroProcessor {
 
         long time = System.currentTimeMillis();
 
-        var json = mapper.writeValueAsString(Map.of(
+        var json = MAPPER.writeValueAsString(Map.of(
             "source", IOUtils.toString(new FileInputStream(srcPath), StandardCharsets.UTF_8),
             "format", format
         ));
