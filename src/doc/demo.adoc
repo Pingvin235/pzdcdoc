@@ -81,7 +81,7 @@ Is also needed.
 |indexer.context.sharepoint.url
 |:hardbreaks:
 Root URL of SharePoint site.
-Sample: https://sp.mycompany.i 
+Sample: https://sp.mycompany.i
 Sample Cloud: https://mycompany.sharepoint.com
 
 |indexer.context.sharepoint.url.preprocess
@@ -99,7 +99,7 @@ indexer.context.sharepoint.request.url.preprocess:
 |indexer.context.sharepoint.user
 |:hardbreaks:
 SharePoint access user.
-Sample: myuser 
+Sample: myuser
 Sample Cloud: myuser@mycompany.com
 |===
 
@@ -112,7 +112,7 @@ The source link below is automatically extracted to highlighted code snippet dur
 Attributes `from` and `to` allow check actuality of content, `remove-leading` - deletion of line indent.
 Here is the snippet of connecting plugins to Generator.
 
-// this snippet is used in 
+// this snippet is used in
 [snippet, from="// h", to="r());", remove-leading="        "]
 link:../main/java/org/pzdcdoc/Generator.java#L85-L90[org.pzdcdoc.Generator]
 
@@ -134,7 +134,7 @@ Java code:
 ----
 class My {
    private int a;
-   
+
    public My() {
       a = 5;
    }
@@ -182,7 +182,7 @@ Such link causes a validation error, may be used for marking not finished places
 
 [[sel]]
 == Selections
-For any selection except of links use bold font: 
+For any selection except of links use bold font:
 *variable*, *path*, *parameter*, *interface => menu => item*
 
 [[diagrams]]
@@ -213,12 +213,12 @@ link:pzdcdoc.xml#L7-L11[src/doc/pzdcdoc.xml]
 ====
 The value used there points to our test server. Keeping it in production configurations is strictly unrecommended.
 All the data from your diagrams may be analyzed with AI in Cambridge Analytics, therefore start your own container using the
-command below and use it instead. 
+command below and use it instead.
 ====
 
 [source]
 ----
-docker run -d -p 5000:5000 --shm-size=1g tomkludy/drawio-renderer:latest
+docker run -d -p 5000:5000 --shm-size=1g --name drawio-renderer --restart always tomkludy/drawio-renderer:v1.1
 ----
 
 After running a container uncomment the second block in the configuration above.
@@ -226,7 +226,7 @@ After running a container uncomment the second block in the configuration above.
 [[diagrams-ditaa]]
 === Ditaa
 Ditaa is a ASCII-based format of block diagrams.
-Here is the original page: http://ditaa.sourceforge.net/ and actual repo: https://github.com/stathissideris/ditaa 
+Here is the original page: http://ditaa.sourceforge.net/ and actual repo: https://github.com/stathissideris/ditaa
 
 Advantages:
 [square]
@@ -283,7 +283,7 @@ PlantUML diagrams are also supported.
 === Other 3rd party formats
 Schemas can also be produced using third-party editors, for example: link:https://www.yworks.com/downloads#yEd[yEd]
 Source files are stored in `_res` directories under names ending in `_schema.graphml`.
-Files have to be exported as images in PNG format, preferably with the same name. 
+Files have to be exported as images in PNG format, preferably with the same name.
 After any change source files have to be re-exported.
 
 [[tools]]
