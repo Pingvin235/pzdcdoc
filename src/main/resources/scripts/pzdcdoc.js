@@ -12,6 +12,7 @@ const $$ = new function() {
 				hash = decodeURI(hash);
 				markTocCurrent(hash);
 				markContentCurrent(hash);
+				setTimeout(scrollContentCurrentToVisible);
 			}
 		};
 
@@ -37,8 +38,8 @@ const $$ = new function() {
 	 * @param {*} hash fragment ID starting from '#'.
 	 */
 	const markContentCurrent = (hash) => {
-		const $current = $('#content ' + hash);
-		$current.addClass('current');
+		$('body > #content .current').removeClass('current');
+		$('#content ' + hash).addClass('current');
 	}
 
 	/**
@@ -55,8 +56,8 @@ const $$ = new function() {
 	 */
 	const scrollContentCurrentToVisible = () => {
 		const html = document.querySelector('html');
-		const selected = html.querySelector('body > #content .current');
-		html.scrollTop = selected.offsetTop - 200;
+		const current = html.querySelector('body > #content .current');
+		html.scrollTop = current.offsetTop - 200;
 	}
 
 	/**
@@ -151,12 +152,10 @@ const $$ = new function() {
 	// public functions
 	this.markFragment = markFragment;
 	this.scrollTocCurrentToVisible = scrollTocCurrentToVisible;
-	this.scrollContentCurrentToVisible = scrollContentCurrentToVisible;
 	this.initSearch = initSearch;
 }
 
 $(function () {
 	$$.markFragment();
 	$$.scrollTocCurrentToVisible();
-	setTimeout($$.scrollContentCurrentToVisible, 1000);
 });
