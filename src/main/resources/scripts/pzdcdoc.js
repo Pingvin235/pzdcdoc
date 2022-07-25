@@ -2,33 +2,45 @@
  * This file has to be loaded the last.
  */
 const $$ = new function() {
+	/**
+	 * Scrolls current item in left ToC to visible area.
+	 */
 	const scrollTocToVisible = () => {
 		const toc2 = document.querySelector('#toc.toc2');
 		const selected = $(toc2).find('li a.current').last()[0];
 		toc2.scrollTop = selected.offsetTop - toc2.offsetTop;
 	}
-	
-	const markPart = () => {
+
+	const markFragment = () => {
 		const mark = function () {
 			let hash = location.hash;
 			if (hash) {
 				hash = decodeURI(hash);
 				const $selected = $('#toc.toc2 li > p > a.current');
 				const $partLinks = $selected.closest('li').find('ul a');
-				
+
 				$partLinks.removeClass('current');
 				$partLinks.filter('[href="' + hash + '"]').addClass('current');
 			}
 		};
-		
+
 		mark();
 		$(window).bind('hashchange', mark);
 	}
 
-	const enterPressed = ($e) => {
-		return ($e.keyCode || $e.which) == 13;
+	/**
+	 * Checks if key event is enter.
+	 * @param {*} e the event.
+	 * @returns
+	 */
+	const enterPressed = (e) => {
+		return (e.keyCode || e.which) == 13;
 	}
 
+	/**
+	 * Builds full-text search index on a first usage.
+	 * @returns
+	 */
 	const buildIndex = () => {
 		return lunr(function () {
 			// https://lunrjs.com/guides/language_support.html
@@ -37,13 +49,16 @@ const $$ = new function() {
 			this.ref('ref')
 			this.field('title')
 			this.field('content')
-		
+
 			$$.documents.forEach(function (doc) {
 				this.add(doc)
 			}, this)
 		});
 	}
 
+	/**
+	 * Inits search input.
+	 */
 	const initSearch = () => {
 		let idx = undefined;
 
@@ -63,7 +78,7 @@ const $$ = new function() {
 			let searchValue = $input.val().toLowerCase();
 			if (searchValue) {
 				const tokens = searchValue.split(/\s+/);
-				
+
 				searchValue = '';
 				tokens.forEach(token => {
 					if (!token.match(/^[\+\-\~]/))
@@ -86,6 +101,11 @@ const $$ = new function() {
 		});
 	}
 
+	/**
+	 * Searches substring in documents.
+	 * @param {*} value searched substring.
+	 * @returns array of found documents.
+	 */
 	const substringSearch = (value) => {
 		const result = [];
 
@@ -96,14 +116,14 @@ const $$ = new function() {
 
 		return result;
 	}
-	
+
 	// public functions
 	this.scrollTocToVisible = scrollTocToVisible;
-	this.markPart = markPart;
+	this.markFragment = markFragment;
 	this.initSearch = initSearch;
 }
 
 $(function () {
-	$$.markPart();
+	$$.markFragment();
 	$$.scrollTocToVisible();
 });
