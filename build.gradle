@@ -78,6 +78,10 @@ tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
 
+tasks.withType(JavaExec) {
+    jvmArgs "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED"
+}
+
 test {
     testLogging {
         showStandardStreams = true
@@ -91,7 +95,7 @@ defaultTasks 'clean', 'buildDemoDocLocal'
 
 task buildDemoDocLocal(type:JavaExec, dependsOn: ['compileJava']) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'org.pzdcdoc.Generator'
+    mainClass = 'org.pzdcdoc.Generator'
     args '--in', 'src/doc', '--out', docOutDir
 }
 
@@ -103,7 +107,7 @@ task checkoutDemoDoc(type: Exec, dependsOn: ['clean']) {
 // gradlew buildDemoDoc -PdocBranch=i5-diagrams
 task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenLocal']) {
     classpath = configurations.pzdcdoc
-    main = 'org.pzdcdoc.Generator'
+    mainClass = 'org.pzdcdoc.Generator'
     args '--in', docSrcDir, '--out', docOutDir
 }
 
