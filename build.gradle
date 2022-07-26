@@ -132,18 +132,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives sourceJar
-    archives javadocJar
-}
-
-signing {
-    required { admin }
-    sign configurations.archives
-}
-
-// https://medium.com/@nmauti/publishing-a-project-on-maven-central-8106393db2c3
-// https://medium.com/@nmauti/sign-and-publish-on-maven-central-a-project-with-the-new-maven-publish-gradle-plugin-22a72a4bfd4b
+// https://docs.gradle.org/7.3.2/userguide/publishing_maven.html
 
 /*
   Local publishing:
@@ -155,6 +144,11 @@ signing {
     wait for all close checks in 'Activity' and 'Release' the repo
 */
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -164,37 +158,35 @@ publishing {
 
             from components.java
 
-            if (admin) {
-                customizePom(pom)
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
 
-                // create the sign pom artifact
-                pom.withXml {
-                    def pomFile = file("${project.buildDir}/generated-pom.xml")
-                    writeTo(pomFile)
-                    def pomAscFile = signing.sign(pomFile).signatureFiles[0]
-                    artifact(pomAscFile) {
-                        classifier = null
-                        extension = 'pom.asc'
+            pom {
+                name = 'PzdcDoc'
+                description = 'AsciiDoctor based ocumentation generation tool'
+                url = 'https://github.com/Pingvin235/pzdcdoc'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://github.com/Pingvin235/pzdcdoc/blob/master/LICENSE'
+                        distribution = 'repo'
                     }
                 }
-
-                artifact(sourceJar) {
-                    classifier = 'sources'
+                scm {
+                    url = 'https://github.com/Pingvin235/pzdcdoc'
+                    connection = 'scm:git:git://github.com/Pingvin235/pzdcdoc.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:pzdcdoc/pzdcdoc.git'
                 }
-                artifact(javadocJar) {
-                    classifier = 'javadoc'
-                }
-
-                // create the signed artifacts
-                project.tasks.signArchives.signatureFiles.each {
-                    artifact(it) {
-                        def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
-                        if (matcher.find()) {
-                            classifier = matcher.group(1)
-                        } else {
-                            classifier = null
-                        }
-                        extension = 'jar.asc'
+                developers {
+                    developer {
+                        name = 'Shamil Vakhitov'
                     }
                 }
             }
@@ -212,62 +204,6 @@ publishing {
     }
 }
 
-def customizePom(pom) {
-    pom.withXml {
-        def root = asNode()
-
-        // change packaging from pom
-        root.packaging[0].value = 'jar'
-
-        // eliminate test-scoped dependencies (no need in maven central POMs)
-        root.dependencies.removeAll { dep ->
-            dep.scope == "test"
-        }
-
-        // add all items necessary for maven central publication
-        root.children().last() + {
-            resolveStrategy = Closure.DELEGATE_FIRST
-
-            description 'AsciiDoctor based documentation generation tool'
-            name 'PzdcDoc'
-            url 'https://github.com/Pingvin235/pzdcdoc'
-            organization {
-                name 'org.pzdcdoc'
-                url 'https://pzdcdoc.org'
-            }
-            issueManagement {
-                system 'GitHub'
-                url 'https://github.com/Pingvin235/pzdcdoc/issues'
-            }
-            licenses {
-                license {
-                    name 'MIT License'
-                    url 'https://github.com/Pingvin235/pzdcdoc/blob/master/LICENSE'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                url 'https://github.com/Pingvin235/pzdcdoc'
-                connection 'scm:git:git://github.com/Pingvin235/pzdcdoc.git'
-                developerConnection 'scm:git:ssh://git@github.com:pzdcdoc/pzdcdoc.git'
-            }
-            developers {
-                developer {
-                    name 'Shamil Vakhitov'
-                }
-            }
-        }
-    }
-}
-
-model {
-    tasks.generatePomFileForMavenJavaPublication {
-        destination = file("$buildDir/generated-pom.xml")
-    }
-    tasks.publishMavenJavaPublicationToMavenLocal {
-        dependsOn project.tasks.signArchives
-    }
-    tasks.publishMavenJavaPublicationToMavenRepository {
-        dependsOn project.tasks.signArchives
-    }
+signing {
+    sign publishing.publications.mavenJava
 }
