@@ -32,7 +32,7 @@ idea {
 }
 
 configurations {
-    all {
+    compile {
         transitive = false
     }
     // for demo build
