@@ -118,7 +118,7 @@ public class DrawIO extends InlineMacroProcessor {
 
         long time = System.currentTimeMillis();
 
-        var json = MAPPER.writeValueAsString(Map.of(
+        String json = MAPPER.writeValueAsString(Map.of(
             "source", IOUtils.toString(new FileInputStream(srcPath), StandardCharsets.UTF_8),
             "format", format
         ));
@@ -129,6 +129,9 @@ public class DrawIO extends InlineMacroProcessor {
             .build();
 
         try (var response = http.newCall(request).execute()) {
+            if (!response.isSuccessful())
+                throw new IOException("HTTP response code: " + response.code() + "; body: " + response.body().string());
+
             targetPath.getParent().toFile().mkdirs();
             IOUtils.write(response.body().string(), new FileOutputStream(targetPath.toString()), StandardCharsets.UTF_8);
         }

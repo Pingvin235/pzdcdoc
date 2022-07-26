@@ -59,6 +59,10 @@ body * {
   margin-left: 0;
 }
 
+#toc.toc2 ul.sectlevel1 li a {
+  color: #1a0dab;
+}
+
 #toc.toc2 li {
   margin-top: 0;
 }
@@ -77,6 +81,11 @@ body * {
 
 #toc.toc2 li a.search {
   color: #bf3400;
+}
+
+/* current fragment symbol */
+#content .current > a.anchor {
+  visibility:visible
 }
 
 /* elements */
