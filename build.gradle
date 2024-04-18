@@ -50,7 +50,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
     runtimeOnly 'org.apache.logging.log4j:log4j-core:2.14.1'
-    implementation 'org.jsoup:jsoup:1.14.2'
+    implementation 'org.jsoup:jsoup:1.17.2'
     implementation 'org.asciidoctor:asciidoctorj-api:2.5.1'
     runtimeOnly 'org.asciidoctor:asciidoctorj:2.5.1'
     // version 2.1.2 places resulting PNG files in the project root, that brakes generation
