@@ -256,6 +256,8 @@ public class Generator {
             if (containsIndex(target.toString())) {
                 toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
                 toc = toc.select("body").tagName("div").get(0);
+                // remove class="article"
+                toc.clearAttributes();
                 // add search field
                 search.injectField(toc.select("#header"));
             }
@@ -291,20 +293,22 @@ public class Generator {
     }
 
     private void correctToC(Document jsoup, Path target, int depth) {
-        // find of the top ToC
         Element pageToC = jsoup.selectFirst("#toc.toc");
-        if (pageToC != null) {
-            Element ul = pageToC.selectFirst(".sectlevel1").clone();
-            // remove doesn't work properly
-            pageToC.html("");
-            pageToC = ul;
-        }
+        if (pageToC == null)
+            return;
 
-        // inject left ToC
+        // set class 'toc2' for body to support it
         jsoup.selectFirst("body").addClass("toc2");
-        jsoup.select("#toc").before("<div id=\"toc\" class=\"toc2\">" + toc.toString() + "</div>");
+        // extract page toc's content
+        Element pageToCRootUl = pageToC.selectFirst(".sectlevel1").clone();
+        pageToC
+            // convert page toc to toc2
+            .attr("class", "toc2")
+            // replace toc2's content by toc
+            .html(toc.toString());
 
-        for (Element a : jsoup.select("#toc.toc2 a")) {
+        // going through toc links
+        for (Element a : pageToC.select("a")) {
             Link link = new Link(a);
             if (link.isExternalReference())
                 continue;
@@ -313,18 +317,19 @@ public class Generator {
 
             if (target.endsWith(href)) {
                 a.addClass("current");
-                if (pageToC != null)
-                    a.after(pageToC);
+                // injecting page ToC into the global ToC
+                if (pageToCRootUl != null)
+                    a.after(pageToCRootUl);
             }
+            // correct link URL related to the actual page
             link.set(StringUtils.repeat("../", depth) + href);
             a.attr("title", a.text());
         }
 
         // add link to root on title
-        Element title = jsoup.selectFirst("#toc #header h1");
-        if (title != null) {
+        Element title = pageToC.selectFirst("#header h1");
+        if (title != null)
             title.html("<a href='" + StringUtils.repeat("../", depth) + "index.html'>" + title.text() + "</a>");
-        }
     }
 
     private void copyResources(Document jsoup, Path source, Path target) throws IOException {
