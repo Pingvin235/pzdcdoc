@@ -11,8 +11,8 @@ repositories {
 
 buildDir = 'target'
 version = '2.7'
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 ext.admin = hasProperty('sonatypeUsername')
 ext.docBranch = project.hasProperty('docBranch') ? project.findProperty('docBranch') : 'master'
