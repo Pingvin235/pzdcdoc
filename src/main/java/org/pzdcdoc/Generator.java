@@ -151,7 +151,7 @@ public class Generator {
                 process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, attributes);
         } else {
             if (sourceName.endsWith(EXT_ADOC)) {
-                log.info("Processing: " + source);
+                log.info("Processing: {}", source);
 
                 Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
 
@@ -206,6 +206,8 @@ public class Generator {
 
             for (Node attr : document.selectNodes("//attributes/*"))
                 attributes.put(attr.getName(), attr.getText());
+
+            attributes.put("doctitle", "BGERP 3.0 CD1");
 
             log.info("Read {} attributes", attributes.size());
         }
