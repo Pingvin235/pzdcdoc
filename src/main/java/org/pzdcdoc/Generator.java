@@ -312,7 +312,7 @@ public class Generator {
         }
 
         // add html title suffix
-        String siteTitle = attributes.get(ATTR_SITE_TITLE);
+        String siteTitle = attributes == null ? null : attributes.get(ATTR_SITE_TITLE);
         if (siteTitle != null)
             title.text(title.text() + " | " + siteTitle);
 
