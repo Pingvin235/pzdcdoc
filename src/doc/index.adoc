@@ -1,4 +1,4 @@
-// this index file is used only for local tests
+// the index file is used only for junit tests
 = Demo Local ToC
 :nofooter:
 
