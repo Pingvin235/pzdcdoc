@@ -200,10 +200,10 @@ public class Generator {
 
                 var options = Options.builder()
                     .toFile(false)
-                    .headerFooter(true)
                     .safe(SafeMode.UNSAFE)
                     .attributes(attrs)
                     .build();
+                options.setHeaderFooter(true);
 
                 String html = asciidoctor.convertFile(source, options);
 
