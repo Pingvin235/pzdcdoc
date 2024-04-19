@@ -27,6 +27,7 @@ p {margin-bottom: 1rem}
 
 #header > h1:first-child {
   margin-top: 1rem;
+  white-space: nowrap;
 }
 
 .stretch {
