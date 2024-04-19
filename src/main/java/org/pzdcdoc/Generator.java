@@ -54,6 +54,7 @@ public class Generator {
     public static final String ATTR_GENERATOR = "generator";
     public static final String ATTR_TARGET = "target";
     public static final String ATTR_SOURCE = "source";
+    private static final String ATTR_SITE_TITLE = "pzdc-site-title";
 
     private final Asciidoctor asciidoctor = Factory.create();
 
@@ -207,7 +208,10 @@ public class Generator {
 
                 String html = asciidoctor.convertFile(source, options);
 
-                html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new SourceLink(attributes));
+                if (toc == null)
+                    extractToC(html, targetPath);
+                else
+                    html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new SourceLink(attributes));
 
                 FileUtils.forceMkdirParent(target);
 
@@ -271,6 +275,23 @@ public class Generator {
             });
     }
 
+    /**
+     * Extracts ToC to #toc from index file placed on the first place of the root directory.
+     * @param html
+     * @param target
+     */
+    private void extractToC(String html, Path target) {
+        if (!containsIndex(target.toString()))
+            return;
+
+        toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
+        toc = toc.select("body").tagName("div").get(0);
+        // remove class="article"
+        toc.clearAttributes();
+        // add search field
+        search.injectField(toc.select("#header"));
+    }
+
     private boolean containsIndex(String name) {
         return name.contains("index");
     }
@@ -278,27 +299,20 @@ public class Generator {
     private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth, SourceLink linkToSource) throws Exception {
         log.debug("correctHtml targetPath: {}, deep: {}", target, depth);
 
-        if (toc == null) {
-            // the index file must be placed on the top the root directory
-            if (containsIndex(target.toString())) {
-                toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
-                toc = toc.select("body").tagName("div").get(0);
-                // remove class="article"
-                toc.clearAttributes();
-                // add search field
-                search.injectField(toc.select("#header"));
-            }
-            return html;
-        }
-
         Document jsoup = Jsoup.parse(html);
         Element head = jsoup.selectFirst("head");
+        Element title = head.selectFirst("title");
 
         // add content to search index
         if (search != null) {
             final String relativePath = targetDir.toPath().relativize(target).toString();
-            search.addArticle(new Search.Article(relativePath, head.select("title").text(), jsoup.text()));
+            search.addArticle(new Search.Article(relativePath, title.text(), jsoup.text()));
         }
+
+        // add html title suffix
+        String siteTitle = attributes.get(ATTR_SITE_TITLE);
+        if (siteTitle != null)
+            title.text(title.text() + " | " + siteTitle);
 
         copyResources(jsoup, source, target);
 
