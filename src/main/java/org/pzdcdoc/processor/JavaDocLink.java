@@ -9,20 +9,28 @@ import org.asciidoctor.extension.Name;
 
 /**
  * AsciiDoctor-J processor converting 'javadoc:package.Class[]' to JavaDoc URLs.
- * 
+ *
  * @author Shamil Vakhitov
  */
 @Name("javadoc")
 public class JavaDocLink extends InlineMacroProcessor {
-    /** Attribute defining JavaDoc root URL. */
-    private static final String ATTR_PATH_PREFIX_NAME = "pzdc-javadoc";
+    /** JavaDoc root URL attribute name */
+    private static final String ATTR_ROOT_URL = "pzdc-javadoc-root-url";
+    /** JavaDoc root relative path */
+    private static final String ATTR_ROOT_REL_PATH = "pzdc-javadoc-root-path";
 
     @Override
     public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
-        Map<String, Object> options = new HashMap<>(2);
-        options.put("type", ":link");
-        options.put("target", (String) parent.getDocument().getAttribute(ATTR_PATH_PREFIX_NAME) + target.replace('.', '/') + ".html");
-        return createPhraseNode(parent, "anchor", target, attributes, options);
+        String urlPrefix = (String) parent.getDocument().getAttribute(ATTR_ROOT_URL);
+        if (urlPrefix != null) {
+            Map<String, Object> options = Map.of(
+                "type", ":link",
+                "target", urlPrefix + target.replace('.', '/') + ".html"
+            );
+            return createPhraseNode(parent, "anchor", target, attributes, options);
+        }
+
+        throw new UnsupportedOperationException("No proper configuration defined for javadoc macros");
     }
 
 }

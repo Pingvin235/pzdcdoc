@@ -182,8 +182,8 @@ Such link causes a validation error, may be used for marking not finished places
 
 [[sel]]
 == Selections
-For any selection except of links use bold font:
-*variable*, *path*, *parameter*, *interface => menu => item*
+For any selection except of link:https://pzdcdoc.org[links] and `file names` use bold font:
+*variable*, *path*, *parameter*, *interface / menu / item*
 
 [[diagrams]]
 == Diagrams

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- PzdcDoc onfiguration file, may be placed together over *.adoc sources -->
+<!-- demo configuration file, may be placed together over *.adoc sources -->
 <pzdcdoc>
 	<attributes>
-		<!-- root path for JavaDoc, used by JavaDocLink processor -->
-		<pzdc-javadoc>https://bgerp.org/doc/3.0/javadoc/</pzdc-javadoc>
+		<!-- root URL for JavaDoc, used by JavaDocLink processor -->
+		<pzdc-javadoc-root-url>https://bgerp.org/doc/3.0/javadoc/</pzdc-javadoc-root-url>
 		<!-- converter URL, used by DrawIO processor -->
 		<pzdc-drawio-converter>https://drawio.bgerp.org/convert</pzdc-drawio-converter>
 		<!-- converter URL in locally running Docker container
