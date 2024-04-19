@@ -69,10 +69,34 @@ public class Generator {
     private static final String[] STYLESHEETS = { ASCIIDOCTOR_DEFAULT_CSS, PZDCDOC_CSS, FONT_CSS, "coderay-asciidoctor.css" };
     private static final String[] STYLESHEETS_INJECT = { PZDCDOC_CSS, FONT_CSS };
 
+    public static void main(String[] args) throws Exception {
+        var gen = new Generator();
+        var parser = new CmdLineParser(gen);
+        try {
+            parser.parseArgument(args);
+        } catch (CmdLineException e) {
+            System.err.println(e.getMessage());
+            parser.printUsage(System.err);
+            System.exit(1);
+        }
+
+        int errors = gen.process();
+        errors += gen.check();
+
+        log.info("DONE!");
+
+        if (errors > 0) {
+            log.error("ERRORS => {}", errors);
+            System.exit(errors);
+        }
+    }
+
     @Option(required = true, name = "-i", aliases = { "--in" }, usage = "Source directory path")
     private File sourceDir;
     @Option(required = true, name = "-o", aliases = { "--out" }, usage = "Target directory path")
     private File targetDir;
+    @Option(required = false, name = "-a", aliases = { "--attribute" }, usage = "Attributes")
+    private Map<String, String> attributes;
 
     /** Cached ToC from index.adoc for injecting everywhere. */
     private Element toc;
@@ -107,14 +131,14 @@ public class Generator {
         copyScriptsAndStyles();
         deleteTmpFiles();
         if (errors > 0)
-            log.error("PROC ERRORS => " + errors);
+            log.error("PROC ERRORS => {}", errors);
         return errors;
     }
 
     private int check() throws Exception {
         int errors = new Links().checkDir(targetDir);
         if (errors > 0)
-            log.error("CHECK ERRORS => " + errors);
+            log.error("CHECK ERRORS => {}", errors);
         return errors;
     }
 
@@ -207,7 +231,8 @@ public class Generator {
             for (Node attr : document.selectNodes("//attributes/*"))
                 attributes.put(attr.getName(), attr.getText());
 
-            // attributes.put("doctitle", "BGERP 3.0 CD1");
+            if (this.attributes != null)
+                attributes.putAll(this.attributes);
 
             log.info("Read {} attributes", attributes.size());
         }
@@ -369,27 +394,4 @@ public class Generator {
             }
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        var gen = new Generator();
-        var parser = new CmdLineParser(gen);
-        try {
-            parser.parseArgument(args);
-        } catch (CmdLineException e) {
-            System.err.println(e.getMessage());
-            parser.printUsage(System.err);
-            System.exit(1);
-        }
-
-        int errors = gen.process();
-        errors += gen.check();
-
-        log.info("DONE!");
-
-        if (errors > 0) {
-            log.error("ERRORS => " + errors);
-            System.exit(errors);
-        }
-    }
-
 }
