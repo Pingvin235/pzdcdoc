@@ -208,9 +208,7 @@ public class Generator {
 
                 String html = asciidoctor.convertFile(source, options);
 
-                if (toc == null)
-                    extractToC(html, targetPath);
-                else
+                if (toc != null || !extractToC(html, targetPath))
                     html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new SourceLink(attributes));
 
                 FileUtils.forceMkdirParent(target);
@@ -280,9 +278,11 @@ public class Generator {
      * @param html
      * @param target
      */
-    private void extractToC(String html, Path target) {
-        if (!containsIndex(target.toString()))
-            return;
+    private boolean extractToC(String html, Path target) {
+        if (!containsIndex(target.toString())) {
+            log.debug("Not found index file with ToC");
+            return false;
+        }
 
         toc = Jsoup.parse(html, StandardCharsets.UTF_8.name());
         toc = toc.select("body").tagName("div").get(0);
@@ -290,6 +290,8 @@ public class Generator {
         toc.clearAttributes();
         // add search field
         search.injectField(toc.select("#header"));
+
+        return true;
     }
 
     private boolean containsIndex(String name) {
