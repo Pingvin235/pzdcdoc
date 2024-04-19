@@ -207,7 +207,7 @@ public class Generator {
             for (Node attr : document.selectNodes("//attributes/*"))
                 attributes.put(attr.getName(), attr.getText());
 
-            attributes.put("doctitle", "BGERP 3.0 CD1");
+            // attributes.put("doctitle", "BGERP 3.0 CD1");
 
             log.info("Read {} attributes", attributes.size());
         }
