@@ -17,16 +17,16 @@ public class JavaDocLink extends InlineMacroProcessor {
     /** JavaDoc root URL attribute name */
     private static final String ATTR_ROOT_URL = "pzdc-javadoc-root-url";
     /** JavaDoc root relative path */
-    private static final String ATTR_ROOT_REL_PATH = "pzdc-javadoc-root-path";
+    private static final String ATTR_ROOT_PATH = "pzdc-javadoc-root-path";
 
     @Override
     public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
         String urlPrefix = (String) parent.getDocument().getAttribute(ATTR_ROOT_URL);
         if (urlPrefix != null) {
-            Map<String, Object> options = Map.of(
-                "type", ":link",
-                "target", urlPrefix + target.replace('.', '/') + ".html"
-            );
+            // the map must be modifiable
+            Map<String, Object> options = new HashMap<>();
+            options.put("type", ":link");
+            options.put("target", urlPrefix + target.replace('.', '/') + ".html");
             return createPhraseNode(parent, "anchor", target, attributes, options);
         }
 
