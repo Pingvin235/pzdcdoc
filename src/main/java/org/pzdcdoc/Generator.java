@@ -98,7 +98,7 @@ public class Generator {
     private File sourceDir;
     @Option(required = true, name = "-o", aliases = { "--out" }, usage = "Target directory path")
     private File targetDir;
-    @Option(required = false, name = "-a", aliases = { "--attribute" }, usage = "Attributes")
+    @Option(required = false, name = "-a", aliases = { "--attribute" }, usage = "Attribute name=value")
     private Map<String, String> attributes;
 
     /** Cached ToC from index.adoc for injecting everywhere. */
