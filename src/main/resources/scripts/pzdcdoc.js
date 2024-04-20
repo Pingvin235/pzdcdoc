@@ -81,16 +81,15 @@ const $$ = new function() {
 
 			let searchValue = $input.val().toLowerCase();
 			if (searchValue) {
-				const tokens = searchValue.split(/\s+/);
+				let tokens = '';
 
-				searchValue = '';
-				tokens.forEach(token => {
+				searchValue.split(/\s+/).forEach(token => {
 					if (!token.match(/^[\+\-\~]/))
-						searchValue += ' +';
-					searchValue += token + ' ';
+						tokens += ' +';
+					tokens += token + ' ';
 				});
 
-				const searchResult = idx.search(searchValue).concat(substringSearch(searchValue));
+				const searchResult = idx.search(tokens).concat(substringSearch(searchValue));
 
 				$searchCount.text(searchResult.length);
 				searchResult.forEach(hit => {
