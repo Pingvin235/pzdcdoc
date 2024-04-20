@@ -2,9 +2,20 @@
 html, body {font-size: .9em; line-height: .8em}
 p {margin-bottom: 1rem}
 
-@media only screen and (min-width:1280px){
-  body.toc2{padding-left:25em;padding-right:0}
-  #toc.toc2{width:25em; overflow-x: scroll;}
+@media only screen and (min-width:1280px) {
+  body.toc2 {
+    padding-left:25em;
+    padding-right:0
+  }
+  #toc.toc2 {
+    width:25em; overflow-x: scroll;
+  }
+  body.article > #header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #fff;
+  }
 }
 
 #header,
@@ -16,6 +27,7 @@ p {margin-bottom: 1rem}
 
 #header > h1:first-child {
   margin-top: 1rem;
+  white-space: nowrap;
 }
 
 .stretch {
@@ -29,13 +41,6 @@ body.article > #footnotes,
 body.article > #footer {
   padding-left: 2em;
   padding-right: 2em;
-}
-
-body.article > #header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background-color: #fff;
 }
 
 body.article > #header #source-link {
@@ -55,12 +60,12 @@ body * {
   margin-bottom: 0;
 }
 
-#toc.toc2 div.ulist ul {
+#toc.toc2 #content > div.ulist > ul {
   margin-left: 0;
 }
 
 #toc.toc2 ul.sectlevel1 li a {
-  color: #1a0dab;
+  color: #693e2f;
 }
 
 #toc.toc2 li {
@@ -80,7 +85,7 @@ body * {
 }
 
 #toc.toc2 li a.search {
-  color: #bf3400;
+  color: #ce6f1d;
 }
 
 /* current fragment symbol */
@@ -120,6 +125,6 @@ td.tableblock * {
 }
 
 #search-count {
-  color: #bf3400;
+  color: #ce6f1d;
   padding-left: 0.5em;
 }
