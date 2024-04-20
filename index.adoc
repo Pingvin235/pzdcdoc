@@ -1,3 +1,4 @@
+// the main index of the demo sample
 = Demo ToC
 :nofooter:
 

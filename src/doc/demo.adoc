@@ -114,7 +114,7 @@ Here is the snippet of connecting plugins to Generator.
 
 // this snippet is used in
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/Generator.java#L85-L90[org.pzdcdoc.Generator]
+link:../main/java/org/pzdcdoc/Generator.java#L112-L117[org.pzdcdoc.Generator]
 
 [[snippet-simple]]
 === Simple snippets
@@ -182,8 +182,8 @@ Such link causes a validation error, may be used for marking not finished places
 
 [[sel]]
 == Selections
-For any selection except of links use bold font:
-*variable*, *path*, *parameter*, *interface => menu => item*
+For any selection except of link:https://pzdcdoc.org[links] and `file names` use bold font:
+*variable*, *path*, *parameter*, *interface / menu / item*
 
 [[diagrams]]
 == Diagrams
