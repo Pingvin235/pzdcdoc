@@ -6,6 +6,7 @@ import java.util.Map;
 import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
+import org.pzdcdoc.Generator;
 
 /**
  * AsciiDoctor-J processor converting 'javadoc:package.Class[]' to JavaDoc URLs.
@@ -19,9 +20,13 @@ public class JavaDocLink extends InlineMacroProcessor {
 
     @Override
     public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
-        String urlPrefix = (String) parent.getDocument().getAttribute(ATTR_PATH_PREFIX);
-        if (urlPrefix == null)
+        String prefix = (String) parent.getDocument().getAttribute(ATTR_PATH_PREFIX);
+        if (prefix == null)
             throw new UnsupportedOperationException("No proper configuration defined for javadoc macros");
+
+        prefix = prefix.trim();
+        if (!prefix.endsWith("/"))
+            prefix = prefix + "/";
 
         // the map must be modifiable
         Map<String, Object> options = new HashMap<>();
@@ -31,11 +36,12 @@ public class JavaDocLink extends InlineMacroProcessor {
 
         String targetOption = null;
         // absolute path prefix
-        if (urlPrefix.contains("://"))
-            targetOption = urlPrefix + path;
-        // relative
+        if (prefix.contains("://"))
+            targetOption = prefix + path;
+        // relative path prefix
         else {
-
+            String pathToRoot = (String) parent.getDocument().getAttribute(Generator.ATTR_PATH_TO_ROOT);
+            targetOption = pathToRoot + prefix + path;
         }
 
         options.put("target", targetOption);

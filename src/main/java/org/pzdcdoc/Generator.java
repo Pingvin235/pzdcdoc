@@ -45,15 +45,17 @@ import org.pzdcdoc.processor.snippet.Snippet;
 public class Generator {
     private static final Logger log = LogManager.getLogger();
 
+    public static final String ATTR_GENERATOR = "pzdc-generator";
+    public static final String ATTR_SOURCE = "pzdc-source";
+    public static final String ATTR_TARGET = "pzdc-target";
+    public static final String ATTR_PATH_TO_ROOT = "pzdc-path-to-root";
+
     private static final String DIR_RES = "_res";
 
     private static final String EXT_ADOC = ".adoc";
     private static final String EXT_ADOCF = ".adocf";
     private static final String EXT_HTML = ".html";
 
-    public static final String ATTR_GENERATOR = "generator";
-    public static final String ATTR_SOURCE = "source";
-    public static final String ATTR_TARGET = "target";
     private static final String ATTR_SITE_TITLE = "pzdc-site-title";
 
     private final Asciidoctor asciidoctor = Factory.create();
@@ -179,6 +181,7 @@ public class Generator {
                 log.info("Processing: {}", source);
 
                 Path targetPath = Paths.get(target.getPath().replace(EXT_ADOC, EXT_HTML));
+                String pathToRoot = StringUtils.repeat("../", depth);
 
                 var attrs = Attributes.builder()
                     .backend("html5")
@@ -196,6 +199,7 @@ public class Generator {
                 attrs.setAttribute(ATTR_SOURCE, source);
                 attrs.setAttribute(ATTR_TARGET, targetPath);
                 attrs.setAttribute(ATTR_GENERATOR, this);
+                attrs.setAttribute(ATTR_PATH_TO_ROOT, pathToRoot);
 
                 attrs.setAttributes(attributes);
 
@@ -209,7 +213,7 @@ public class Generator {
                 String html = asciidoctor.convertFile(source, options);
 
                 if (toc != null || !extractToC(html, targetPath))
-                    html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, depth, new SourceLink(attributes));
+                    html = correctHtmlAndCopyResources(source.toPath(), html, targetPath, pathToRoot, new SourceLink(attributes));
 
                 FileUtils.forceMkdirParent(target);
 
@@ -296,8 +300,8 @@ public class Generator {
         return name.contains("index");
     }
 
-    private String correctHtmlAndCopyResources(Path source, String html, Path target, int depth, SourceLink linkToSource) throws Exception {
-        log.debug("correctHtml targetPath: {}, deep: {}", target, depth);
+    private String correctHtmlAndCopyResources(Path source, String html, Path target, String pathToRoot, SourceLink linkToSource) throws Exception {
+        log.debug("correctHtml targetPath: {}, pathToRoot: {}", target, pathToRoot);
 
         Document jsoup = Jsoup.parse(html);
         Element head = jsoup.selectFirst("head");
@@ -316,61 +320,13 @@ public class Generator {
 
         copyResources(jsoup, source, target);
 
-        injectScriptsAndStyles(depth, head);
+        injectScriptsAndStyles(head, pathToRoot);
 
-        correctToC(jsoup, target, depth);
+        correctToC(jsoup, target, pathToRoot);
 
         linkToSource.inject(jsoup, sourceDir.toPath().relativize(source).toString());
 
         return jsoup.toString();
-    }
-
-    private void injectScriptsAndStyles(int depth, Element head) {
-        var pathPrefix = StringUtils.repeat("../", depth) + DIR_RES  + "/";
-        for (String script : SCRIPTS_INJECT)
-            head.append("<script src='" + pathPrefix + script + "'/>");
-        for (String css : STYLESHEETS_INJECT)
-            head.append("<link rel='stylesheet' href='" + pathPrefix + css + "'>");
-    }
-
-    private void correctToC(Document jsoup, Path target, int depth) {
-        Element pageToC = jsoup.selectFirst("#toc.toc");
-        if (pageToC == null)
-            return;
-
-        // set class 'toc2' for body to support it
-        jsoup.selectFirst("body").addClass("toc2");
-        // extract page toc's content
-        Element pageToCRootUl = pageToC.selectFirst(".sectlevel1").clone();
-        pageToC
-            // convert page toc to toc2
-            .attr("class", "toc2")
-            // replace toc2's content by toc
-            .html(toc.toString());
-
-        // going through toc links
-        for (Element a : pageToC.select("a")) {
-            Link link = new Link(a);
-            if (link.isExternalReference())
-                continue;
-
-            String href = link.get();
-
-            if (target.endsWith(href)) {
-                a.addClass("current");
-                // injecting page ToC into the global ToC
-                if (pageToCRootUl != null)
-                    a.after(pageToCRootUl);
-            }
-            // correct link URL related to the actual page
-            link.set(StringUtils.repeat("../", depth) + href);
-            a.attr("title", a.text());
-        }
-
-        // add link to root on title
-        Element title = pageToC.selectFirst("#header h1");
-        if (title != null)
-            title.html("<a href='" + StringUtils.repeat("../", depth) + "index.html'>" + title.text() + "</a>");
     }
 
     private void copyResources(Document jsoup, Path source, Path target) throws IOException {
@@ -407,5 +363,53 @@ public class Generator {
                     FileUtils.copyFile(resSrc, resTarget);
             }
         }
+    }
+
+    private void injectScriptsAndStyles(Element head, String pathToRoot) {
+        var pathPrefix = pathToRoot + DIR_RES  + "/";
+        for (String script : SCRIPTS_INJECT)
+            head.append("<script src='" + pathPrefix + script + "'/>");
+        for (String css : STYLESHEETS_INJECT)
+            head.append("<link rel='stylesheet' href='" + pathPrefix + css + "'>");
+    }
+
+    private void correctToC(Document jsoup, Path target, String pathToRoot) {
+        Element pageToC = jsoup.selectFirst("#toc.toc");
+        if (pageToC == null)
+            return;
+
+        // set class 'toc2' for body to support it
+        jsoup.selectFirst("body").addClass("toc2");
+        // extract page toc's content
+        Element pageToCRootUl = pageToC.selectFirst(".sectlevel1").clone();
+        pageToC
+            // convert page toc to toc2
+            .attr("class", "toc2")
+            // replace toc2's content by toc
+            .html(toc.toString());
+
+        // going through toc links
+        for (Element a : pageToC.select("a")) {
+            Link link = new Link(a);
+            if (link.isExternalReference())
+                continue;
+
+            String href = link.get();
+
+            if (target.endsWith(href)) {
+                a.addClass("current");
+                // injecting page ToC into the global ToC
+                if (pageToCRootUl != null)
+                    a.after(pageToCRootUl);
+            }
+            // correct link URL related to the actual page
+            link.set(pathToRoot + href);
+            a.attr("title", a.text());
+        }
+
+        // add link to root on title
+        Element title = pageToC.selectFirst("#header h1");
+        if (title != null)
+            title.html("<a href='" + pathToRoot + "index.html'>" + title.text() + "</a>");
     }
 }
