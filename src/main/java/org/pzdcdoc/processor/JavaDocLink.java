@@ -6,23 +6,46 @@ import java.util.Map;
 import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
+import org.pzdcdoc.Generator;
 
 /**
  * AsciiDoctor-J processor converting 'javadoc:package.Class[]' to JavaDoc URLs.
- * 
+ *
  * @author Shamil Vakhitov
  */
 @Name("javadoc")
 public class JavaDocLink extends InlineMacroProcessor {
-    /** Attribute defining JavaDoc root URL. */
-    private static final String ATTR_PATH_PREFIX_NAME = "pzdc-javadoc";
+    /** JavaDoc URL path prefix, can be absolute or related to the target root directory */
+    private static final String ATTR_PATH_PREFIX = "pzdc-javadoc";
 
     @Override
     public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
-        Map<String, Object> options = new HashMap<>(2);
+        String prefix = (String) parent.getDocument().getAttribute(ATTR_PATH_PREFIX);
+        if (prefix == null)
+            throw new UnsupportedOperationException("No proper configuration defined for javadoc macros");
+
+        prefix = prefix.trim();
+        if (!prefix.endsWith("/"))
+            prefix = prefix + "/";
+
+        // the map must be modifiable
+        Map<String, Object> options = new HashMap<>();
         options.put("type", ":link");
-        options.put("target", (String) parent.getDocument().getAttribute(ATTR_PATH_PREFIX_NAME) + target.replace('.', '/') + ".html");
+
+        String path = target.replace('.', '/') + ".html";
+
+        String targetOption = null;
+        // absolute path prefix
+        if (prefix.contains("://"))
+            targetOption = prefix + path;
+        // relative path prefix
+        else {
+            String pathToRoot = (String) parent.getDocument().getAttribute(Generator.ATTR_PATH_TO_ROOT);
+            targetOption = pathToRoot + prefix + path;
+        }
+
+        options.put("target", targetOption);
+
         return createPhraseNode(parent, "anchor", target, attributes, options);
     }
-
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- configuration file, may be placed in the same directory with .adoc file -->
+<!-- root configuration file for the Demo sample, extended in src/doc/pzdcdoc.xml -->
 <pzdcdoc>
 	<!-- these attributes applied to each of processed files, may be extended/overvritten in deeper pzdcdoc.xml files and inside the files themself -->
 	<attributes>
-		<!-- the path with main doc sources -->
+		<!-- relative path to the main doc, used in index.adoc as {doc-path} -->
 		<doc-path>src/doc</doc-path>
 		<!-- use your own favicon URL instead -->
 		<favicon>https://bgerp.org/img/favicon-doc.svg</favicon>
@@ -13,7 +13,7 @@
 		<!-- sample of labels customization
 		https://asciidoctor.org/docs/user-manual/#customizing-labels
 		https://github.com/asciidoctor/asciidoctor/blob/master/lib/asciidoctor/document.rb#L255
-		
+
 		<appendix-caption>Приложение</appendix-caption>
 		<caution-caption>Внимание</caution-caption>
 		<example-caption>Пример</example-caption>
