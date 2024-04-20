@@ -4,7 +4,7 @@
 ifndef::backend-html5[]
 [NOTE]
 ====
-See this article published to HTML5: http://pzdcdoc.org/demo/README.html 
+See this article published to HTML5: http://pzdcdoc.org/demo/README.html
 ====
 endif::[]
 
@@ -12,7 +12,7 @@ endif::[]
 == About
 PzdcDoc is the complete ready-to-use solution, providing clear way and workflow for organizing software documentation.
 
-Based on link:https://asciidoctor.org/docs/asciidoctorj[AsciidoctorJ], 
+Based on link:https://asciidoctor.org/docs/asciidoctorj[AsciidoctorJ],
 Java binding of the excellent software documentation framework link:https://asciidoctor.org/docs[Asciidoctor].
 Thanks to 100% compatibility to AsciiDoctor, existing documentation files may be re-used.
 
@@ -37,7 +37,7 @@ On top of AsciiDoctor there are added the following features:
 [[howto]]
 == How to use
 Clone the GIT repository, after execute in the directory one of the following tests.
-You would need Java version 8 or higher.
+You would need Java version 21 or higher.
 Both produce result to `target/doc-out`, these files may be published on HTTP server.
 See tasks configuration in link:build.gradle[] file.
 
@@ -65,7 +65,7 @@ gradlew buildDemoDoc
 ----
 
 Extracts the project data from GIT and uses Maven artifact of PzdcDoc for running.
-That sample may be useful for the case of building documentation out of many GIT projects. 
+That sample may be useful for the case of building documentation out of many GIT projects.
 The result from *master* branch is published to: http://pzdcdoc.org/demo
 
 [[history]]
@@ -78,15 +78,15 @@ It was successfully used there as one system with GIT stored sources for support
 * database structure
 
 The single tool has replaced Confluence + MediaWiki + self-written DB structure describing utility in a more convenient way.
-Ideally fits for continuous delivery approach, when documentation is considered as essential part of product and written, 
-stored, handled together with other sources. Documentation is automatically built using GitLab CI and published, 
+Ideally fits for continuous delivery approach, when documentation is considered as essential part of product and written,
+stored, handled together with other sources. Documentation is automatically built using GitLab CI and published,
 you may see the result link:https://bgerp.ru/doc/3.0/manual/[here].
 
 [[how-work]]
 == How does it work
 [square]
 * As parameter generator takes input and output directories.
-* Input directory may be copied directly from project or checked out from version control to outside like `target`. 
+* Input directory may be copied directly from project or checked out from version control to outside like `target`.
 First way is easier, in the second one may be combined doc sources out of many GIT projects.
 In the input directory may be placed:
 * `index.adoc` with table of contents. Only one index on the highest level will be used.
@@ -94,7 +94,7 @@ In the input directory may be placed:
 * The generator goes through all the files in input dir and converting all with extension `.adoc` them to `.html`.
 ** Directory starting from `.` are skipped.
 ** Includes have to be named `.adocf` to avoid converting.
-** Resources (files, images) are recommended be placed in `_res` subdirectory near of referencing `.adoc` file, 
+** Resources (files, images) are recommended be placed in `_res` subdirectory near of referencing `.adoc` file,
 but you may reference as well any project file, it will be copied to the target directory.
 * All the used references between `.adoc` are relative and automatically converted to HTML.
 
@@ -102,7 +102,7 @@ but you may reference as well any project file, it will be copied to the target 
 == GIT workflow
 Documentation sources have to be treated as high-level program code, written for humans.
 For easily managing all of those sources together, recommended to do each change in separated GIT branch,
-do not merge it on master, but pick all the modification in single commit on master whenever work is done. 
+do not merge it on master, but pick all the modification in single commit on master whenever work is done.
 Use merge squash of similar operations. You may found link:https://drive.google.com/open?id=15NptRsx1qrdiWEew23EFz6gbxD6S12VQpnBQ6X9NbiQ[here] detailed description of such workflow.
 
 For doing modifications in documentation only recommended to make one more branch *doc-no-merge*

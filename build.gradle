@@ -9,10 +9,13 @@ repositories {
     mavenCentral()
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 buildDir = 'target'
 version = '2.7'
-sourceCompatibility = 11
-targetCompatibility = 11
 
 ext.admin = hasProperty('sonatypeUsername')
 ext.docBranch = project.hasProperty('docBranch') ? project.findProperty('docBranch') : 'master'
@@ -123,12 +126,12 @@ task publishDemoDoc(dependsOn: 'buildDemoDoc') {
 }
 
 task sourceJar(type: Jar) {
-    classifier "sources"
+    archiveClassifier = "sources"
     from sourceSets.main.allJava
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier "javadoc"
+    archiveClassifier = "javadoc"
     from javadoc.destinationDir
 }
 
