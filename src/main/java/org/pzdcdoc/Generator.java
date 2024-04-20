@@ -52,8 +52,8 @@ public class Generator {
     private static final String EXT_HTML = ".html";
 
     public static final String ATTR_GENERATOR = "generator";
-    public static final String ATTR_TARGET = "target";
     public static final String ATTR_SOURCE = "source";
+    public static final String ATTR_TARGET = "target";
     private static final String ATTR_SITE_TITLE = "pzdc-site-title";
 
     private final Asciidoctor asciidoctor = Factory.create();
@@ -173,7 +173,7 @@ public class Generator {
             attributes = loadAttributes(source, attributes);
 
             for (File file : files)
-                process(file, new File(target.getPath() + "/" + file.getName()), depth + 1, attributes);
+                process(file, new File(target, file.getName()), depth + 1, attributes);
         } else {
             if (sourceName.endsWith(EXT_ADOC)) {
                 log.info("Processing: {}", source);
@@ -244,18 +244,16 @@ public class Generator {
     private void copyScriptsAndStyles() throws IOException {
         log.info("Copying scripts and styles.");
 
-        File rootRes = new File(targetDir + "/" + DIR_RES);
+        File rootRes = new File(targetDir, DIR_RES);
         if (!rootRes.exists()) rootRes.mkdirs();
 
         for (String script : SCRIPTS)
-            IOUtils.copy(getClass().getClassLoader().getResourceAsStream("scripts/" + script),
-                    new FileOutputStream(rootRes.getAbsolutePath() + "/" + script));
+            IOUtils.copy(getClass().getClassLoader().getResourceAsStream("scripts/" + script), new FileOutputStream(new File(rootRes, script)));
 
         search.writeScript(rootRes);
 
         for (String style : STYLESHEETS)
-            IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style),
-                    new FileOutputStream(rootRes.getAbsolutePath() + "/" + style));
+            IOUtils.copy(getClass().getClassLoader().getResourceAsStream("stylesheets/" + style), new FileOutputStream(new File(rootRes, style)));
     }
 
     private void deleteTmpFiles() throws IOException {
