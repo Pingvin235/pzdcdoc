@@ -93,6 +93,10 @@ body * {
   visibility:visible
 }
 
+.sectionbody a.current::before {
+  content: "\00A7";
+}
+
 /* elements */
 .exampleblock > .content {
   overflow: auto;
