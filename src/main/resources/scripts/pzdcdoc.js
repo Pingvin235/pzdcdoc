@@ -79,7 +79,7 @@ const $$ = new function() {
 			const $searchCount = $('#search-count');
 			$searchCount.text('');
 
-			let searchValue = $input.val().toLowerCase();
+			const searchValue = $input.val().toLowerCase();
 			if (searchValue) {
 				let tokens = '';
 
@@ -142,7 +142,7 @@ const $$ = new function() {
 
 		$$.documents.forEach(doc => {
 			if (doc.content.includes(value) || doc.title.toLowerCase().includes(value))
-				result.push[doc]
+				result.push(doc);
 		})
 
 		return result;
