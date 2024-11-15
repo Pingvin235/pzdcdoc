@@ -5,14 +5,13 @@ const $$ = new function() {
 	/**
 	 * Marks a hash from URL in the left ToC and in document area.
 	 */
-	const markFragment = () => {
+	const markFragments = () => {
 		const mark = () => {
 			let hash = window.location.hash;
 			if (hash) {
 				hash = decodeURI(hash);
 				markTocCurrent(hash);
 				markContentCurrent(hash);
-				setTimeout(scrollContentCurrentToVisible);
 			}
 		};
 
@@ -57,7 +56,18 @@ const $$ = new function() {
 	const scrollContentCurrentToVisible = () => {
 		const html = document.querySelector('html');
 		const current = html.querySelector('body > #content .current');
-		html.scrollTop = current.offsetTop - 200;
+		if (current) {
+			current.scrollIntoView();
+			html.scrollTop -= 300;
+		}
+	}
+
+	/**
+	 * Calls the two scrolling functions above.
+	 */
+	const scrollCurrentToVisible = () => {
+		scrollTocCurrentToVisible();
+		scrollContentCurrentToVisible();
 	}
 
 	/**
@@ -149,12 +159,12 @@ const $$ = new function() {
 	}
 
 	// public functions
-	this.markFragment = markFragment;
-	this.scrollTocCurrentToVisible = scrollTocCurrentToVisible;
+	this.markFragments = markFragments;
+	this.scrollCurrentToVisible = scrollCurrentToVisible;
 	this.initSearch = initSearch;
 }
 
 $(function () {
-	$$.markFragment();
-	$$.scrollTocCurrentToVisible();
-});
+	$$.markFragments();
+	setTimeout(() => $$.scrollCurrentToVisible(), 1000);
+})
