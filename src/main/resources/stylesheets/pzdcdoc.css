@@ -18,6 +18,10 @@ p {margin-bottom: 1rem}
   }
 }
 
+:root {
+  --search-bg-color: #ccc;
+}
+
 #header,
 #content,
 #footnotes,
@@ -65,7 +69,8 @@ body * {
 }
 
 #toc.toc2 ul.sectlevel1 li a {
-  color: #693e2f;
+  /* color of headers */
+  color: #ba3925;
 }
 
 #toc.toc2 li {
@@ -85,7 +90,7 @@ body * {
 }
 
 #toc.toc2 li a.search {
-  color: #ce6f1d;
+  background-color: var(--search-bg-color);
 }
 
 /* current fragment symbol */
@@ -121,7 +126,6 @@ td.tableblock * {
 
 #search-input {
   width: 100%;
-  padding-left: 0.5em;
 }
 
 #search-input input {
@@ -129,6 +133,7 @@ td.tableblock * {
 }
 
 #search-count {
-  color: #ce6f1d;
-  padding-left: 0.5em;
+  width: 1px;
+  white-space: nowrap;
+  background-color: var(--search-bg-color);
 }
