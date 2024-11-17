@@ -100,16 +100,17 @@ const $$ = new function() {
 				});
 
 				const searchResult = idx.search(tokens).concat(substringSearch(searchValue));
-
-				$searchCount.text(searchResult.length);
-				searchResult.forEach(hit => {
-					$tocLinks.each(function () {
-						const $a = $(this);
-						const url = $a.attr('href').replace(/\.\.\//g, '');
-						if (url === hit.ref)
-							$a.addClass('search').attr('target', '_blank');
+				if (searchResult.length) {
+					$searchCount.html('&nbsp;' + searchResult.length + '&nbsp;');
+					searchResult.forEach(hit => {
+						$tocLinks.each(function () {
+							const $a = $(this);
+							const url = $a.attr('href').replace(/\.\.\//g, '');
+							if (url === hit.ref)
+								$a.addClass('search').attr('target', '_blank');
+						});
 					});
-				});
+				}
 			}
 		});
 	}
