@@ -11,19 +11,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Document;
+import org.asciidoctor.ast.PhraseNode;
+import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
 import org.pzdcdoc.Generator;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -49,7 +50,7 @@ public class DrawIO extends InlineMacroProcessor {
     private OkHttpClient http;
 
     @Override
-    public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
+    public PhraseNode process(StructuralNode parent, String target, Map<String, Object> attributes) {
         Map<String, Object> options = new HashMap<>();
         options.put("type", "image");
         options.put("target", export(parent.getDocument(), target));
