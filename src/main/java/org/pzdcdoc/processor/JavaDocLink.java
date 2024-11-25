@@ -3,7 +3,8 @@ package org.pzdcdoc.processor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.asciidoctor.ast.ContentNode;
+import org.asciidoctor.ast.PhraseNode;
+import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
 import org.pzdcdoc.Generator;
@@ -19,7 +20,7 @@ public class JavaDocLink extends InlineMacroProcessor {
     private static final String ATTR_PATH_PREFIX = "pzdc-javadoc";
 
     @Override
-    public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
+    public PhraseNode process(StructuralNode parent, String target, Map<String, Object> attributes) {
         String prefix = (String) parent.getDocument().getAttribute(ATTR_PATH_PREFIX);
         if (prefix == null)
             throw new UnsupportedOperationException("No proper configuration defined for javadoc macros");

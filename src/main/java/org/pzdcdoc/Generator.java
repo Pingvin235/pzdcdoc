@@ -207,8 +207,8 @@ public class Generator {
                     .toFile(false)
                     .safe(SafeMode.UNSAFE)
                     .attributes(attrs)
+                    .standalone(true)
                     .build();
-                options.setHeaderFooter(true);
 
                 String html = asciidoctor.convertFile(source, options);
 
