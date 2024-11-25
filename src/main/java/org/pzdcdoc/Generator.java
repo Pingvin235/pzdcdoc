@@ -115,8 +115,6 @@ public class Generator {
         javaExtensionRegistry.inlineMacro(new DrawIO());
         javaExtensionRegistry.block(new Snippet());
         //javaExtensionRegistry.treeprocessor(new Treeprocessor());
-
-        asciidoctor.requireLibrary("asciidoctor-diagram");
     }
 
     /**
@@ -343,25 +341,16 @@ public class Generator {
                 continue;
             }
 
-            // Ditaa generated images
-            if (href.startsWith("diag")) {
-                File resTarget = target.getParent().resolve(href).toFile();
-                log.info("Moving {} to {}", resSrc, resTarget);
-                // without the deletion moving after fails in case of existing file
-                FileUtils.deleteQuietly(resTarget);
-                FileUtils.moveFile(resSrc, resTarget);
-            } else {
-                String relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
-                link.set(relativePath);
+            String relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
+            link.set(relativePath);
 
-                File resTarget = target.getParent().resolve(relativePath).toFile();
-                log.info("Copying {} to {}", resSrc, resTarget);
-                FileUtils.forceMkdirParent(resTarget);
-                if (resTarget.exists() && resTarget.lastModified() == resSrc.lastModified())
-                    log.info("Not changed.");
-                else
-                    FileUtils.copyFile(resSrc, resTarget);
-            }
+            File resTarget = target.getParent().resolve(relativePath).toFile();
+            log.info("Copying {} to {}", resSrc, resTarget);
+            FileUtils.forceMkdirParent(resTarget);
+            if (resTarget.exists() && resTarget.lastModified() == resSrc.lastModified())
+                log.info("Not changed.");
+            else
+                FileUtils.copyFile(resSrc, resTarget);
         }
     }
 
