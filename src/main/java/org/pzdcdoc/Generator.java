@@ -215,7 +215,7 @@ public class Generator {
 
                 FileUtils.forceMkdirParent(target);
 
-                try (var writer = new FileWriterWithEncoding(targetPath.toFile(), StandardCharsets.UTF_8)) {
+                try (var writer = FileWriterWithEncoding.builder().setPath(targetPath).setCharset(StandardCharsets.UTF_8).get()) {
                     writer.write(html);
                 }
 
