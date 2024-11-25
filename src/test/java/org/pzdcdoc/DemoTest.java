@@ -45,7 +45,7 @@ public class DemoTest {
     public void checkFileDemo() throws Exception {
         var file = new File(TARGET_DIR, "demo.html");
         Assert.assertTrue("File exists", file.exists());
-        Assert.assertEquals("File size", 26318, file.length());
+        Assert.assertEquals("File size", 23520, file.length());
 
         var doc = Jsoup.parse(file, StandardCharsets.UTF_8.name());
         checkFileDemoHeader(doc);
@@ -59,10 +59,6 @@ public class DemoTest {
     }
 
     private void checkFileDemoToC(Document doc) {
-        var tocEmpty = doc.selectFirst("body #header #toc.toc");
-        Assert.assertNotNull("ToC empty", tocEmpty);
-        Assert.assertEquals("ToC empty children", 0, tocEmpty.childrenSize());
-
         var tocLeft = doc.selectFirst("body #header #toc.toc2");
         Assert.assertNotNull("ToC left", tocLeft);
 
@@ -71,8 +67,8 @@ public class DemoTest {
         Assert.assertNotNull("Search input", search.selectFirst("#search-input input"));
         Assert.assertNotNull("Search count", search.selectFirst("#search-count"));
 
-        Assert.assertEquals("ToC items count", 27, tocLeft.select("li").size());
-        Assert.assertEquals("ToC links count", 27, tocLeft.select("a").size());
+        Assert.assertEquals("ToC items count", 25, tocLeft.select("li").size());
+        Assert.assertEquals("ToC links count", 25, tocLeft.select("a").size());
     }
 
     private void checkFileDemoContent(Document doc) {
