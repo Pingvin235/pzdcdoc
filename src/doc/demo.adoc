@@ -223,62 +223,6 @@ docker run -d -p 5000:5000 --shm-size=1g --name drawio-renderer --restart always
 
 After running a container uncomment the second block in the configuration above.
 
-[[diagrams-ditaa]]
-=== Ditaa
-Ditaa is a ASCII-based format of block diagrams.
-Here is the original page: http://ditaa.sourceforge.net/ and actual repo: https://github.com/stathissideris/ditaa
-
-Advantages:
-[square]
-* lightness;
-* quick preview;
-* simplicity and uniformity;
-* storage and editing in the text of the document;
-* no need to export.
-
-References:
-[square]
-* http://asciiflow.com/ - online editor;
-* https://blog.regehr.org/archives/1653 - examples of ASCII Art including diagrams.
-
-[ditaa]
-----
-+------------------+       +---------------+
-|                  |       |               |
-|  Test for Adoc   +------>+   Diagrams    |
-|                  |       |               |
-+------------------+       +---------------+
-----
-
-And a complex sample.
-[ditaa]
-----
-                /-----------\
-           /--->+  context  |
-           |    \------+----/
-  all jobs |           |       knows root job                  points to super job
-  point to |     seeds |   /-----------------------------+------------------------------\
-   context |           |   |                             :                              |
-           |           v   v     splits/merges           v         splits/merges        |
-           :    +------+---+--+     starts       +-------+-------+      starts    +------+------+
-           \----+ (root) job  +----------------->+ sub/super job +--------------->|   sub job   |
-                +------+---+--+                  +-------+-------+                +------+------+
-                       |   ^                             :                              ^
-               creates |   :                             |                              |
-                       |   | know each other             \------------------------------/
-      starts on change |   | (parent <-> child)                 points to sub job
-                       v   v
-                +------+---+--+
-                |  child job  |
-                +-------------+
-----
-
-[[diagrams-plantuml]]
-=== PlantUML
-PlantUML diagrams are also supported.
-[square]
-* https://asciidoctor.org/news/2014/02/18/plain-text-diagrams-in-asciidoctor/
-
 [[diagrams-3rd-party]]
 === Other 3rd party formats
 Schemas can also be produced using third-party editors, for example: link:https://www.yworks.com/downloads#yEd[yEd]
