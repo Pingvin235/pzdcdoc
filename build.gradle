@@ -15,7 +15,7 @@ java {
 }
 
 buildDir = 'target'
-version = '2.8'
+version = '2.9'
 
 ext.admin = hasProperty('sonatypeUsername')
 ext.docBranch = project.hasProperty('docBranch') ? project.findProperty('docBranch') : 'master'
