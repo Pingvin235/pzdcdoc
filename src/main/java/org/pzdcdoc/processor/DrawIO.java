@@ -41,10 +41,7 @@ public class DrawIO extends InlineMacroProcessor {
     private static final String ATTR_CONVERTER = "pzdc-drawio-converter";
     private static final String ATTR_TIMEOUT = "pzdc-drawio-request-timeout-sec";
 
-    // private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final ObjectMapper MAPPER = new ObjectMapper();
-
-    // private OkHttpClient http;
 
     @Override
     public PhraseNode process(StructuralNode parent, String target, Map<String, Object> attributes) {
