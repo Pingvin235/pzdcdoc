@@ -167,7 +167,7 @@ publishing {
 
             pom {
                 name = 'PzdcDoc'
-                description = 'AsciiDoctor based ocumentation generation tool'
+                description = 'AsciiDoctor based documentation generation tool'
                 url = 'https://github.com/Pingvin235/pzdcdoc'
 
                 licenses {
