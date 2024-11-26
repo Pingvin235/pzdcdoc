@@ -7,15 +7,15 @@ import org.jsoup.nodes.Document;
 
 /**
  * Link to source injector.
- * 
+ *
  * @author Shamil Vakhitov
  */
 public class SourceLink {
-    private static final String ATTR_SOURCE_LINK_ROOT = "pzdc-source-link-root";
     private final String linkRootUrl;
 
-    public SourceLink(Map<String, Object> attributes) {
-        this.linkRootUrl = (String) attributes.get(ATTR_SOURCE_LINK_ROOT);
+    /** Constructor */
+    SourceLink(Map<String, Object> attributes) {
+        this.linkRootUrl = (String) attributes.get("pzdc-source-link-root");
     }
 
     /**

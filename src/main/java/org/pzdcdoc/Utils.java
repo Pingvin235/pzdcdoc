@@ -2,10 +2,14 @@ package org.pzdcdoc;
 
 /**
  * Utilities.
- * 
+ *
  * @author Shamil Vakhitov
  */
 public class Utils {
+    /** Unavailable constructor */
+    private Utils() {
+    }
+
     /**
      * Replaces path separators to right slashes.
      * @param path original path.

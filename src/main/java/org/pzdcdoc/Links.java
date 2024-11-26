@@ -19,10 +19,14 @@ import org.jsoup.nodes.Element;
  *
  * @author Shamil Vakhitov
  */
-public class Links {
+class Links {
     private static final Logger log = LogManager.getLogger();
 
     private int errors;
+
+    /** Constructor */
+    Links() {
+    }
 
     /**
      * Checks all the files in the dir.

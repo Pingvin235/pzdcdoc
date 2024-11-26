@@ -20,8 +20,13 @@ public class PossibleLineTest {
         LineFunction toF = new LineFunction.Ends("r());");
 
         // take the right values from snippet in demo.adoc
+<<<<<<< HEAD
         final int from = 85;
         final int to = 90;
+=======
+        final int from = 122;
+        final int to = 128;
+>>>>>>> 142ff45 (Java Doc fixes)
 
         var plFrom = PossibleLine.find(lines, from - 1, null, fromF);
         Assert.assertNotNull(plFrom);

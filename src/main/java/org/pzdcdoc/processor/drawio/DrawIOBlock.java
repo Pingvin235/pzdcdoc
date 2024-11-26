@@ -15,6 +15,9 @@ import org.asciidoctor.extension.Name;
 @Name("drawio")
 public class DrawIOBlock extends BlockMacroProcessor {
 
+    /** Constructor */
+    public DrawIOBlock() {}
+
     @Override
     public StructuralNode process(StructuralNode parent, String target, Map<String, Object> attributes) {
         String path = DrawIO.convert(parent.getDocument(), target);

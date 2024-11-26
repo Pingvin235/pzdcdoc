@@ -46,9 +46,13 @@ import org.pzdcdoc.processor.snippet.Snippet;
 public class Generator {
     private static final Logger log = LogManager.getLogger();
 
+    /** {@link Generator} instance attribute */
     public static final String ATTR_GENERATOR = "pzdc-generator";
+    /** Source {@link File} */
     public static final String ATTR_SOURCE = "pzdc-source";
+    /** Target {@link Path} */
     public static final String ATTR_TARGET = "pzdc-target";
+    /** String with relative for the current file path to the root directory */
     public static final String ATTR_PATH_TO_ROOT = "pzdc-path-to-root";
 
     private static final String DIR_RES = "_res";
@@ -73,6 +77,11 @@ public class Generator {
     private static final String[] STYLESHEETS = { ASCIIDOCTOR_DEFAULT_CSS, PZDCDOC_CSS, FONT_CSS, "coderay-asciidoctor.css" };
     private static final String[] STYLESHEETS_INJECT = { PZDCDOC_CSS, FONT_CSS };
 
+    /**
+     * Entry point for the generator
+     * @param args command line arguments
+     * @throws Exception all exceptions cause exit with printing out stack trace
+     */
     public static void main(String[] args) throws Exception {
         var gen = new Generator();
         var parser = new CmdLineParser(gen);

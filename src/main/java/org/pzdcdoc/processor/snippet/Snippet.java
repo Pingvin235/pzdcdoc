@@ -22,7 +22,7 @@ import org.pzdcdoc.Generator;
 
 /**
  * AsciiDoctor-J processor supporting 'live snippets'.
- * 
+ *
  * @author Shamil Vakhitov
  */
 @Name("snippet")
@@ -30,12 +30,12 @@ import org.pzdcdoc.Generator;
 public class Snippet extends BlockProcessor {
     private static final Logger log = LogManager.getLogger();
 
-    public static final String ATTR_FROM = "from";
-    public static final String ATTR_TO = "to";
-    public static final String ATTR_REMOVE_LEADING = "remove-leading";
-
     private static final String LINK_PREFIX = "link:";
     private static final Pattern LINES_RANGE = Pattern.compile("L(\\d+)(\\-L(\\d+))?");
+
+    /** Constructor */
+    public Snippet() {
+    }
 
     @Override
     public Object process(StructuralNode parent, Reader reader, Map<String, Object> attributes) {
@@ -126,9 +126,9 @@ public class Snippet extends BlockProcessor {
      */
     private void include(Generator generator, Map<String, Object> attributes, String path, List<String> contentList, List<String> lines,
             int lineFrom, int lineTo) {
-        String from = (String) attributes.get(ATTR_FROM);
-        String to = (String) attributes.get(ATTR_TO);
-        String removeLeading = (String) attributes.get(ATTR_REMOVE_LEADING);
+        String from = (String) attributes.get("from");
+        String to = (String) attributes.get("to");
+        String removeLeading = (String) attributes.get("remove-leading");
 
         LineFunction fromF = from != null ? new LineFunction.Starts(from) : LineFunction.PASS;
         LineFunction toF = to != null ? new LineFunction.Ends(to) : LineFunction.PASS;
