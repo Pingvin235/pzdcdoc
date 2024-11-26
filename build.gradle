@@ -110,6 +110,13 @@ task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenL
     args '--in', docSrcDir, '--out', docOutDir
 }
 
+// Configuration of PGP keys:
+//     ~./gnupg directory with your keys
+//     ~./gradle/gradle.settings (sample)
+//         signing.keyId=9DDEF6EB
+//         signing.password=
+//         signing.secretKeyRingFile=C:\\Users\\Shamil\\.gnupg\\secring.gpg
+
 // Sample of generation out of branch:
 // bash -c "./gradlew publishDemoDoc -PdocBranch=i5-diagrams"
 task publishDemoDoc(dependsOn: 'buildDemoDoc') {
@@ -130,17 +137,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-// https://docs.gradle.org/7.3.2/userguide/publishing_maven.html
+// https://docs.gradle.org/8.11.1/userguide/publishing_maven.html
 
-/*
-  Local publishing:
-    gradlew publishToMavenLocal
-  To Sonatype:
-    gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
-    log in to https://oss.sonatype.org/#stagingRepositories using LOGIN and PSWD
-    find a new staging repo, check content and 'Close'
-    wait for all close checks in 'Activity' and 'Release' the repo
-*/
+// Local publish:
+//     gradlew publishToMavenLocal
+
+// To Sonatype:
+//     gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
+//     log in to https://oss.sonatype.org/#stagingRepositories using LOGIN and PSWD
+//     find a new staging repo, check content and 'Close'
+//     wait for all close checks in 'Activity' and 'Release' the repo
 
 java {
     withJavadocJar()
