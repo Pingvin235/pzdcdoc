@@ -59,8 +59,6 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.18.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
     runtimeOnly 'com.fasterxml.jackson.core:jackson-annotations:2.18.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
-    implementation 'com.squareup.okio:okio:1.17.2'
     implementation 'args4j:args4j:2.37'
 
     testImplementation 'junit:junit:4.13.2'

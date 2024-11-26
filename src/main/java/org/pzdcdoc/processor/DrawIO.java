@@ -2,14 +2,18 @@ package org.pzdcdoc.processor;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,14 +27,7 @@ import org.asciidoctor.extension.InlineMacroProcessor;
 import org.asciidoctor.extension.Name;
 import org.pzdcdoc.Generator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-
 /**
  * AsciiDoctor-J processor converting DrawIO diagrams to images.
  *
@@ -44,16 +41,13 @@ public class DrawIO extends InlineMacroProcessor {
     private static final String ATTR_CONVERTER = "pzdc-drawio-converter";
     private static final String ATTR_TIMEOUT = "pzdc-drawio-request-timeout-sec";
 
-    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final ObjectMapper MAPPER = new ObjectMapper();
-
-    private OkHttpClient http;
 
     @Override
     public PhraseNode process(StructuralNode parent, String target, Map<String, Object> attributes) {
         Map<String, Object> options = new HashMap<>();
         options.put("type", "image");
-        options.put("target", export(parent.getDocument(), target));
+        options.put("target", convert(parent.getDocument(), target));
 
         // Image attributes may be found: https://docs.asciidoctor.org/asciidoctorj/latest/extensions/inline-macro-processor/
         return createPhraseNode(parent, "image", (String) null, attributes, options);
@@ -65,7 +59,7 @@ public class DrawIO extends InlineMacroProcessor {
      * @param target document replated path to '.drawio' XML source file.
      * @return path to converted image.
      */
-    private String export(Document doc, String target) {
+    private String convert(Document doc, String target) {
         try {
             String converterUrl = (String) doc.getAttribute(ATTR_CONVERTER);
             if (StringUtils.isBlank(converterUrl)) {
@@ -73,7 +67,6 @@ public class DrawIO extends InlineMacroProcessor {
             }
 
             int timeout = NumberUtils.toInt((String) doc.getAttribute(ATTR_TIMEOUT), 60);
-            http = new OkHttpClient.Builder().readTimeout(timeout, TimeUnit.SECONDS).build();
 
             String srcDocDir = (String) doc.getAttribute("docdir");
             String srcPath = srcDocDir + "/" + target;
@@ -86,7 +79,7 @@ public class DrawIO extends InlineMacroProcessor {
             Path targetDocPath = (Path) doc.getAttribute(Generator.ATTR_TARGET);
             Path targetPath = targetDocPath.getParent().resolve(target);
 
-            convert(converterUrl, srcPath, targetPath, format);
+            convert(converterUrl, timeout, srcPath, targetPath, format);
 
             return target;
         } catch (Exception e) {
@@ -100,15 +93,13 @@ public class DrawIO extends InlineMacroProcessor {
      * https://hub.docker.com/r/tomkludy/drawio-renderer
      *
      * @param converterUrl URL to convert
+     * @param timeout wait timeout in seconds.
      * @param srcPath path of source Draw.IO file.
      * @param targetPath path of resulting file.
      * @param format format, currently only 'svg' is supported.
-     * @throws JsonProcessingException
-     * @throws IOException
-     * @throws FileNotFoundException
-     */
-    private void convert(String converterUrl, String srcPath, Path targetPath, String format)
-            throws JsonProcessingException, IOException, FileNotFoundException {
+     * @throws Exception
+    */
+    private void convert(String converterUrl, int timeout, String srcPath, Path targetPath, String format) throws Exception {
         log.info("Converting URL: {}, srcPath: {}, targetPath: {}", converterUrl, srcPath, targetPath);
 
         var targetFile = targetPath.toFile();
@@ -124,20 +115,23 @@ public class DrawIO extends InlineMacroProcessor {
             "format", format
         ));
 
-        var request = new Request.Builder()
-            .url(converterUrl)
-            .post(RequestBody.create(JSON, json))
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(new URI(converterUrl))
+            .timeout(Duration.ofSeconds(timeout))
+            .header("Content-Type", "application/json; charset=utf-8")
+            .POST(HttpRequest.BodyPublishers.ofString(json))
             .build();
 
-        try (var response = http.newCall(request).execute()) {
-            if (!response.isSuccessful())
-                throw new IOException("HTTP response code: " + response.code() + "; body: " + response.body().string());
+        HttpResponse<String> response = HttpClient.newBuilder()
+            .build()
+            .send(request, BodyHandlers.ofString());
 
-            targetPath.getParent().toFile().mkdirs();
-            IOUtils.write(response.body().string(), new FileOutputStream(targetPath.toString()), StandardCharsets.UTF_8);
-        }
+        if (response.statusCode() != 200)
+            throw new IOException("HTTP response code: " + response.statusCode() + "; body: " + response.body());
+
+        targetPath.getParent().toFile().mkdirs();
+        IOUtils.write(response.body(), new FileOutputStream(targetPath.toString()), StandardCharsets.UTF_8);
 
         log.info("Time => {} ms.", System.currentTimeMillis() - time);
     }
-
 }
