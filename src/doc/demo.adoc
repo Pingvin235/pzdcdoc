@@ -189,8 +189,8 @@ For any selection except of link:https://pzdcdoc.org[links] and `file names` use
 == Diagrams
 
 [[diagrams-drawio]]
-=== Diagrams.NET (former Draw.IO)
-Using link:https://diagrams.net[Diagrams.NET] in software documentation allows to combine
+=== Draw.IO
+Using link:https://draw.io[Draw.IO] in software documentation allows to combine
 text-based source format link:_res/diagram.drawio[stored] in same GIT repo with other and nice representation.
 
 drawio::_res/diagram.drawio[width="600px", alt="Diagram Alt Text"]
@@ -198,11 +198,17 @@ drawio::_res/diagram.drawio[width="600px", alt="Diagram Alt Text"]
 Inline mode:
 drawio:_res/diagram.drawio[width="600px", alt="Diagram Alt Text"]
 
-Diagrams may be edited in VSCode using plugin: https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio
+Diagrams may be edited using the regular Diagrams.Net application or with IDE plugins like: https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio
 
 image::_res/vscode_drawio.png[width="600px"]
 
-IMPORTANT: Source diagram files must *not* be compressed and free of references to library image resources, these requirements are checked during generation and reported as errors case of violation
+[IMPORTANT]
+====
+Source diagram files must *not* be compressed and free of references to library image resources, these requirements are checked during generation and reported as errors case of violation.
+The *Compressed* checkbox can be found in the *File / Properties...* menu of the standard editor.
+
+image::_res/file_properties.png[]
+====
 
 [[diagrams-drawio-renderer]]
 ==== DrawIO renderer

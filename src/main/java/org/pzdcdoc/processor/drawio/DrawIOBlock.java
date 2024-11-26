@@ -13,7 +13,7 @@ import org.asciidoctor.extension.Name;
  * @author Shamil Vakhitov
  */
 @Name("drawio")
-public class DiagramsNet extends BlockMacroProcessor {
+public class DrawIOBlock extends BlockMacroProcessor {
 
     @Override
     public StructuralNode process(StructuralNode parent, String target, Map<String, Object> attributes) {

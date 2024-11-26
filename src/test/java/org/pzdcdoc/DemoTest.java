@@ -34,7 +34,8 @@ public class DemoTest {
             "Resource files set",
             Set.of(
                 "asciidoctor.css", "coderay-asciidoctor.css", "diagram.drawio", "diagram.svg", "eclipse_plugin.png",
-                "font.css", "image.png", "jquery-3.3.1.js",
+                "file_properties.png", "font.css",
+                "image.png", "jquery-3.3.1.js",
                 "lunr-2.3.6.js", "lunr.de.js", "lunr.multi.js", "lunr.ru.js", "lunr.stemmer.support.js",
                 "pzdcdoc.css", "pzdcdoc.js", "pzsearch.js", "Snippet.java", "vscode_drawio.png", "vscode_plugin.png"
             ),
@@ -45,7 +46,7 @@ public class DemoTest {
     public void checkFileDemo() throws Exception {
         var file = new File(TARGET_DIR, "demo.html");
         Assert.assertTrue("File exists", file.exists());
-        Assert.assertEquals("File size", 23520, file.length());
+        Assert.assertEquals("File size", 24640, file.length());
 
         var doc = Jsoup.parse(file, StandardCharsets.UTF_8.name());
         checkFileDemoHeader(doc);
