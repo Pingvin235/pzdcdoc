@@ -1,6 +1,5 @@
 package org.pzdcdoc.processor.drawio;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,15 +60,7 @@ public class DrawIO extends InlineMacroProcessor {
      */
     static String convert(Document doc, String target) {
         try {
-            String converterUrl = (String) doc.getAttribute(ATTR_CONVERTER);
-            if (StringUtils.isBlank(converterUrl)) {
-                throw new IllegalArgumentException("Attribute '" + ATTR_CONVERTER + "' is not defined");
-            }
-
-            int timeout = NumberUtils.toInt((String) doc.getAttribute(ATTR_TIMEOUT), 60);
-
-            String srcDocDir = (String) doc.getAttribute("docdir");
-            String srcPath = srcDocDir + "/" + target;
+            Path srcPath = Path.of((String) doc.getAttribute("docdir"), target);
 
             // TODO: Think about supporting different formats except SVG.
             final var format = "svg";
@@ -79,7 +70,7 @@ public class DrawIO extends InlineMacroProcessor {
             Path targetDocPath = (Path) doc.getAttribute(Generator.ATTR_TARGET);
             Path targetPath = targetDocPath.getParent().resolve(target);
 
-            convert(converterUrl, timeout, srcPath, targetPath, format);
+            convert(doc, srcPath, targetPath, format);
 
             return target;
         } catch (Exception e) {
@@ -92,28 +83,35 @@ public class DrawIO extends InlineMacroProcessor {
      * Sends request to converter container:
      * https://hub.docker.com/r/tomkludy/drawio-renderer
      *
-     * @param converterUrl URL to convert
-     * @param timeout wait timeout in seconds.
+     * @param doc AsciiDoc document
      * @param srcPath path of source Draw.IO file.
      * @param targetPath path of resulting file.
      * @param format format, currently only 'svg' is supported.
      * @throws Exception
     */
-    private static void convert(String converterUrl, int timeout, String srcPath, Path targetPath, String format) throws Exception {
+    private static void convert(Document doc, Path srcPath, Path targetPath, String format) throws Exception {
+        String converterUrl = (String) doc.getAttribute(ATTR_CONVERTER);
+        if (StringUtils.isBlank(converterUrl))
+            throw new IllegalArgumentException("Attribute '" + ATTR_CONVERTER + "' is not defined");
+        int timeout = NumberUtils.toInt((String) doc.getAttribute(ATTR_TIMEOUT), 60);
+
         log.info("Converting URL: {}, srcPath: {}, targetPath: {}", converterUrl, srcPath, targetPath);
 
         var targetFile = targetPath.toFile();
-        if (targetFile.exists() && new File(srcPath).lastModified() < targetFile.lastModified()) {
+        if (targetFile.exists() && srcPath.toFile().lastModified() < targetFile.lastModified()) {
             log.info("Skipping converting. Target file already exists and newer than source.");
             return;
         }
 
         long time = System.currentTimeMillis();
 
+        String source = IOUtils.toString(new FileInputStream(srcPath.toString()), StandardCharsets.UTF_8);
         String json = MAPPER.writeValueAsString(Map.of(
-            "source", IOUtils.toString(new FileInputStream(srcPath), StandardCharsets.UTF_8),
+            "source", source,
             "format", format
         ));
+
+        check((Generator) doc.getAttribute(Generator.ATTR_GENERATOR), source);
 
         HttpRequest request = HttpRequest.newBuilder()
             .uri(new URI(converterUrl))
@@ -133,5 +131,21 @@ public class DrawIO extends InlineMacroProcessor {
         IOUtils.write(response.body(), new FileOutputStream(targetPath.toString()), StandardCharsets.UTF_8);
 
         log.info("Time => {} ms.", System.currentTimeMillis() - time);
+    }
+
+    /**
+     * Performs checks for DrawIO source file
+     * @param generator the generator for reporting errors
+     * @param source the DrawIO source
+     */
+    private static void check(Generator generator, String source) {
+        if (source.contains(".png\"")) {
+            log.error("The source file contains '.png' resources included");
+            generator.error();
+        }
+        if (source.contains("compressed=\"true\"")) {
+            log.error("The source file is compressed");
+            generator.error();
+        }
     }
 }
