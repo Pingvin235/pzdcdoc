@@ -199,6 +199,8 @@ Diagrams may be edited in VSCode using plugin: https://marketplace.visualstudio.
 
 image::_res/vscode_drawio.png[width="600px"]
 
+IMPORTANT: Source diagram files must *not* be compressed and free of references to library image resources, these requirements are checked during generation and reported as errors case of violation
+
 [[diagrams-drawio-renderer]]
 ==== DrawIO renderer
 For converting DrawIO format to graphic files is used container:
