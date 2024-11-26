@@ -112,9 +112,9 @@ The source link below is automatically extracted to highlighted code snippet dur
 Attributes `from` and `to` allow check actuality of content, `remove-leading` - deletion of line indent.
 Here is the snippet of connecting plugins to Generator.
 
-// this snippet is used in
+// this snippet is used in PossibleLineTest, keep updated 'from' and 'to' variables there according to the current state after 'java#'
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/Generator.java#L112-L117[org.pzdcdoc.Generator]
+link:../main/java/org/pzdcdoc/Generator.java#L113-L119[org.pzdcdoc.Generator]
 
 [[snippet-simple]]
 === Simple snippets
@@ -193,7 +193,10 @@ For any selection except of link:https://pzdcdoc.org[links] and `file names` use
 Using link:https://diagrams.net[Diagrams.NET] in software documentation allows to combine
 text-based source format link:_res/diagram.drawio[stored] in same GIT repo with other and nice representation.
 
-drawio:_res/diagram.drawio[width="600px"]
+drawio::_res/diagram.drawio[width="600px", alt="Diagram Alt Text"]
+
+Inline mode:
+drawio:_res/diagram.drawio[width="600px", alt="Diagram Alt Text"]
 
 Diagrams may be edited in VSCode using plugin: https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio
 

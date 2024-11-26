@@ -1,4 +1,4 @@
-package org.pzdcdoc.processor;
+package org.pzdcdoc.processor.drawio;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +59,7 @@ public class DrawIO extends InlineMacroProcessor {
      * @param target document replated path to '.drawio' XML source file.
      * @return path to converted image.
      */
-    private String convert(Document doc, String target) {
+    static String convert(Document doc, String target) {
         try {
             String converterUrl = (String) doc.getAttribute(ATTR_CONVERTER);
             if (StringUtils.isBlank(converterUrl)) {
@@ -99,7 +99,7 @@ public class DrawIO extends InlineMacroProcessor {
      * @param format format, currently only 'svg' is supported.
      * @throws Exception
     */
-    private void convert(String converterUrl, int timeout, String srcPath, Path targetPath, String format) throws Exception {
+    private static void convert(String converterUrl, int timeout, String srcPath, Path targetPath, String format) throws Exception {
         log.info("Converting URL: {}, srcPath: {}, targetPath: {}", converterUrl, srcPath, targetPath);
 
         var targetFile = targetPath.toFile();

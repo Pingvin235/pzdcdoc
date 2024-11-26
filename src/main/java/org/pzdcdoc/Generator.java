@@ -33,8 +33,9 @@ import org.jsoup.nodes.Element;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.pzdcdoc.processor.DrawIO;
 import org.pzdcdoc.processor.JavaDocLink;
+import org.pzdcdoc.processor.drawio.DiagramsNet;
+import org.pzdcdoc.processor.drawio.DrawIO;
 import org.pzdcdoc.processor.snippet.Snippet;
 
 /**
@@ -113,6 +114,7 @@ public class Generator {
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
         javaExtensionRegistry.inlineMacro(new JavaDocLink());
         javaExtensionRegistry.inlineMacro(new DrawIO());
+        javaExtensionRegistry.blockMacro(new DiagramsNet());
         javaExtensionRegistry.block(new Snippet());
         //javaExtensionRegistry.treeprocessor(new Treeprocessor());
     }
