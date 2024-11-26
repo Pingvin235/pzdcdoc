@@ -114,7 +114,7 @@ Here is the snippet of connecting plugins to Generator.
 
 // this snippet is used in PossibleLineTest, keep updated 'from' and 'to' variables there according to the current state after 'java#'
 [snippet, from="// h", to="r());", remove-leading="        "]
-link:../main/java/org/pzdcdoc/Generator.java#L113-L119[org.pzdcdoc.Generator]
+link:../main/java/org/pzdcdoc/Generator.java#L122-L128[org.pzdcdoc.Generator]
 
 [[snippet-simple]]
 === Simple Snippets

@@ -16,16 +16,20 @@ import org.jsoup.select.Elements;
 
 /**
  * Embedded JS search.
- * 
+ *
  * @author Shamil Vakhitov
  */
-public class Search {
+class Search {
     private static final Logger log = LogManager.getLogger();
 
     static final String SCRIPT = "pzsearch.js";
 
     private List<Article> articles = new ArrayList<>();
-    
+
+    /** Constructor */
+    Search() {
+    }
+
     /**
      * Adds an article to search index.
      * @param article article instance.

@@ -19,6 +19,10 @@ public class JavaDocLink extends InlineMacroProcessor {
     /** JavaDoc URL path prefix, can be absolute or related to the target root directory */
     private static final String ATTR_PATH_PREFIX = "pzdc-javadoc";
 
+    /** Constructor */
+    public JavaDocLink() {
+    }
+
     @Override
     public PhraseNode process(StructuralNode parent, String target, Map<String, Object> attributes) {
         String prefix = (String) parent.getDocument().getAttribute(ATTR_PATH_PREFIX);

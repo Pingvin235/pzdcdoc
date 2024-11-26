@@ -42,6 +42,9 @@ public class DrawIO extends InlineMacroProcessor {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    /** Constructor */
+    public DrawIO() {}
+
     @Override
     public PhraseNode process(StructuralNode parent, String target, Map<String, Object> attributes) {
         Map<String, Object> options = new HashMap<>();
