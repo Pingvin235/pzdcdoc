@@ -6,7 +6,7 @@
 		<!-- relative path to the main doc, used in index.adoc as {doc-path} -->
 		<doc-path>src/doc</doc-path>
 		<!-- use your own favicon URL instead -->
-		<favicon>https://bgerp.org/img/favicon-doc.svg</favicon>
+		<favicon>https://bgerp.org/asset/img/favicon-doc.svg</favicon>
 		<!-- source link root -->
 		<pzdc-source-link-root>https://github.com/Pingvin235/pzdcdoc/blob/master</pzdc-source-link-root>
 
