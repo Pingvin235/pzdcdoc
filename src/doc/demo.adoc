@@ -107,7 +107,7 @@ Sample Cloud: myuser@mycompany.com
 == Code snippets
 
 [[snippet-live]]
-=== Extracted "live snippets"
+=== Live Snippets
 The source link below is automatically extracted to highlighted code snippet during HTML converting.
 Attributes `from` and `to` allow check actuality of content, `remove-leading` - deletion of line indent.
 Here is the snippet of connecting plugins to Generator.
@@ -117,7 +117,7 @@ Here is the snippet of connecting plugins to Generator.
 link:../main/java/org/pzdcdoc/Generator.java#L113-L119[org.pzdcdoc.Generator]
 
 [[snippet-simple]]
-=== Simple snippets
+=== Simple Snippets
 Configuration or another selected block of code (*source* adds horisontal scrolling if needed):
 [source]
 ----
