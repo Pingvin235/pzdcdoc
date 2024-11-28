@@ -211,7 +211,7 @@ image::_res/file_properties.png[]
 ====
 
 [[diagrams-drawio-renderer]]
-==== DrawIO renderer
+==== DrawIO Renderer
 For converting DrawIO format to graphic files is used container:
 https://hub.docker.com/r/tomkludy/drawio-renderer
 
@@ -227,12 +227,22 @@ All the data from your diagrams may be analyzed with AI in Cambridge Analytics, 
 command below and use it instead.
 ====
 
-[source]
+[source, sh]
 ----
 docker run -d -p 5000:5000 --shm-size=1g --name drawio-renderer --restart always tomkludy/drawio-renderer:v1.1
 ----
 
 After running a container uncomment the second block in the configuration above.
+
+[[diagrams-drawio-variant]]
+=== DrawIO Variants
+:husband:husband
+:wife:wife
+drawio::_res/diagram_family.drawio[width="800px", variant="en"]
+
+:husband:муж
+:wife:жена
+drawio::_res/diagram_family.drawio[width="800px", variant="ru"]
 
 [[diagrams-3rd-party]]
 === Other 3rd party formats

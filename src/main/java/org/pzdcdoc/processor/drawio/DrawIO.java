@@ -109,12 +109,13 @@ public class DrawIO extends InlineMacroProcessor {
         long time = System.currentTimeMillis();
 
         String source = IOUtils.toString(new FileInputStream(srcPath.toString()), StandardCharsets.UTF_8);
+
+        check((Generator) doc.getAttribute(Generator.ATTR_GENERATOR), source);
+
         String json = MAPPER.writeValueAsString(Map.of(
             "source", source,
             "format", format
         ));
-
-        check((Generator) doc.getAttribute(Generator.ATTR_GENERATOR), source);
 
         HttpRequest request = HttpRequest.newBuilder()
             .uri(new URI(converterUrl))
