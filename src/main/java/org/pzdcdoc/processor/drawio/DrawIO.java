@@ -84,7 +84,7 @@ public class DrawIO extends InlineMacroProcessor {
 
     /**
      * Sends request to converter container:
-     * https://hub.docker.com/r/tomkludy/drawio-renderer
+     * https://hub.docker.com/r/bgerp/drawio-renderer
      *
      * @param doc AsciiDoc document
      * @param srcPath path of source Draw.IO file.
