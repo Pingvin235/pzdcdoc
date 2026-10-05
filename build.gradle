@@ -1,8 +1,10 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+    id 'eclipse'
+    id 'idea'
+}
 
 repositories {
     mavenLocal()
@@ -156,9 +158,9 @@ java {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId 'org.pzdcdoc'
-            artifactId 'pzdcdoc'
-            version "${project.version}"
+            groupId = 'org.pzdcdoc'
+            artifactId = 'pzdcdoc'
+            version = "${project.version}"
 
             from components.java
 
@@ -199,10 +201,10 @@ publishing {
 
     repositories {
         maven {
-            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
             credentials {
-                username findProperty('sonatypeUsername')
-                password findProperty('sonatypePassword')
+                username = findProperty('sonatypeUsername')
+                password = findProperty('sonatypePassword')
             }
         }
     }
