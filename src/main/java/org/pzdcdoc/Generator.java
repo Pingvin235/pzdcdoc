@@ -352,8 +352,12 @@ public class Generator {
                 continue;
             }
 
-            String relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
-            link.set(relativePath);
+            String relativePath = href;
+            // copy snippet's source files to _res directory
+            if (!relativePath.startsWith(DIR_RES)) {
+                relativePath = DIR_RES + "/" + Paths.get(href).getFileName();
+                link.set(relativePath);
+            }
 
             File resTarget = target.getParent().resolve(relativePath).toFile();
             log.info("Copying {} to {}", resSrc, resTarget);
