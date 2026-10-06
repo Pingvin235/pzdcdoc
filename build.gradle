@@ -1,7 +1,6 @@
 plugins {
     id 'java'
-    id 'maven-publish'
-    id 'signing'
+    id 'com.vanniktech.maven.publish' version '0.37.0'
     id 'eclipse'
     id 'idea'
 }
@@ -17,6 +16,7 @@ java {
 }
 
 buildDir = 'target'
+group = 'org.pzdcdoc'
 version = '2.9'
 
 ext.admin = hasProperty('sonatypeUsername')
@@ -67,7 +67,7 @@ dependencies {
     testRuntimeOnly 'org.hamcrest:hamcrest-core:1.3'
 
     // for demo build
-    pzdcdoc "org.pzdcdoc:pzdcdoc:${project.version}"
+    pzdcdoc "${project.group}:pzdcdoc:${project.version}"
 }
 
 tasks.withType(JavaCompile) {
@@ -112,13 +112,6 @@ task buildDemoDoc(type:JavaExec, dependsOn: ['checkoutDemoDoc', 'publishToMavenL
     args '--in', docSrcDir, '--out', docOutDir
 }
 
-// Configuration of PGP keys:
-//     ~./gnupg directory with your keys
-//     ~./gradle/gradle.settings (sample)
-//         signing.keyId=9DDEF6EB
-//         signing.password=
-//         signing.secretKeyRingFile=C:\\Users\\Shamil\\.gnupg\\secring.gpg
-
 // Sample of generation out of branch:
 // bash -c "./gradlew publishDemoDoc -PdocBranch=i5-diagrams"
 task publishDemoDoc(dependsOn: 'buildDemoDoc') {
@@ -129,87 +122,47 @@ task publishDemoDoc(dependsOn: 'buildDemoDoc') {
     }
 }
 
-task sourceJar(type: Jar) {
-    archiveClassifier = "sources"
-    from sourceSets.main.allJava
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = "javadoc"
-    from javadoc.destinationDir
-}
-
-// https://docs.gradle.org/8.11.1/userguide/publishing_maven.html
+// https://github.com/vanniktech/gradle-maven-publish-plugin
 
 // Local publish:
-//     gradlew publishToMavenLocal
+//    ./gradlew publishToMavenLocal
 
-// To Sonatype:
-//     gradlew publish -PsonatypeUsername=LOGIN -PsonatypePassword=PSWD
-//     log in to https://oss.sonatype.org/#stagingRepositories using LOGIN and PSWD
-//     find a new staging repo, check content and 'Close'
-//     wait for all close checks in 'Activity' and 'Release' the repo
+// Maven Central publish:
+//     ./gradlew publishToMavenCentral
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
+mavenPublishing {
+    coordinates(group, "pzdcdoc", version)
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'org.pzdcdoc'
-            artifactId = 'pzdcdoc'
-            version = "${project.version}"
+    // POM metadata, required by Maven Central
+    pom {
+        name = 'PzdcDoc'
+        description = 'AsciiDoctor based documentation generation tool'
+        url = 'https://github.com/Pingvin235/pzdcdoc'
 
-            from components.java
-
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
+        licenses {
+            license {
+                name = 'MIT License'
+                url = 'https://github.com/Pingvin235/pzdcdoc/blob/master/LICENSE'
+                distribution = 'repo'
             }
-
-            pom {
-                name = 'PzdcDoc'
-                description = 'AsciiDoctor based documentation generation tool'
-                url = 'https://github.com/Pingvin235/pzdcdoc'
-
-                licenses {
-                    license {
-                        name = 'MIT License'
-                        url = 'https://github.com/Pingvin235/pzdcdoc/blob/master/LICENSE'
-                        distribution = 'repo'
-                    }
-                }
-                scm {
-                    url = 'https://github.com/Pingvin235/pzdcdoc'
-                    connection = 'scm:git:git://github.com/Pingvin235/pzdcdoc.git'
-                    developerConnection = 'scm:git:ssh://git@github.com:pzdcdoc/pzdcdoc.git'
-                }
-                developers {
-                    developer {
-                        name = 'Shamil Vakhitov'
-                    }
-                }
+        }
+        scm {
+            url = 'https://github.com/Pingvin235/pzdcdoc'
+            connection = 'scm:git:git://github.com/Pingvin235/pzdcdoc.git'
+            developerConnection = 'scm:git:ssh://git@github.com:Pingvin235/pzdcdoc.git'
+        }
+        developers {
+            developer {
+                name = 'Shamil Vakhitov'
             }
         }
     }
 
-    repositories {
-        maven {
-            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
-            credentials {
-                username = findProperty('sonatypeUsername')
-                password = findProperty('sonatypePassword')
-            }
-        }
-    }
-}
+    publishToMavenCentral()
 
-signing {
-    sign publishing.publications.mavenJava
+    // Configuration of PGP keys stored ~./gradle/gradle.settings (sample):
+    // signing.keyId=9DDEF6EB
+    // signing.password=
+    // signing.secretKeyRingFile=/home/shamil/.gnupg/secring.gpg
+    signAllPublications()
 }
