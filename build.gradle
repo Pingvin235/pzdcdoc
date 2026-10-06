@@ -17,7 +17,7 @@ java {
 
 buildDir = 'target'
 group = 'org.pzdcdoc'
-version = '2.9'
+version = '3.0'
 
 ext.admin = hasProperty('sonatypeUsername')
 ext.docBranch = project.hasProperty('docBranch') ? project.findProperty('docBranch') : 'master'
